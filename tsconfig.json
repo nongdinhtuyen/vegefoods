@@ -3,7 +3,7 @@
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
+    "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
@@ -14,8 +14,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "noImplicitAny": false,
+    "jsx": "react-jsx",
+    "typeRoots": ["../node_modules/@types", "../@types"],
+    "types": ["node"],
+    "baseUrl": "src",
+    "paths": {
+      "stream": ["./node_modules/readable-stream"]
+    }
   },
-  "include": ["src"],
+  "include": ["src", "index.d.ts", "src/types"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
