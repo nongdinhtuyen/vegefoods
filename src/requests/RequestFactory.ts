@@ -1,6 +1,6 @@
 import CategoryRequest from './CategoryRequest';
 import ProductRequest from './ProductRequest';
-import LoginRequest from './LoginRequest';
+import UserRequest from './UserRequest';
 import CartRequest from './CartRequest';
 import OrderRequest from './OrderRequest';
 import CommentRequest from './CommentRequest';
@@ -10,7 +10,7 @@ import StatisticRequest from './StatisticRequest';
 const requestMap = {
     CategoryRequest,
     ProductRequest,
-    LoginRequest,
+    UserRequest,
     CartRequest,
     OrderRequest,
     CommentRequest,

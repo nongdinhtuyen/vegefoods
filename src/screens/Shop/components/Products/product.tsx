@@ -1,11 +1,13 @@
+import utils from 'common/utils';
 import {Link} from 'react-router-dom';
 
 function Product(props) {
+console.log("🚀 ~ file: product.tsx:5 ~ Product ~ props:", props)
 
     return (
         <div className="col-md-6 col-lg-3">
             <div className="product">
-                <Link to={`/product/${props.id}`} class="img-prod"><img className="img-fluid" src={props.image} alt="Colorlib Template" />
+                <Link to={`/product/${props.id}`} className="img-prod"><img className="img-fluid" src={utils.baseUrlImage(props.image)} alt="Colorlib Template" />
                     <div className="overlay"></div>
                 </Link>
                 <div className="text py-3 pb-4 px-3 text-center">

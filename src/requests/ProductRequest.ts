@@ -1,16 +1,24 @@
 import BaseRequest from './BaseRequest';
 
-const prefix = '/product'
- 
+const prefix = '/product';
+
 class ProductRequest extends BaseRequest {
-    fetchProducts(data) {
-        const url = `${prefix}/list`;
-        return this.get(url,data);
-    }
-    fetchProduct(id) {
-        const url = `${prefix}/${id}`
-        return this.get(url)
-    }
+  getListProducts(params) {
+    const url = `${prefix}`;
+    return this.get(url, params);
+  }
+
+  getProductTypes(params) {
+    const url = `${prefix}/type`;
+    return this.get(url, params);
+  }
+
+  getProductById(params) {
+    console.log("🚀 ~ file: ProductRequest.ts:17 ~ ProductRequest ~ getProductById ~ params:", params)
+    const url = `${prefix}/${params}`;
+    return this.get(url);
+  }
+
 }
 
-export default ProductRequest
+export default ProductRequest;

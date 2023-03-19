@@ -1,11 +1,15 @@
 
 function Footer(props) {
+
+  const scrollToTop = () => {
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth' });
+  }
     return (
 
         <>
             <section className="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
                 <div className="container py-4">
-                    <div className="row d-flex justify-content-center py-5">
+                    ie<div className="row d-flex justify-content-center py-5">
                         <div className="col-md-6">
                             <h2 style={{ fontSize: '22px' }} className="mb-0">Subcribe to our Newsletter</h2>
                             <span>Get e-mail updates about our latest shops and special offers</span>
@@ -26,9 +30,9 @@ function Footer(props) {
                 <div className="container">
                     <div className="row">
                         <div className="mouse">
-                            <a href="#" className="mouse-icon">
+                            <div onClick={scrollToTop} className="mouse-icon">
                                 <div className="mouse-wheel"><span className="ion-ios-arrow-up"></span></div>
-                            </a>
+                            </div>
                         </div>
                     </div>
                     <div className="row mb-5">

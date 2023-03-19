@@ -1,5 +1,6 @@
 import createSagaMiddleware from '@redux-saga/core';
 import { configureStore } from '@reduxjs/toolkit';
+import { INIT } from './actions/user';
 import rootReducers from './root_reducers';
 import rootSaga from './root_saga';
 
@@ -7,7 +8,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
   reducer: rootReducers,
-  devTools: true,
+  // devTools: true,
   middleware: (getDefaultMiddleware: any) => [
     ...getDefaultMiddleware({
       thunk: true,
@@ -23,7 +24,7 @@ const store = configureStore({
 sagaMiddleware.run(rootSaga);
 
 store.dispatch({
-  type: 'INIT',
+  type: INIT,
 });
 
 export default store;

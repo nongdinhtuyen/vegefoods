@@ -1,8 +1,10 @@
-export const FETCH_PRODUCTS = 'FETCH_PRODUCTS'
-export const FETCH_PRODUCTS_SUCCEED = 'FETCH_PRODUCTS_SUCCEED'
-export const FETCH_PRODUCTS_FAILED = 'FETCH_PRODUCTS_FAILED'
+import { createAction } from "@reduxjs/toolkit"
 
-export const FETCH_PRODUCT = 'FETCH_PRODUCT'
+export const GET_PRODUCTS = 'GET_PRODUCTS'
+
+export const GET_PRODUCT_BY_ID = 'GET_PRODUCTS_BY_D'
+
+export const GET_PRODUCT_TYPES = 'GET_PRODUCT_TYPES'
 export const FETCH_PRODUCT_SUCCEED = 'FETCH_PRODUCT_SUCCEED'
 export const FETCH_PRODUCT_FAILED = 'FETCH_PRODUCT_FAILED'
 
@@ -17,22 +19,9 @@ export const RATE = 'RATE';
 
 
 export default {
-  onFetchProducts: (data) => ({
-    type: FETCH_PRODUCTS,
-    data,
-  }),
-  onFetchProductsSucceed: (data) => ({
-    type: FETCH_PRODUCTS_SUCCEED,
-    data,
-  }),
-  onFetchProductsFailed: (err) => ({
-    type: FETCH_PRODUCTS_FAILED,
-    err,
-  }),
-  onFetchProduct: (data) => ({
-    type: FETCH_PRODUCT,
-    data,
-  }),
+  actionGetProducts: createAction<ActionPayloadStandard>(GET_PRODUCTS),
+  actionGetProductTypes: createAction<ActionPayloadStandard>(GET_PRODUCT_TYPES),
+  actionGetProductById: createAction<ActionPayloadStandard>(GET_PRODUCT_BY_ID),
   onFetchProductSucceed: (data) => ({
     type: FETCH_PRODUCT_SUCCEED,
     data,

@@ -12,6 +12,8 @@
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json,scss} --config ./.prettierrc"
   },
   "dependencies": {
+    "@ant-design/compatible": "^5.1.1",
+    "@ant-design/pro-layout": "^7.10.2",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@redux-saga/core": "^1.2.2",
     "@reduxjs/toolkit": "^1.9.1",
@@ -19,6 +21,7 @@
     "axios": "^1.2.2",
     "bignumber.js": "^9.1.1",
     "buffer": "^6.0.3",
+    "classnames": "^2.3.2",
     "click-to-react-component": "^1.0.8",
     "dayjs": "^1.11.7",
     "events": "^3.3.0",
@@ -30,7 +33,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^12.1.1",
-    "react-icomoon": "^2.5.4",
+    "react-icomoon": "^2.5.7",
     "react-icons": "^4.7.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.1",
@@ -75,6 +78,7 @@
     "typescript": "^4.9.3",
     "vite": "^4.2.0",
     "vite-plugin-checker": "^0.5.3",
+    "vite-plugin-commonjs": "^0.6.2",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-require": "^1.1.10",
     "vite-react-jsx": "^1.1.2",

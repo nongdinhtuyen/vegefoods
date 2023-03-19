@@ -4,7 +4,7 @@ function SaleProduct(props){
     return(
         <div className="col-md-6 col-lg-3">
                 <div className="product">
-                    <Link to="/product" class="img-prod"><img className="img-fluid" src={props.image} alt="Colorlib Template" />
+                    <Link to="/product" className="img-prod"><img className="img-fluid" src={props.image} alt="Colorlib Template" />
                         <span className="status">{props.salePercent}%</span>
                         <div className="overlay"></div>
                     </Link>

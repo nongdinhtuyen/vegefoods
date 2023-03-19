@@ -26,7 +26,7 @@ function Cart(props) {
         {
             dataIndex: 'image',
             key: 'img',
-            render: (text) => (<div className="img" style={{ backgroundImage: 'url(images/product-4.jpg)' }} />),
+            render: (text) => (<div className="img" style={{ backgroundImage: `url(${require('images/product-4.jpg')})` }} />),
         },
         {
             title: 'Product name',
@@ -54,7 +54,7 @@ function Cart(props) {
         props.onFetchCart
         ,[])
 
-    
+
 
     return (
         <>
@@ -88,7 +88,7 @@ function Cart(props) {
                                             <span>${props.cart.reduce((sum,value) => (sum +value.price*value.quantity),0).toFixed(2)}</span>
                                         </p>
                                     </div>
-                                    <p><Link to="/checkout" class="btn btn-primary py-3 px-4">Proceed to Checkout</Link></p>
+                                    <p><Link to="/checkout" className="btn btn-primary py-3 px-4">Proceed to Checkout</Link></p>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +97,7 @@ function Cart(props) {
                     <div>
                         <div className="col-md-12 text-center cart-empty">
                             <div>Your cart is empty, Keep shopping</div>
-                            <p><Link to="/shop" class="btn btn-primary">Back to Shop</Link></p>
+                            <p><Link to="/shop" className="btn btn-primary">Back to Shop</Link></p>
                         </div>
                     </div>
             }

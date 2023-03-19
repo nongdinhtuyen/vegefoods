@@ -1,95 +1,104 @@
-import { Form, Input, Button } from 'antd';
-import { connect } from 'react-redux';
-import {useHistory} from 'react-router-dom';
-
-import Background from '../../static/background_login.jpg'
-import actions from '../../redux/actions/user'
+import { Form, Input, Button, Divider } from 'antd';
+import { connect, useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { HiOutlineMail } from 'react-icons/hi';
+import Background from '../../static/background_login.jpg';
+import actions from '../../redux/actions/user';
 
 const layout = {
-    wrapperCol: {
-        span: 24,
-    },
+  wrapperCol: {
+    span: 24,
+  },
 };
 const tailLayout = {
-    wrapperCol: {
-        offset: 4,
-        span: 16,
-    },
+  wrapperCol: {
+    offset: 4,
+    span: 16,
+  },
 };
 
+export default function Login(props) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-function Login(props) {
-    let history = useHistory();
-
-    const onFinish = (value) => {
-        props.onLogin(value,redirect)
-    }
-
-    const redirect = () => {
-        history.push("/");
-    }
-
-
-    return (
-        <div className="bg" style={{ backgroundImage: `url(${Background})` }}>
-            <div className="container">
-                <div className="login-container" >
-                    <h1>Login</h1>
-                    <Form
-                        {...layout}
-                        name="basic"
-                        onFinish={onFinish}
-                        style={{ margin: "auto" }}
-                    >
-                        <Form.Item
-                            name="username"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your username!',
-                                },
-                            ]}
-                        >
-                            <Input placeholder="Username" />
-                        </Form.Item>
-
-                        <Form.Item
-                            name="pass"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your password!',
-                                },
-                            ]}
-                        >
-                            <Input.Password placeholder="Password" />
-                        </Form.Item>
-
-                        <Form.Item {...tailLayout}>
-                            <Button type="primary" htmlType="submit"> Login </Button>
-                        </Form.Item>
-                        <div>
-                            <span>Don't have an account?</span> <a href="signup"><span>Sign up</span></a>
-                        </div>
-                    </Form>
-                </div>
-            </div>
-        </div>
+  const onFinish = (value) => {
+    dispatch(
+      actions.actionLogin({
+        params: {
+          ...value,
+        },
+        callbacks: {
+          onSuccess({ data }) {
+            fetchInfo(data.id);
+          },
+        },
+      }),
     );
+  };
+
+  const fetchInfo = (id) => {
+    dispatch(
+      actions.actionGetUserInfo({
+        params: id,
+        callbacks: {
+          onSuccess(data) {
+            navigate('/');
+          },
+        },
+      }),
+    );
+  };
+
+  return (
+    <div className='bg' style={{ backgroundImage: `url(${Background})` }}>
+      <div className='w-modal m-auto p-12 rounded-3xl bg-[#ffffffe0] text-center'>
+        <div className='text-3xl mb-12 text-zinc-800 font-bold'>Đăng nhập</div>
+        <Form
+          size='large'
+          {...layout}
+          name='basic'
+          onFinish={onFinish}
+          className='m-auto'
+          layout='vertical'
+          initialValues={{
+            pass: '123456',
+            username: 'lanln',
+          }}
+        >
+          <Form.Item
+            name='username'
+            rules={[
+              {
+                required: true,
+                message: 'Please input your username!',
+              },
+            ]}
+          >
+            <Input placeholder='Tài khoản' />
+          </Form.Item>
+
+          <Form.Item
+            name='pass'
+            rules={[
+              {
+                required: true,
+                message: 'Mât khẩu',
+              },
+            ]}
+          >
+            <Input.Password placeholder='Mật khẩu' />
+          </Form.Item>
+
+          <Form.Item >
+            <Button type="primary" className='w-full' htmlType='submit' size='large'>
+              Đăng nhập
+            </Button>
+          </Form.Item>
+          <div>
+            <span>Chưa có tài khoản?</span> <Link to='/signup'>Đăng ký</Link>
+          </div>
+        </Form>
+      </div>
+    </div>
+  );
 }
-
-
-const mapStateToProps = (state) => {
-    return{
-        
-    }
-}   
-const mapDispatchToProps = (dispatch) => {
-    return {
-        onLogin: (data, callback) => {
-            dispatch(actions.onLogin(data,callback))
-        }
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(Login);

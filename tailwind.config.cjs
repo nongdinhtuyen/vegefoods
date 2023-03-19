@@ -5,7 +5,20 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundColor: {
+        primary: '#82ae46'
+      },
+      colors: {
+        primary: '#82ae46'
+      },
+      width: {
+        modal: 448
+      }
+    },
   },
   plugins: [],
+  corePlugins: {
+    preflight: false, // <== disable this!
+  },
 }

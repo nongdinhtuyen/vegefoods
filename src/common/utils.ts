@@ -18,32 +18,6 @@ const formatTimeFromUnix = (unixTime, format = 'DD/MM/YYYY', def = '--') => {
 
   return dayjs.unix(parseInt(`${unixTime}`.substr(0, 10))).format(format);
 };
-const getStatusQuestionPost = (startTime, endTime, isDistributed, typeQuestion, distributedAt = 0) => {
-  const wrapStartTime = dayjs.unix(startTime);
-  const wrapEndTime = dayjs.unix(endTime);
-  const wrapDistributeAt = dayjs.unix(distributedAt);
-
-  if (isDistributed) {
-    return 'QUESTION_DISTRIBUTED';
-  }
-  if (wrapStartTime.isAfter(dayjs())) {
-    return 'QUESTION_IN_COMMING_EVENT';
-  }
-  if (dayjs().isBetween(wrapStartTime, wrapEndTime)) {
-    return 'QUESTION_LIVE';
-  }
-  if (dayjs().isAfter(wrapEndTime) && typeQuestion == '0') {
-    return 'QUESTION_END';
-  }
-  if (dayjs().isAfter(wrapDistributeAt) && dayjs().isAfter(wrapEndTime) && typeQuestion != '0' && !isDistributed) {
-    return 'QUESTION_NONE_DISTRIBUTED';
-  }
-  if (dayjs().isAfter(wrapEndTime) && typeQuestion != '0' && !isDistributed) {
-    return 'QUESTION_IN_COMMING_DISTRIBUTE';
-  }
-
-  return 'SOME_THING_WRONG_HERE';
-};
 
 const formatCurrencyWithDecimal = (currency, symbol = '--', precision = 8, decimal = 18) =>
   _.isNaN(currency) ? symbol : trimRightZeroAndDot(new BigNumber(currency).div(10 ** decimal).toFormat(precision));
@@ -64,130 +38,6 @@ const formatCurrencyWithDecimalFloor = (currency, symbol = '--', precision = 8, 
   _.isNaN(currency) ? symbol : trimRightZeroAndDot(new BigNumber(currency).div(10 ** decimal).toFormat(precision, BigNumber.ROUND_FLOOR));
 
 const showNotification = openNotification;
-
-function UnMergedCell(arr) {
-  return _.map(arr, (item, index: number) => {
-    if (_.some(item, (value1) => _.isUndefined(value1) || _.isNull(value1))) {
-      return {
-        ...arr[index - 1],
-        ..._.pickBy(item, (value2) => !_.isUndefined(value2) && !_.isNull(value2)),
-      };
-    }
-    return item;
-  });
-}
-
-const ExcelArrayToObject = (roa, sheetName) => {
-  const result = {};
-  result[sheetName] = [];
-  const header: any = _.first(roa);
-  roa = roa.slice(1);
-  _.forEach(roa, (arr) => {
-    const item = {};
-    _.forEach(arr, (field, index) => {
-      item[header[index]] = field;
-    });
-
-    result[sheetName].push(item);
-  });
-  return result;
-};
-
-function toJson(workbook) {
-  try {
-    let result = {};
-    workbook.SheetNames.forEach((sheetName) => {
-      const roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
-        header: 1,
-        blankrows: false,
-      });
-
-      if (roa.length) {
-        result = ExcelArrayToObject(roa, sheetName);
-      }
-    });
-    _.forEach(result, (sheetData, name) => {
-      result[name] = UnMergedCell(sheetData);
-    });
-    return result;
-  } catch (e) {
-    console.log(e, ': src/common/utils.js:433');
-  }
-}
-
-function processExcel(data) {
-  const workbook = XLSX.read(data, {
-    type: 'binary',
-  });
-
-  // const firstSheet = workbook.SheetNames[0];
-  return toJson(workbook);
-}
-
-function importFileCsv(file, callback) {
-  if (file) {
-    const r = new FileReader();
-    r.onload = (e: any) => {
-      callback(processExcel(e.target.result));
-    };
-    r.readAsBinaryString(file);
-  } else {
-    console.log('Failed to load file');
-  }
-}
-
-function upperCaseFirst(input) {
-  return _.upperFirst(input);
-}
-
-const convertFieldsDescription = (fieldsDescription) => {
-  const cloneFs = _.cloneDeep(fieldsDescription);
-  _.forEach(Object.keys(fieldsDescription), (value, key) => {
-    cloneFs[value] = _.get(fieldsDescription, [value, 'value'], {});
-  });
-
-  return cloneFs;
-};
-
-const revertFieldsDescription = (fieldsDescription) => {
-  const cloneFs = _.cloneDeep(fieldsDescription);
-  _.forEach(Object.keys(fieldsDescription || {}), (value, key) => {
-    cloneFs[value]['value'] = fieldsDescription[value];
-  });
-
-  return cloneFs;
-};
-
-const wrapBodyRequest = (params) => {
-  return {
-    ...params,
-    pubkey: getSessionJSON()?.pubkey,
-  };
-};
-
-/**
- * Revert field description to old version
- * @param q
- */
-const revertQuestion = (q) => {
-  _.forEach(Object.keys(q.list_question), (value) => {
-    q.list_question[value].fields_description = revertFieldsDescription(q.list_question[value].fields_description);
-  });
-
-  return q;
-};
-
-const revertListTemplateQuestion = (listTemplateQuestion) => {
-  _.forEach(listTemplateQuestion, (q) => {
-    revertTemplateQuestion(q);
-  });
-};
-
-const revertTemplateQuestion = (q) => {
-  q.fields_description = revertFieldsDescription(q.fields_description);
-
-  return q;
-};
 
 const getDp = (num) => {
   const cloneNum = new BigNumber(num).toFixed();
@@ -265,27 +115,21 @@ const dumpRequest = ({ file, onSuccess }, callback) => {
   onSuccess('ok');
 };
 
+const baseUrlImage = (img) => {
+  return `http://192.168.0.104:8089/raw/${img}`
+}
+
 export default {
+  baseUrlImage,
   formatTimeFromUnix,
-  getStatusQuestionPost,
   formatCurrency,
   showNotification,
   getSession,
   getSessionJSON,
-  importFileCsv,
   isNumeric,
   trimDot,
-  upperCaseFirst,
-  convertFieldsDescription,
-  revertFieldsDescription,
   getDp,
   formatCurrencyWithDecimal,
-  UnMergedCell,
-  ExcelArrayToObject,
-  wrapBodyRequest,
-  revertQuestion,
-  revertTemplateQuestion,
-  revertListTemplateQuestion,
   isImage,
   isVideo,
   imageSizeRequired,

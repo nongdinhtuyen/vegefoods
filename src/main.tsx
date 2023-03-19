@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './bootstrap';
 import App from './App';
 import './index.css';
+import './bootstrap';
+import './styles/style.css';
 import { Provider } from 'react-redux';
 import store from 'redux/store';
 import { BrowserRouter } from 'react-router-dom';

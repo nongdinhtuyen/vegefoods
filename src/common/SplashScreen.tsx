@@ -7,6 +7,7 @@ type Props = {
 };
 
 export default function SplashScreen({ children }: Props) {
-  const { inited } = useSelector((state: any) => state.initReducer);
+  // const { inited } = useSelector((state: any) => state.initReducer);
+  const inited = true;
   return inited ? <>{children}</> : <LoadingInit />;
 }

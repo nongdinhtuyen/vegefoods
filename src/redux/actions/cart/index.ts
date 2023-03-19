@@ -11,7 +11,7 @@ export const CREATE_ORDER_SUCCEED = 'CREATE_ORDER_SUCCEED';
 export const CREATE_ORDER_FAILED = 'CREATE_ORDER_FAILED';
 
 export default {
-    onFetchCart: (data,callback) => ({
+    onFetchCart: (data?,callback?) => ({
       type: FETCH_CART,
       data,
       callback,

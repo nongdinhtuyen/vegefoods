@@ -2,14 +2,14 @@ import {useEffect} from 'react';
 import { Breadcrumb } from "../../components";
 import { Form, Input, Button } from 'antd';
 import {connect} from 'react-redux';
-import {useHistory} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 import actions from '../../redux/actions/cart';
 
 function Checkout(props) {
 
     const [form] = Form.useForm();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(()=> {
         if (props.cart.length === 0) {
@@ -19,12 +19,12 @@ function Checkout(props) {
 
     useEffect(()=> {
         if (props.cart.length === 0) {
-            history.push("/")
+            navigate("/")
         }
     },[props.cart])
 
     const onFinish = (values) => {
-        let detail = props.cart.map((item) => ({product_id:item.id, quantity: item.quantity}));
+        const detail = props.cart.map((item) => ({product_id:item.id, quantity: item.quantity}));
         values.detail = detail;
         props.onCreateOrder(values);
       };
@@ -41,7 +41,7 @@ function Checkout(props) {
                             labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}
                             >
                                 <h3 className="mb-4 billing-heading">Billing Details</h3>
-                                <Form.Item 
+                                <Form.Item
                                 label='Full name'
                                 name="name"
                                 rules={[{ required: true, message: 'Please input your name!' }]}
@@ -63,9 +63,9 @@ function Checkout(props) {
                                     <Input/>
                                 </Form.Item>
                                 <div style={{width:'100%'}}>
-                                <div 
+                                <div
                                 className="btn btn-primary py-3 px-4"
-                                style={{    
+                                style={{
                                     margin:' 0px auto',
                                     width: '30%',
                                     display: 'block'

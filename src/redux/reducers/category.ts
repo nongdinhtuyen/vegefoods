@@ -5,7 +5,7 @@ import {
 
 export default (
   state = {
-    category:[],
+    listCategory:[],
   },
   action,
 ) => {
@@ -13,7 +13,7 @@ export default (
     case FETCH_CATEGORY_SUCCEED:{
         return  {
             ...state,
-            category: action.data,
+            listCategory: action.data,
         }
     }
     default:
