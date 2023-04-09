@@ -8244,22 +8244,6 @@
    background: transparent;
    padding: 0 15px; }
 
- .product-details button, .product-details .form-control {
-   height: 40px !important;
-   text-align: center;
-   border: 1px solid rgba(0, 0, 0, 0.1) !important;
-   color: #82ae46;
-   padding: 10px 20px;
-   background: transparent !important;
-   -webkit-border-radius: 0;
-   -moz-border-radius: 0;
-   -ms-border-radius: 0;
-   border-radius: 0;
-   font-size: 14px; }
-   .product-details button:hover, .product-details button:focus, .product-details .form-control:hover, .product-details .form-control:focus {
-     text-decoration: none;
-     outline: none; }
-
  .product-details .form-group {
    position: relative; }
    .product-details .form-group .form-control {
@@ -8702,7 +8686,7 @@
  .heading-section {
    position: relative; }
    .heading-section .subheading {
-     font-size: 18px;
+     font-size: 24px;
      display: block;
      margin-bottom: 10px;
      font-family: "Lora", Georgia, serif;

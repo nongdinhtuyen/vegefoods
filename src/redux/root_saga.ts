@@ -3,14 +3,15 @@ import watchCategory from './sagas/category_saga';
 import watchProduct from './sagas/product_saga';
 import watchUser from './sagas/user_saga';
 import watchCart from './sagas/cart_saga';
-import watchStatistic from './sagas/statistic_saga';
+import watchInit from './sagas/init_saga';
 
 function* rootSaga() {
   yield all([
+    watchInit(),
     // watchCategory(),
     watchProduct(),
     watchUser(),
-    // watchCart(),
+    watchCart(),
     // watchStatistic(),
   ]);
 }

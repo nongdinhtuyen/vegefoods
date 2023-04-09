@@ -14,11 +14,20 @@ class ProductRequest extends BaseRequest {
   }
 
   getProductById(params) {
-    console.log("🚀 ~ file: ProductRequest.ts:17 ~ ProductRequest ~ getProductById ~ params:", params)
     const url = `${prefix}/${params}`;
     return this.get(url);
   }
 
+  getListComments(params) {
+    const url = `${prefix}/${params.id}/comment`;
+    return this.get(url, params);
+  }
+
+  addComment(params) {
+    const url = `${prefix}/${params.id}/comment`;
+    delete params.id
+    return this.post(url, params);
+  }
 }
 
 export default ProductRequest;

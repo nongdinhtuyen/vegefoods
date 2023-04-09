@@ -15,5 +15,6 @@ export const openNotification = ({ description = 'description', type = 'info' }:
   notification[type]({
     message: '',
     description,
+    className: 'custom_open_notify',
   });
 };

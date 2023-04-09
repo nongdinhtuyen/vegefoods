@@ -9,6 +9,7 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import utils from 'common/utils';
+import { Pagination } from 'antd';
 type ProductType = {
   productType?: number;
 };
@@ -22,21 +23,28 @@ export default function Shop(props) {
   const [_products, setProducts] = useImmer({
     total: 0,
     current: 1,
-    data: [],
+    data: {
+      products: [],
+      salePrices: {},
+    },
   });
-  const [_productTypes, setProductTypes] = useImmer<any>({
+  const [_productTypes, setProductTypes] = useImmer({
     total: 0,
     current: 1,
-    data: [],
+    data: {},
   });
   const [_selectType, setSelectType] = useState(0);
   const dispatch = useDispatch();
 
   const getListProducts = ({ current = 1, productType = 0 }: ListProductType = {}) => {
+    setProducts((draft) => {
+      draft.current = current;
+    });
     dispatch(
       productActions.actionGetProducts({
         params: {
           current,
+          count: 8,
           productType,
         },
         callbacks: {
@@ -69,77 +77,76 @@ export default function Shop(props) {
   useEffect(() => {
     getListProducts();
     getProductTypes();
-    // item.fetchProduct({ current: 1 });
   }, []);
 
-  // const onPageChange = (page, size) => {
-  //   if (_category === null) {
-  //     item.fetchProducts({ page: page, size: 12 });
-  //   } else {
-  //     item.fetchProducts({ page: page, size: 12, cateid: _category });
-  //   }
-  // };
-
-  const onCategoryChange = (id) => {
-    // setCategory(id || null);
+  const handleChange = (page) => {
+    getListProducts({ current: page, productType: _selectType });
   };
 
   const changeTypes = (index) => {
     setSelectType(index);
-    getListProducts({ productType: index });
+    getListProducts({ productType: index, current: 1 });
   };
 
   return (
     <>
       <Breadcrumb />
-      <section className='ftco-section'>
-        <div className='container'>
-          <div className='flex items-center justify-center'>
-            {_.map(_productTypes.data, (item: any, index: number) => (
-              <div
-                key={index}
-                onClick={() => {
-                  changeTypes(index);
-                }}
-                className={classNames(
-                  'text-base py-2 px-5 rounded-md cursor-pointer',
-                  _selectType === index ? ['bg-primary', 'text-white'] : 'text-primary',
-                )}
-              >
-                {item.name}
-              </div>
-            ))}
-          </div>
-          <div className='flex flex-wrap'>
-            {_.map(_products.data, (item: any, index) => (
-              <div className='col-md-6 col-lg-3'>
-                <div className='block w-full '>
-                  <Link to={`/product/${item.id}`} className='block overflow-hidden'>
-                    {/* <img className='img-fluid' src={utils.baseUrlImage(item.img)} alt={item.img} /> */}
-                    <img className='h-auto max-w-full hover:scale-110 transition duration-300' src={utils.baseUrlImage(item.img)} alt={item.img} />
-                    {/* <div className='overlay'></div> */}
-                  </Link>
-                  <div className='text py-3 pb-4 px-3 text-center'>
-                    <div className="text-2xl">
-                      <Link to={`/product/${item.id}`}>{item.name}</Link>
-                    </div>
-                    <div className='d-flex'>
-                      <div className='pricing'>
-                        <p className='price'>
-                          <span>{item.price.toFixed(2)} VNĐ</span>
-                        </p>
-                      </div>
+      <div className='container my-12'>
+        <div className='flex items-center justify-center'>
+          {_.map(_productTypes.data, (item: any, index: number) => (
+            <div
+              key={index}
+              onClick={() => {
+                changeTypes(index);
+              }}
+              className={classNames(
+                'text-base py-2 px-5 rounded-md cursor-pointer',
+                _selectType === index ? ['bg-primary', 'text-white'] : 'text-primary',
+              )}
+            >
+              {item.name}
+            </div>
+          ))}
+        </div>
+        <div className='flex flex-wrap'>
+          {_.map(_products.data?.products, (item: any) => (
+            <div className='col-md-6 col-lg-3'>
+              <div className='block w-full '>
+                <Link to={`/product/${item.id}`} className='block overflow-hidden'>
+                  <img
+                    height={260}
+                    className='max-w-full hover:scale-110 transition duration-300 object-contain'
+                    src={utils.baseUrlImage(item.img)}
+                    alt={item.img}
+                  />
+                </Link>
+                <div className='text py-3 pb-4 px-3 text-center'>
+                  <div className='text-2xl'>
+                    <Link to={`/product/${item.id}`}>{item.name}</Link>
+                  </div>
+                  <div className='d-flex'>
+                    <div className='pricing'>
+                      <p className='price'>
+                        <span>{item.price.toFixed(2)} VNĐ</span>
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-          {/* <Categories categories={_products.data} onCategoryChange={onCategoryChange} /> */}
-          {/* <Products products={_products.data} /> */}
-          {/* <CustomPagination total={total_count} onPageChange={onPageChange} /> */}
+            </div>
+          ))}
         </div>
-      </section>
+        <div className='text-center'>
+          <Pagination
+            onChange={handleChange}
+            showSizeChanger={false}
+            current={_products.current}
+            pageSize={8}
+            total={_products.total}
+            hideOnSinglePage={true}
+          />
+        </div>
+      </div>
     </>
   );
 }

@@ -1,9 +1,25 @@
-import axios from 'axios';
+import axios, { AxiosInstance, ParamsSerializerOptions } from 'axios';
+import { parse, stringify, ParsedQs, IStringifyOptions } from 'qs';
+import 'dayjs/locale/vi' // import locale
+import dayjs from 'dayjs';
 
-export const BASEURL = 'http://192.168.0.104:4869/v1/orderfood';
+
+dayjs.locale('vi') // use locale
+
+export const BASEURL = 'http://192.168.68.106:4869/v1/orderfood';
 // export const BASEURL = 'http://localhost:4869/v1/orderfood';
 
 window.axios = axios.create({
   baseURL: BASEURL,
-  headers: { token: localStorage.getItem('token') },
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  paramsSerializer: {
+    encode: (param: string): ParsedQs => parse(param),
+    serialize: (
+      params: Record<string, any>,
+      options?: ParamsSerializerOptions | IStringifyOptions | any,
+    ): string => stringify(params, options),
+    indexes: false, // array indexes format (null - no brackets, false (default) - empty brackets, true - brackets with indexes)
+  },
 });

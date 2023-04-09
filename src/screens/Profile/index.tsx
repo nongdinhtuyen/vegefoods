@@ -6,13 +6,14 @@ import { AiOutlinePaperClip } from 'react-icons/ai';
 import { BiUserCircle } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import actions from 'redux/actions/user';
+import { useAppSelector } from 'redux/store';
 
 const MALE = 0,
   FEMALE = 1,
   OTHER = 2;
 
 export default function Profile() {
-  const { profile } = useSelector((state: IStateReducers) => state.userReducer);
+  const { profile } = useAppSelector((state) => state.userReducer);
   const [_open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const [_form] = Form.useForm();

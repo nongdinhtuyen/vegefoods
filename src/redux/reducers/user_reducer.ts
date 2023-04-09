@@ -1,4 +1,4 @@
-import { createReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createReducer } from '@reduxjs/toolkit';
 import actions from 'redux/actions/user';
 import { createActionTypeOnSuccess } from 'redux/redux_helper';
 

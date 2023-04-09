@@ -14,7 +14,10 @@ module.exports = {
       },
       width: {
         modal: 448
-      }
+      },
+      maxWidth: {
+        container: 1140,
+      },
     },
   },
   plugins: [],

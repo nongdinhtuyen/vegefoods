@@ -1,125 +1,74 @@
 import { useState, useEffect } from 'react';
-import {Link} from 'react-router-dom';
-import { Table } from 'antd';
-import {CloseOutlined} from '@ant-design/icons';
-import {connect} from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Col, Divider, Empty, Image, Row, Table } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { Breadcrumb } from '../../components';
 import actions from '../../redux/actions/cart';
+import { useAppSelector } from 'redux/store';
+import _ from 'lodash';
+import utils from 'common/utils';
 
-const Hover = styled.div`
-    &:hover {
-        cursor:pointer;
-    }
-`
+export default function Cart() {
+  const { cartData } = useAppSelector((state) => state.cartReducer);
 
-function Cart(props) {
-    const deteleCart = (index) => {
-        props.onDeleteCart({pid: index});
-    }
-
-    const columns = [
-        {
-            render: (text,record) => (<Hover onClick={() => {deteleCart(record.id)}}><CloseOutlined /></Hover>),
-        },
-        {
-            dataIndex: 'image',
-            key: 'img',
-            render: (text) => (<div className="img" style={{ backgroundImage: `url(${require('images/product-4.jpg')})` }} />),
-        },
-        {
-            title: 'Product name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Price',
-            dataIndex: 'price',
-            key: 'price',
-            render: (text) => (<div>${`${text}`}</div>)
-        },
-        {
-            title: 'Quantity',
-            dataIndex: 'quantity',
-            key: 'quantity',
-        },
-        {
-            title: 'Total',
-            render: (text,record) => (<div>${`${record.price * record.quantity}`}</div>)
-        }
-    ];
-
-    useEffect(
-        props.onFetchCart
-        ,[])
-
-
-
-    return (
-        <>
-            <Breadcrumb navi='Cart' name='My cart'/>
-            {
-                props.cart.length !== 0
-                    ?
-                    <section className="ftco-section ftco-cart">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-12  ">
-                                    <div>
-                                        <Table columns={columns} dataSource={[...props.cart]} pagination={false}/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row justify-content-end">
-                                <div className="col-lg-4 mt-5 cart-wrap  ">
-                                    <div className="cart-total mb-3">
-                                        <h3>Cart Totals</h3>
-                                        <p className="d-flex">
-                                            <span>Subtotal</span>
-                                            <span>${props.cart.reduce((sum,value) => (sum +value.price*value.quantity),0).toFixed(2)}</span>
-                                        </p>
-                                        <p className="d-flex">
-                                            <span>Delivery</span>
-                                            <span>$0.00</span>
-                                        </p>
-                                        <p className="d-flex total-price">
-                                            <span>Total</span>
-                                            <span>${props.cart.reduce((sum,value) => (sum +value.price*value.quantity),0).toFixed(2)}</span>
-                                        </p>
-                                    </div>
-                                    <p><Link to="/checkout" className="btn btn-primary py-3 px-4">Proceed to Checkout</Link></p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    :
-                    <div>
-                        <div className="col-md-12 text-center cart-empty">
-                            <div>Your cart is empty, Keep shopping</div>
-                            <p><Link to="/shop" className="btn btn-primary">Back to Shop</Link></p>
-                        </div>
-                    </div>
-            }
-        </>
-    );
+  return (
+    <div className='bg-[#F2F2F2]'>
+      <Breadcrumb navi='Cart' name='My cart' />
+      {!_.isEmpty(cartData.data?.items) ? (
+        <div className='container py-20 !max-w-4xl'>
+          {_.map(cartData.data.items, (item) => (
+            <div className='bg-white rounded-md py-2 px-5 mt-3'>
+              <div className='flex items-center gap-x-6'>
+                <Image height={110} className='object-contain' src={utils.baseUrlImage(item.productList.img)} />
+                <div className='flex flex-1 flex-wrap gap-y-1 text-base'>
+                  <div className='w-1/2 font-bold'>Đơn vị</div>
+                  <div className='w-1/2 text-right'>Giá bán: {item.price} VNĐ</div>
+                  <div className='w-1/2'>Đơn vị tính: {item.productList.unit}</div>
+                  <div className='w-1/2 text-right'>x {item.quantity}</div>
+                </div>
+              </div>
+              <Divider className='m-0' />
+              <div className='py-2 text-right text-lg'>
+                Tổng tiền: <span className='font-bold text-primary'>{item.price * item.quantity}</span> VNĐ
+              </div>
+            </div>
+          ))}
+          {/* <div className='row justify-content-end'>
+              <div className='col-lg-4 mt-5 cart-wrap  '>
+                <div className='cart-total mb-3'>
+                  <h3>Cart Totals</h3>
+                  <p className='d-flex'>
+                    <span>Subtotal</span>
+                    <span>${props.cart.reduce((sum, value) => sum + value.price * value.quantity, 0).toFixed(2)}</span>
+                  </p>
+                  <p className='d-flex'>
+                    <span>Delivery</span>
+                    <span>$0.00</span>
+                  </p>
+                  <p className='d-flex total-price'>
+                    <span>Total</span>
+                    <span>${props.cart.reduce((sum, value) => sum + value.price * value.quantity, 0).toFixed(2)}</span>
+                  </p>
+                </div>
+                <p>
+                  <Link to='/checkout' className='btn btn-primary py-3 px-4'>
+                    Proceed to Checkout
+                  </Link>
+                </p>
+              </div>
+            </div> */}
+        </div>
+      ) : (
+        <div className='col-md-12 text-center cart-empty'>
+          <Empty description='Giỏ hàng của bạn đang trống, hãy tiếp tục mua sắm' />
+          <Link to='/shop' className='btn btn-primary'>
+            Quay lại danh sách hàng hóa
+          </Link>
+        </div>
+      )}
+    </div>
+  );
 }
-
-const mapStateToProps = (state) => {
-    return {
-        cart: state.cart.cart,
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return{
-        onFetchCart: () => {
-            dispatch(actions.onFetchCart())
-        },
-        onDeleteCart: (data) => {
-            dispatch(actions.onDeleteCart(data))
-        }
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(Cart);

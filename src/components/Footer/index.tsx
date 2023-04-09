@@ -1,97 +1,90 @@
+'use client';
 
-function Footer(props) {
+import { Button, Col, Input, Row, Space } from 'antd';
+import React from 'react';
+import { BsTelephoneFill } from 'react-icons/bs';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+import { IoChevronUpOutline } from 'react-icons/io5';
+import { SiGmail } from 'react-icons/si';
 
-  const scrollToTop = () => {
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth' });
-  }
-    return (
+export default function Footer() {
+  const scrollUp = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
 
-        <>
-            <section className="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
-                <div className="container py-4">
-                    ie<div className="row d-flex justify-content-center py-5">
-                        <div className="col-md-6">
-                            <h2 style={{ fontSize: '22px' }} className="mb-0">Subcribe to our Newsletter</h2>
-                            <span>Get e-mail updates about our latest shops and special offers</span>
-                        </div>
-                        <div className="col-md-6 d-flex align-items-center">
-                            <form action="#" className="subscribe-form">
-                                <div className="form-group d-flex">
-                                    <input type="text" className="form-control" placeholder="Enter email address" />
-                                    <input type="submit" value="Subscribe" className="submit px-3" />
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+  return (
+    <footer>
+      <div className='bg-[#f7f6f2] py-24 relative'>
+        <div className='container max-w-container m-auto flex items-center'>
+          <div className='flex-1'>
+            <div className='mb-0 text-2xl'>Subcribe to our Newsletter</div>
+            <span className=' text-gray-600 text-sm'>Get e-mail updates about our latest shops and special offers</span>
+          </div>
+          <Space.Compact className='flex-1 h-12'>
+            <Input className='w-full' />
+            <Button type='primary' className='text-base !h-full !shadow-none'>
+              Đăng ký
+            </Button>
+          </Space.Compact>
+        </div>
+        <div className='back-to-top'>
+          <div className='mouse-icon'>
+            <div className='mouse-wheel'>
+              <IoChevronUpOutline className='h-full text-white text-2xl' onClick={scrollUp} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='pt-20 pb-40'>
+        <div className='container flex max-w-container m-auto'>
+          <Row gutter={[20, 20]}>
+            <Col xs={24} md={12} xl={6} className='pl-4 pr-6'>
+              <div className='text-xl mb-5 font-bold'>Vegefoods</div>
+              <div className='text-sm leading-7'>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</div>
+            </Col>
+            <Col xs={0} md={1} xl={1} />
+            <Col xs={23} md={11} xl={5}>
+              <div className='text-xl mb-5 font-bold'>Menu</div>
+              <Space direction='vertical' size='large'>
+                <a>Shop</a>
+                <a>About</a>
+                <a>Journal</a>
+                <a>Contact Us</a>
+              </Space>
+            </Col>
+            <Col xs={0} md={1} xl={1} />
+            <Col xs={23} md={11} xl={5}>
+              <div className='text-xl mb-5 font-bold'>Help</div>
+              <Space direction='vertical' size='large'>
+                <a>Shipping Information</a>
+                <a>Returns & Exchange</a>
+                <a>Terms & Conditions</a>
+                <a>Privacy Policy</a>
+              </Space>
+            </Col>
+            <Col xs={0} md={1} xl={1} />
+            <Col xs={23} md={11} xl={5}>
+              <div className='text-xl mb-5 font-bold'>Have a Questions?</div>
+              <Space direction='vertical' size='large'>
+                <div className='flex items-center gap-x-2'>
+                  <FaMapMarkerAlt /> 141 Đường Phú Mỹ, Từ Liêm, Hà Nội
                 </div>
-            </section>
-
-            <footer className="ftco-footer ftco-section">
-                <div className="container">
-                    <div className="row">
-                        <div className="mouse">
-                            <div onClick={scrollToTop} className="mouse-icon">
-                                <div className="mouse-wheel"><span className="ion-ios-arrow-up"></span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row mb-5">
-                        <div className="col-md">
-                            <div className="ftco-footer-widget mb-4">
-                                <h2 className="ftco-heading-2">Vegefoods</h2>
-                                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p>
-                                <ul className="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-                                    <li><a href="#"><span className="icon-twitter"></span></a></li>
-                                    <li><a href="#"><span className="icon-facebook"></span></a></li>
-                                    <li><a href="#"><span className="icon-instagram"></span></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className="col-md">
-                            <div className="ftco-footer-widget mb-4 ml-md-5">
-                                <h2 className="ftco-heading-2">Menu</h2>
-                                <ul className="list-unstyled">
-                                    <li><a href="#" className="py-2 d-block">Shop</a></li>
-                                    <li><a href="#" className="py-2 d-block">About</a></li>
-                                    <li><a href="#" className="py-2 d-block">Journal</a></li>
-                                    <li><a href="#" className="py-2 d-block">Contact Us</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className="col-md-4">
-                            <div className="ftco-footer-widget mb-4">
-                                <h2 className="ftco-heading-2">Help</h2>
-                                <div className="d-flex">
-                                    <ul className="list-unstyled mr-l-5 pr-l-3 mr-4">
-                                        <li><a href="#" className="py-2 d-block">Shipping Information</a></li>
-                                        <li><a href="#" className="py-2 d-block">Returns &amp; Exchange</a></li>
-                                        <li><a href="#" className="py-2 d-block">Terms &amp; Conditions</a></li>
-                                        <li><a href="#" className="py-2 d-block">Privacy Policy</a></li>
-                                    </ul>
-                                    <ul className="list-unstyled">
-                                        <li><a href="#" className="py-2 d-block">FAQs</a></li>
-                                        <li><a href="#" className="py-2 d-block">Contact</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md">
-                            <div className="ftco-footer-widget mb-4">
-                                <h2 className="ftco-heading-2">Have a Questions?</h2>
-                                <div className="block-23 mb-3">
-                                    <ul>
-                                        <li><span className="icon icon-map-marker"></span><span className="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-                                        <li><a href="#"><span className="icon icon-phone"></span><span className="text">+2 392 3929 210</span></a></li>
-                                        <li><a href="#"><span className="icon icon-envelope"></span><span className="text">info@yourdomain.com</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div className='flex items-center gap-x-2'>
+                  <BsTelephoneFill />
+                  +2 392 3929 210
                 </div>
-            </footer>
-        </>
-    );
+                <div className='flex items-center gap-x-2'>
+                  <SiGmail />
+                  Test@gmail.com
+                </div>
+              </Space>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </footer>
+  );
 }
-
-export default Footer;

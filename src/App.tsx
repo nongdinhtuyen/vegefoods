@@ -9,6 +9,7 @@ import { Header, Footer } from './components';
 import { Home, Shop, Product, Cart, Checkout, Login, Signup, OrderHistory } from './screens';
 import { ConfigProvider } from 'antd';
 import Profile from 'screens/Profile';
+import viVN from 'antd/lib/locale/vi_VN';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           colorPrimary: '#82ae46',
         },
       }}
+      locale={viVN}
     >
       <SplashScreen>
         <Header />
