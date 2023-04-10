@@ -6,15 +6,20 @@ import _ from 'lodash';
 
 export interface ICartState {
   cartData: any;
+  cartDataTotal: any;
 }
 
 const initialState: ICartState = {
-  cartData: [],
+  cartData: {},
+  cartDataTotal: {},
 };
 
 const cartReducer = createReducer(initialState, (builder) => {
   builder.addCase(createActionTypeOnSuccess(actions.actionGetCart), (state, { payload }: any) => {
-    state.cartData = payload;
+    state.cartData = payload.data;
+  });
+  builder.addCase(createActionTypeOnSuccess(actions.actionGetCartTotal), (state, { payload }: any) => {
+    state.cartDataTotal = payload.data;
   });
 });
 export default cartReducer;

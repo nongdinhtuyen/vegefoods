@@ -90,7 +90,7 @@ export default function Shop(props) {
 
   return (
     <>
-      <Breadcrumb />
+      <Breadcrumb name="shop"/>
       <div className='container my-12'>
         <div className='flex items-center justify-center'>
           {_.map(_productTypes.data, (item: any, index: number) => (

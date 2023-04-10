@@ -6,8 +6,9 @@ import dayjs from 'dayjs';
 
 dayjs.locale('vi') // use locale
 
-export const BASEURL = 'http://192.168.68.106:4869/v1/orderfood';
+// export const BASEURL = 'http://192.168.68.106:4869/v1/orderfood';
 // export const BASEURL = 'http://localhost:4869/v1/orderfood';
+export const BASEURL = 'http://192.168.68.101:4869/v1/orderfood';
 
 window.axios = axios.create({
   baseURL: BASEURL,

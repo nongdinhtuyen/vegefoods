@@ -1,4 +1,6 @@
 import { openNotification } from 'common/Notify';
+import { LOGOUT } from 'redux/actions/user';
+import store from 'redux/store';
 
 class BaseRequest {
   async get(url, params = {}) {
@@ -53,6 +55,9 @@ class BaseRequest {
       openNotification({
         description: 'Không có quyền',
         type: 'error',
+      });
+      store.dispatch({
+        type: LOGOUT,
       });
     }
     throw err;

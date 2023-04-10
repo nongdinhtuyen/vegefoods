@@ -4,11 +4,13 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import actions from '../../redux/actions/user';
 import { Avatar, Badge, Dropdown, Image, Menu, Popover } from 'antd';
 import _ from 'lodash';
-import { AiOutlineShoppingCart } from 'react-icons/ai';
 import type { MenuProps } from 'antd';
 import { BiUserCircle } from 'react-icons/bi';
 import classNames from 'classnames';
 import { FaPhoneAlt, FaShoppingCart } from 'react-icons/fa';
+import { AiOutlineUnorderedList } from 'react-icons/ai';
+import { IoReceiptOutline } from 'react-icons/io5';
+import { MdLogout } from 'react-icons/md';
 import { useAppSelector } from 'redux/store';
 
 export default function Header(props) {
@@ -16,6 +18,7 @@ export default function Header(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLogin, profile } = useAppSelector((state) => state.userReducer);
+  const { cartDataTotal } = useAppSelector((state) => state.cartReducer);
 
   const dropdownHandle = () => {
     if (dropdown !== '') {
@@ -29,14 +32,26 @@ export default function Header(props) {
     dispatch(actions.actionLogout({}));
   };
 
-  const dropdownMenu: MenuProps['items'] = [
+  const items: MenuProps['items'] = [
     {
       key: '1',
-      label: (
-        <div onClick={logout} className='cursor-pointer'>
-          Đăng xuất
-        </div>
-      ),
+      icon: <BiUserCircle size={18} />,
+      label: <Link to='/profile'>Thông tin cá nhân</Link>,
+    },
+    {
+      key: '2',
+      label: <Link to='/address'>Sổ địa chỉ</Link>,
+      icon: <AiOutlineUnorderedList size={18} />,
+    },
+    {
+      key: '3',
+      label: <Link to='/history'>Lịch sử thanh toán</Link>,
+      icon: <IoReceiptOutline />,
+    },
+    {
+      key: '4',
+      label: <div onClick={logout}>Đăng xuất</div>,
+      icon: <MdLogout />,
     },
   ];
 
@@ -69,13 +84,16 @@ export default function Header(props) {
             Shop
           </Link>
           <Link className='flex tracking-widest' to='/cart'>
-            <Badge size='small' count={5}>
+            <Badge size='small' count={cartDataTotal.totalItem}>
               <FaShoppingCart size={16} />
             </Badge>
           </Link>
           {isLogin ? (
             <div className='text-xs tracking-widest'>
-              Xin chào, <Link to='profile'>{profile.username}</Link>
+              Xin chào,{' '}
+              <Dropdown menu={{ items }} placement='bottomRight'>
+                <span className='text-primary cursor-pointer'>{profile.username}</span>
+              </Dropdown>
             </div>
           ) : (
             <Link to='/login' className='text-xs tracking-widest'>

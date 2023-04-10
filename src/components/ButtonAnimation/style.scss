@@ -9,6 +9,10 @@
     border: none;
     border-radius: var(--button_radius);
     background: var(--button_outline_color);
+    outline: none !important;
+    &:focus {
+      outline: none !important;
+    }
   }
 
   .button_top {
@@ -50,6 +54,7 @@
   button.learn-more {
     width: 12rem;
     height: auto;
+    outline: none;
   }
 
   button.learn-more .circle {

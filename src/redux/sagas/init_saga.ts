@@ -15,8 +15,11 @@ function* init() {
       window.axios.defaults.headers.common['apikey'] = token;
       yield saveMasterData(id);
     } catch (err) {
+      yield put(initActions.actionInitSuccedd({}));
       console.log('=======', err);
     }
+  } else {
+    yield put(initActions.actionInitSuccedd({}));
   }
 }
 
@@ -25,7 +28,7 @@ export function* saveMasterData(id) {
   yield put(createActionTypeOnSuccess(LOGIN)());
   yield put(createActionTypeOnSuccess(GET_USER_INFO)(resp));
   yield put(cartActions.actionGetCartTotal({}));
-  yield put(cartActions.actionGetCart({}));
+  // yield put(cartActions.actionGetCart({}));
   yield put(initActions.actionInitSuccedd({}));
 }
 

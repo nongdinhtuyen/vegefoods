@@ -12,6 +12,9 @@ module.exports = {
       colors: {
         primary: '#82ae46'
       },
+      borderColor: {
+        primary: '#82ae46'
+      },
       width: {
         modal: 448
       },

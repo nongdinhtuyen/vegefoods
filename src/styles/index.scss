@@ -1,4 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 * {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
   &::-webkit-scrollbar {
     width: 7px;
     height: 7px;
@@ -8,20 +13,29 @@
     background-color: #aaa9a9;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-
   }
 
   &::-webkit-scrollbar-track {
     background-color: #e6e6e6;
   }
+  font-family: 'Roboto', 'Arial', sans-serif;
+  font-weight: 400;
 }
 
 a {
   color: inherit;
   text-decoration: none;
   &:hover {
-    color: var(--root-primary)
+    color: var(--root-primary);
   }
+}
+
+button:focus {
+  outline: none !important;
+}
+
+.ant-btn > span {
+  display: inline-flex !important;
 }
 
 .header {
@@ -34,7 +48,7 @@ a {
   padding: 0.575rem 1rem;
   font-size: 1rem;
   text-align: center;
-  transition: opacity 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
   background-color: #82ae46;
   &:hover {
     color: #fff;
@@ -75,46 +89,46 @@ a {
       animation: 1.6s ease infinite wheel-up-down;
     }
   }
-}
 
-@-webkit-keyframes wheel-up-down {
-  100% {
-    margin-top: 2px;
-    opacity: 1;
+  @-webkit-keyframes wheel-up-down {
+    100% {
+      margin-top: 2px;
+      opacity: 1;
+    }
+    30% {
+      opacity: 1;
+    }
+    0% {
+      margin-top: 20px;
+      opacity: 0;
+    }
   }
-  30% {
-    opacity: 1;
-  }
-  0% {
-    margin-top: 20px;
-    opacity: 0;
-  }
-}
 
-@-moz-keyframes wheel-up-down {
-  100% {
-    margin-top: 2px;
-    opacity: 1;
+  @-moz-keyframes wheel-up-down {
+    100% {
+      margin-top: 2px;
+      opacity: 1;
+    }
+    30% {
+      opacity: 1;
+    }
+    0% {
+      margin-top: 20px;
+      opacity: 0;
+    }
   }
-  30% {
-    opacity: 1;
-  }
-  0% {
-    margin-top: 20px;
-    opacity: 0;
-  }
-}
 
-@keyframes wheel-up-down {
-  100% {
-    margin-top: 2px;
-    opacity: 1;
-  }
-  30% {
-    opacity: 1;
-  }
-  0% {
-    margin-top: 20px;
-    opacity: 0;
+  @keyframes wheel-up-down {
+    100% {
+      margin-top: 2px;
+      opacity: 1;
+    }
+    30% {
+      opacity: 1;
+    }
+    0% {
+      margin-top: 20px;
+      opacity: 0;
+    }
   }
 }

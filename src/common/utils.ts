@@ -21,6 +21,7 @@ const formatTimeFromUnix = (unixTime, format = 'DD/MM/YYYY', def = '--') => {
 
 const formatCurrencyWithDecimal = (currency, symbol = '--', precision = 8, decimal = 18) =>
   _.isNaN(currency) ? symbol : trimRightZeroAndDot(new BigNumber(currency).div(10 ** decimal).toFormat(precision));
+
 const formatCurrency = (currency, decimal = 8) => {
   if (!isNumeric(decimal)) {
     decimal = 8;
@@ -116,8 +117,8 @@ const dumpRequest = ({ file, onSuccess }, callback) => {
 };
 
 const baseUrlImage = (img) => {
-  // return `http://127.0.0.1:8089/raw/${img}`
-  return `http://192.168.68.106:8089/raw/${img}`
+  return `http://127.0.0.1:8089/raw/${img}`
+  // return `http://192.168.68.106:8089/raw/${img}`
 }
 
 export default {

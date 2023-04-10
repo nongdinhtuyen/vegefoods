@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { BiUserCircle } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import actions from 'redux/actions/user';
 import { useAppSelector } from 'redux/store';
 
@@ -71,7 +72,6 @@ export default function Profile() {
 
   return (
     <div className='py-10 bg-gray-100 border-b-gray-300 border-solid border-0 border-b-2'>
-      {/* Page header */}
       <div className='max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8'>
         <div className='flex items-center space-x-5'>
           <div className='flex-shrink-0'>
@@ -103,9 +103,10 @@ export default function Profile() {
           <section aria-labelledby='applicant-information-title'>
             <div className='bg-white shadow sm:rounded-lg'>
               <div className='flex justify-between items-center px-4 py-5 sm:px-6'>
-                <h2 id='applicant-information-title' className='text-lg leading-6 font-medium text-gray-900'>
+                <h2 id='applicant-information-title' className='flex-1 text-lg leading-6 font-medium text-gray-900'>
                   Thông tin cá nhân
                 </h2>
+                {/* <Link className='mr-4' to='/address'>Sổ địa chỉ</Link> */}
                 <Button type='primary' onClick={openUpdateProfile}>
                   Cập nhật
                 </Button>

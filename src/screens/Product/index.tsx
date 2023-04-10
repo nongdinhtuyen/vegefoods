@@ -22,7 +22,6 @@ export default function Product() {
   const [_rate, setRate] = useState(5);
   const dispatch = useDispatch();
   const { id }: any = useParams();
-  const navigate = useNavigate();
   const [_comments, setComments] = useImmer({
     data: [],
     current: 1,
@@ -48,6 +47,10 @@ export default function Product() {
     setRate(parseInt(value, 10));
   };
 
+  const getCart = () => {
+    dispatch(cartActions.actionGetCartTotal({}));
+  };
+
   const addCart = () => {
     dispatch(
       cartActions.actionAddCart({
@@ -61,7 +64,7 @@ export default function Product() {
               description: 'Thêm vào giỏ hàng thành công',
               type: 'success',
             });
-            // setProduct(data.product);
+            getCart();
           },
         },
       }),
@@ -82,7 +85,7 @@ export default function Product() {
         },
         callbacks: {
           onSuccess({ data, total }) {
-            console.log("🚀 ~ file: index.tsx:85 ~ onSuccess ~ total:", total)
+            console.log('🚀 ~ file: index.tsx:85 ~ onSuccess ~ total:', total);
             setComments((draft) => {
               draft.loading = false;
               draft.data = data;
