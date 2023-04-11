@@ -15,8 +15,8 @@ import { BsShieldCheck } from 'react-icons/bs';
 import { MdOutlineCancel } from 'react-icons/md';
 import { FiMapPin } from 'react-icons/all';
 import { FaShippingFast } from 'react-icons/fa';
-import { LoadingOutlined, SmileOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
+import consts from 'consts';
 
 const StepsWrapper = styled(Steps)`
   .ant-steps-item-tail {
@@ -64,10 +64,10 @@ export default function OrderHistoryDetail() {
       <div className='max-w-4xl m-auto py-3'>
         <div className='py-2 bg-white rounded-lg'>
           <div className='flex justify-between px-5 py-1 mb-2'>
-            <div className='text-primary flex items-center gap-x-2 text-xl font-bold'>
+            <span className='text-primary flex items-center gap-x-2 text-xl font-bold cursor-pointer' onClick={() => navigate(-1)}>
               <IoChevronBackSharp />
               Đơn hàng
-            </div>
+            </span>
           </div>
           <Divider className='my-2' />
           <div className='px-5 pt-2'>
@@ -109,13 +109,15 @@ export default function OrderHistoryDetail() {
             <div className='flex items-center gap-x-2 mb-3 text-base'>
               <FiMapPin className='text-primary' size={20} /> THÔNG TIN NGƯỜI NHẬN
             </div>
-            <div>{_receipt.data.receipt.addressList?.name}</div>
-            <div>{_receipt.data.receipt.addressList?.phone}</div>
-            <div>{_receipt.data.receipt.addressList?.address}</div>
+            <div className='ml-8'>
+              <div className='font-bold'>{_receipt.data.receipt.addressList?.name}</div>
+              <div>{_receipt.data.receipt.addressList?.phone}</div>
+              <div>{_receipt.data.receipt.addressList?.address}</div>
+            </div>
             <Divider className='my-4' />
             <div>{_receipt.data.saleReceiptList?.note}</div>
             {_.map(_receipt.data.inforeceipt, (item: any) => (
-              <div key={item.idProduct} className='rounded-md px-5 pt-3 bg-white mb-2'>
+              <div key={item.idProduct} className='rounded-md px-5  bg-white'>
                 <div className='flex items-center gap-x-6'>
                   <CustomImage height={110} className='object-contain' src={utils.baseUrlImage(item.productList.img)} />
                   <div className='flex flex-1 flex-wrap gap-y-1 text-base'>
@@ -126,12 +128,15 @@ export default function OrderHistoryDetail() {
                   </div>
                 </div>
                 <Divider className='m-0' />
-                <div className='py-2 text-right text-lg'>
-                  Tổng tiền: <span className='font-bold text-primary'>{utils.formatCurrency(item.price * item.quantity)}</span> VNĐ
-                </div>
-                <Divider className='m-0' />
               </div>
             ))}
+            <div className='py-2 text-right text-lg'>
+              Tổng tiền: <span className='font-bold text-primary'>{_receipt.data.receipt.totalAfterSale}</span> VNĐ
+            </div>
+            <Divider className='mb-2 mt-0' />
+            <div className='text-right'>
+              Hình thức thanh toán: {_receipt.data.receipt.typePayment === consts.TYPE_PAYMENT_ONLINE ? 'Thanh toán online' : 'Thanh toán khi nhận hàng'}
+            </div>
           </div>
         </div>
       </div>

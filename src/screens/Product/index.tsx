@@ -143,7 +143,7 @@ export default function Product() {
               <Rate value={_product.rateAVG} disabled />
             </div>
             <p className='price'>
-              <span>${_product.price}</span>
+              <span>{utils.formatCurrency(_product.price)} VNĐ</span>
             </p>
             <p>{_product.description}</p>
             <div className='flex items-center my-4 gap-x-4'>
@@ -168,7 +168,7 @@ export default function Product() {
 
       <div className='container'>
         <div className='col-md-12 heading-section text-center  '>
-          <span className='subheading text-2xl'>Comments</span>
+          <span className='subheading text-2xl'>Đánh giá</span>
         </div>
         <div className='text-xl font-bold flex items-center gap-x-2'>
           <span>Đánh giá sản phẩm</span>
@@ -178,7 +178,7 @@ export default function Product() {
           <Form.Item name='content'>
             <TextArea rows={4} placeholder='Viết đánh giá của bạn vào đây' />
           </Form.Item>
-          <Form.Item>
+          <Form.Item className="text-right">
             <Button htmlType='submit' type='primary'>
               Đánh giá
             </Button>

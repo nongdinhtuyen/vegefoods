@@ -127,7 +127,7 @@ export default function Shop(props) {
                   <div className='d-flex'>
                     <div className='pricing'>
                       <p className='price'>
-                        <span>{item.price.toFixed(2)} VNĐ</span>
+                        <span>{utils.formatCurrency(item.price)} VNĐ</span>
                       </p>
                     </div>
                   </div>

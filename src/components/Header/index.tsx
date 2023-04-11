@@ -81,7 +81,7 @@ export default function Header(props) {
 
         <div className='flex items-center gap-x-8'>
           <Link className='text-black text-xs tracking-widest' to='/shop'>
-            Shop
+            Cửa hàng
           </Link>
           <Link className='flex tracking-widest' to='/cart'>
             <Badge size='small' count={cartDataTotal.totalItem}>

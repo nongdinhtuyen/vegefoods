@@ -10,6 +10,8 @@ import _ from 'lodash';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
 import { useImmer } from 'use-immer';
+import Product from 'components/Product';
+import ProductComponent from 'components/Product';
 
 export default function OrderHistory() {
   const { cartData } = useAppSelector((state) => state.cartReducer);
@@ -52,7 +54,13 @@ export default function OrderHistory() {
                 Đơn hàng <span className='font-semibold'>{item.Preview.idSaleReceipt}</span> |{' '}
                 {utils.formatTimeFromUnix(item.Salereceipt.createAt, 'hh:mm:ss DD/MM/YYYY')}
               </div>
-              <div className='flex items-center gap-x-6'>
+              <ProductComponent
+                img={item.Preview.productList.img}
+                price={item.Preview.price}
+                unit={item.Preview.productList.unit}
+                quantity={item.Preview.quantity}
+              />
+              {/* <div className='flex items-center gap-x-6'>
                 <CustomImage height={110} className='object-contain' src={utils.baseUrlImage(item.Preview.productList.img)} />
                 <div className='flex flex-1 flex-wrap gap-y-1 text-base'>
                   <div className='w-1/2 font-bold'>Đơn vị</div>
@@ -60,14 +68,16 @@ export default function OrderHistory() {
                   <div className='w-1/2'>Đơn vị tính: {item.Preview.productList.unit}</div>
                   <div className='w-1/2 text-right'>x {item.Preview.quantity}</div>
                 </div>
-              </div>
+              </div> */}
               <Divider className='m-0' />
               <div className='py-2 text-right text-lg'>
                 Tổng tiền: <span className='font-bold text-primary'>{utils.formatCurrency(item.Preview.price * item.Preview.quantity)}</span> VNĐ
               </div>
               <Divider className='m-0' />
               <div className='py-3 text-right'>
-                <Button type='primary' onClick={() => navigate(`/history/${item.Preview.idSaleReceipt}`)}>Chi tiết</Button>
+                <Button type='primary' onClick={() => navigate(`/history/${item.Preview.idSaleReceipt}`)}>
+                  Chi tiết
+                </Button>
               </div>
             </div>
           ))

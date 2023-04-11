@@ -14,7 +14,7 @@ class ProductRequest extends BaseRequest {
   }
 
   createReceipt(params) {
-    const url = `${prefix}/`;
+    const url = `${prefix}`;
     return this.post(url, params);
   }
 }
