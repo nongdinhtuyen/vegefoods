@@ -12,7 +12,7 @@ export default function Receipt() {
   const [_pay, setPay] = useImmer({
     idReceiver: -1,
     note: '',
-    typePayment: 0,
+    typePayment: 1,
   });
 
   useEffect(() => {

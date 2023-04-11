@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, Col, Divider, Empty, Form, Image, Input, Row, Select, Table } from 'antd';
 import actions from '../../redux/actions/cart';
 import addressActions from '../../redux/actions/address';
-import { useAppDispatch } from 'redux/store';
+import { useAppDispatch, useAppSelector } from 'redux/store';
 import _ from 'lodash';
 import { ReceiptProps } from './receipt';
 
@@ -13,6 +13,7 @@ const layout = {
 };
 
 export default function Page1({ setPay }: ReceiptProps) {
+  const { cartData, cartDataTotal } = useAppSelector((state) => state.cartReducer);
   const [_form] = Form.useForm();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -39,6 +40,14 @@ export default function Page1({ setPay }: ReceiptProps) {
     );
   }, []);
 
+  useEffect(() => {
+    if (cartDataTotal.totalItem === 0) {
+      navigate('/shop', {
+        replace: true,
+      });
+    }
+  }, [cartDataTotal.totalItem]);
+
   const handleChangeAddress = (value, option) => {
     setPay((draft) => {
       draft.idReceiver = option.item.id;
@@ -50,28 +59,6 @@ export default function Page1({ setPay }: ReceiptProps) {
     });
   };
 
-  const select = (label) => (
-    <Select
-      onChange={handleChangeAddress}
-      optionLabelProp='name'
-      options={_.map(_address, (item: any, index: number) => ({
-        key: item.idCart,
-        value: item.idCart,
-        item,
-        name: item[label],
-        label: (
-          <div key={item.id} className='p-1 flex flex-col gap-y-1'>
-            <div>
-              {item.name} {index === 0 && <span className='border border-solid border-primary ml-2 rounded-lg px-2 py-1'>Mặc định</span>}
-            </div>
-            <div>{item.phone}</div>
-            <div>{item.address}</div>
-          </div>
-        ),
-      }))}
-    />
-  );
-
   return (
     <>
       <div className='max-w-4xl m-auto py-10'>
@@ -82,7 +69,25 @@ export default function Page1({ setPay }: ReceiptProps) {
           </div>
           <Form size='large' name='basic' labelAlign='left' {...layout} form={_form} className='m-auto' layout='horizontal'>
             <Form.Item name='name' label='Tên'>
-              {select('name')}
+              <Select
+                onSelect={handleChangeAddress}
+                optionLabelProp='name'
+                options={_.map(_address, (item: any, index: number) => ({
+                  key: item.id,
+                  value: item.id,
+                  item,
+                  name: item['name'],
+                  label: (
+                    <div key={item.id} className='p-1 flex flex-col gap-y-1'>
+                      <div>
+                        {item.name} {index === 0 && <span className='border border-solid border-primary ml-2 rounded-lg px-2 py-1'>Mặc định</span>}
+                      </div>
+                      <div>{item.phone}</div>
+                      <div>{item.address}</div>
+                    </div>
+                  ),
+                }))}
+              />
             </Form.Item>
             <Form.Item label='Số điện thoại' name='phone'>
               <Input readOnly />

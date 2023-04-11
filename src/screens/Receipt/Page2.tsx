@@ -17,7 +17,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Page2({ setPay, pay }: ReceiptProps) {
   const { cartData, cartDataTotal } = useAppSelector((state) => state.cartReducer);
-  console.log('🚀 ~ file: Page2.tsx:20 ~ Page2 ~ cartData:', cartData);
   const { isOpen, open, close } = useToggle();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -30,11 +29,6 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
   };
 
   const createReceipt = () => {
-    console.log({
-      idReceiver: pay?.idReceiver,
-      note: cartData.items.idCart,
-      typePayment: pay?.typePayment,
-    });
     dispatch(
       actions.actionCreateReceipt({
         params: {
@@ -43,8 +37,10 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
           typePayment: pay?.typePayment,
         },
         callbacks: {
-          onSuccess(data) {
+          onSuccess({data}) {
+            console.log("🚀 ~ file: Page2.tsx:41 ~ onSuccess ~ data:", data)
             dispatch(cartActions.actionGetCartTotal({}));
+            navigate(`/history/${data}`)
           },
         },
       }),
@@ -84,7 +80,14 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
               </div>
               {_.map(cartData.items, (item) => (
                 <div key={item.idProduct} className='rounded-md py-2 px-5 mt-3'>
-                  <ProductComponent img={item.productList.img} price={item.price} unit={item.productList.unit} quantity={item.quantity} />
+                  <ProductComponent
+                    img={item.productList.img}
+                    price={item.price}
+                    unit={item.productList.unit}
+                    quantity={item.quantity}
+                    name={item.productList.name}
+                    description={item.productList.description}
+                  />
                   {/* <div className='flex items-center gap-x-6'>
                     <CustomImage height={80} className='object-contain' src={utils.baseUrlImage(item.productList.img)} />
                     <div className='flex flex-1 flex-wrap gap-y-1 text-base'>

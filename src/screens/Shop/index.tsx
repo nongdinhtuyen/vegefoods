@@ -10,16 +10,13 @@ import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import utils from 'common/utils';
 import { Pagination } from 'antd';
-type ProductType = {
-  productType?: number;
-};
 
 type ListProductType = {
   current?: number;
   productType?: number;
 };
 
-export default function Shop(props) {
+export default function Shop() {
   const [_products, setProducts] = useImmer({
     total: 0,
     current: 1,

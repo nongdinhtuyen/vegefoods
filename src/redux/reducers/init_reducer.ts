@@ -12,7 +12,7 @@ const initialState: ICartState = {
 };
 
 const initReducer = createReducer(initialState, (builder) => {
-  builder.addCase(actions.actionInitSuccedd, (state, { payload }: any) => {
+  builder.addCase(actions.actionInitSucceed, (state, { payload }: any) => {
     state.inited = true;
   });
 });

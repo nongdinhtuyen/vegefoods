@@ -45,7 +45,7 @@ export default function Header(props) {
     },
     {
       key: '3',
-      label: <Link to='/history'>Lịch sử thanh toán</Link>,
+      label: <Link to='/history'>Lịch sử mua hàng</Link>,
       icon: <IoReceiptOutline />,
     },
     {

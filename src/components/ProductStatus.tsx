@@ -1,19 +1,25 @@
+import classNames from 'classnames';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
+import consts from 'consts';
 
 export default function ProductStatus({ status }) {
+  console.log("🚀 ~ file: ProductStatus.tsx:7 ~ ProductStatus ~ status:", status)
   const color = () => {
     switch (status) {
       case 0:
       case 1:
       case 2:
       case 3:
-        return 'bg-[#34B0DD] text-[#]';
+        return 'bg-[#34B0DD]';
       case 4:
-        return '#82AE46';
+        return 'bg-[#82AE46]';
       case 5:
-        return '#343A40';
+      case 6:
+        return 'bg-[#343A40]';
+      default:
+        return 'bg-[#82AE46]';
     }
   };
-  return <div className='bg-[#34B0DD] rounded-md p-1'></div>;
+  return <div className={classNames('rounded-xl text-white px-2', color())}>{consts.PRODUCT_STATUS_STRING[status]}</div>;
 }

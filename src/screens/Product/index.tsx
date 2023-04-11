@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Breadcrumb } from '../../components';
 import { Rate, Image, Button, Form, Input, InputNumber, notification, Space, List } from 'antd';
 import dayjs from 'dayjs';
@@ -13,8 +13,14 @@ import { openNotification } from 'common/Notify';
 import { DEFAULT_SMALL_PAGE_SIZE } from 'consts';
 import { Comment } from '@ant-design/compatible';
 import { FaUser } from 'react-icons/fa';
+import _ from 'lodash';
 
 const { TextArea } = Input;
+
+type ListProductType = {
+  current?: number;
+  productType?: number;
+};
 
 export default function Product() {
   const [_total, setTotal] = useState(1);
@@ -28,6 +34,14 @@ export default function Product() {
     total: 0,
     loading: false,
   });
+  const [_products, setProducts] = useImmer({
+    total: 0,
+    current: 1,
+    data: {
+      products: [],
+      salePrices: {},
+    },
+  });
 
   useEffect(() => {
     dispatch(
@@ -36,12 +50,33 @@ export default function Product() {
         callbacks: {
           onSuccess({ data }) {
             setProduct(data.product);
+            getListProducts(data.product.idType);
           },
         },
       }),
     );
     getComments();
   }, [id]);
+
+  const getListProducts = (productType) => {
+    dispatch(
+      productActions.actionGetProducts({
+        params: {
+          current: 1,
+          count: 4,
+          productType,
+        },
+        callbacks: {
+          onSuccess({ data, total }) {
+            setProducts((draft) => {
+              draft.total = total;
+              draft.data = data;
+            });
+          },
+        },
+      }),
+    );
+  };
 
   const handleRate = (value) => {
     setRate(parseInt(value, 10));
@@ -85,7 +120,6 @@ export default function Product() {
         },
         callbacks: {
           onSuccess({ data, total }) {
-            console.log('🚀 ~ file: index.tsx:85 ~ onSuccess ~ total:', total);
             setComments((draft) => {
               draft.loading = false;
               draft.data = data;
@@ -151,11 +185,12 @@ export default function Product() {
                 className='w-24'
                 size='large'
                 min={1}
-                max={_product.remaining || 1}
+                max={_product.remain || 1}
                 defaultValue={1}
                 keyboard={false}
                 onChange={(value) => setTotal(value)}
                 precision={0}
+                value={_total}
               />
               <div>{_product.remain} sản phẩm có sẵn</div>
             </div>
@@ -178,7 +213,7 @@ export default function Product() {
           <Form.Item name='content'>
             <TextArea rows={4} placeholder='Viết đánh giá của bạn vào đây' />
           </Form.Item>
-          <Form.Item className="text-right">
+          <Form.Item className='text-right'>
             <Button htmlType='submit' type='primary'>
               Đánh giá
             </Button>
@@ -218,11 +253,37 @@ export default function Product() {
         />
       </div>
 
-      <section className='ftco-section'>
-        <div className='container'>
-          <div className='row justify-content-center mb-3 pb-3'></div>
+      <div className='container pt-10'>
+        <h3>Có thể bạn sẽ thích</h3>
+        <div className='flex flex-wrap'>
+          {_.map(_products.data?.products, (item: any) => (
+            <div className='col-md-6 col-lg-3'>
+              <div className='block w-full '>
+                <Link to={`/product/${item.id}`} className='block overflow-hidden'>
+                  <img
+                    height={260}
+                    className='max-w-full hover:scale-110 transition duration-300 object-contain'
+                    src={utils.baseUrlImage(item.img)}
+                    alt={item.img}
+                  />
+                </Link>
+                <div className='text py-3 pb-4 px-3 text-center'>
+                  <div className='text-2xl'>
+                    <Link to={`/product/${item.id}`}>{item.name}</Link>
+                  </div>
+                  <div className='d-flex'>
+                    <div className='pricing'>
+                      <p className='price'>
+                        <span>{utils.formatCurrency(item.price)} VNĐ</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
     </>
   );
 }

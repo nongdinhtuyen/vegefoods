@@ -14,9 +14,30 @@ import Address from 'screens/Address';
 import validateMessages from 'common/validateMessages';
 import Receipt from 'screens/Receipt';
 import OrderHistoryDetail from 'screens/OrderHistoryDetail';
+import { useAppSelector } from 'redux/store';
+
+type Router = {
+  children: ReactNode;
+};
+
+function RequireAuth({ children }: Router) {
+  const { isLogin } = useAppSelector((state) => state.userReducer);
+  const location = useLocation();
+  if (!isLogin) {
+    return <Navigate to='/login' state={{ from: location }} replace />;
+  }
+  return <>{children}</>;
+}
+
+function LoginRouter({ children }: Router) {
+  const { isLogin } = useAppSelector((state) => state.userReducer);
+  if (isLogin) {
+    return <Navigate to='/' />;
+  }
+  return <>{children}</>;
+}
 
 function App() {
-
   return (
     <ConfigProvider
       theme={{
@@ -33,16 +54,78 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/shop' element={<Shop />} />
-          <Route path='/address' element={<Address />} />
-          <Route path='/history' element={<OrderHistory />} />
-          <Route path='/history/:id' element={<OrderHistoryDetail />} />
-          <Route path='/product/:id' element={<Product />} />
-          <Route path='/cart' element={<Cart />} />
-          <Route path='/receipt/*' element={<Receipt />} />
-          <Route path='/checkout' element={<Checkout />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/signup' element={<Signup />} />
-          <Route path='/profile' element={<Profile />} />
+          <Route
+            path='/address'
+            element={
+              <RequireAuth>
+                <Address />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path='/history'
+            element={
+              <RequireAuth>
+                <OrderHistory />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path='/history/:id'
+            element={
+              <RequireAuth>
+                <OrderHistoryDetail />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path='/product/:id'
+            element={
+              <RequireAuth>
+                <Product />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path='/cart'
+            element={
+              <RequireAuth>
+                <Cart />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path='/receipt/*'
+            element={
+              <RequireAuth>
+                <Receipt />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path='/login'
+            element={
+              <LoginRouter>
+                <Login />
+              </LoginRouter>
+            }
+          />
+          <Route
+            path='/signup'
+            element={
+              <LoginRouter>
+                <Signup />
+              </LoginRouter>
+            }
+          />
+          <Route
+            path='/profile'
+            element={
+              <RequireAuth>
+                <Profile />
+              </RequireAuth>
+            }
+          />
         </Routes>
         <Footer />
       </SplashScreen>

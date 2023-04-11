@@ -14,8 +14,8 @@ export default class CartRequest extends BaseRequest {
     const url = `${prefix}/add?pid=${params.pid}&quantity=${params.quantity}`;
     return this.post(url);
   }
-  removeCart(data) {
-    const url = `${prefix}`;
-    return this.delete(url, data);
+  removeCart(params) {
+    const url = `${prefix}/remove?pid=${params.pid}&quantity=${params.quantity}`;
+    return this.post(url);
   }
 }
