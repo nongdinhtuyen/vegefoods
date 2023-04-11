@@ -70,7 +70,7 @@ export default function Login(props) {
             rules={[
               {
                 required: true,
-                message: 'Please input your username!',
+                message: 'Tài khoản không được bỏ trống',
               },
             ]}
           >
@@ -82,7 +82,7 @@ export default function Login(props) {
             rules={[
               {
                 required: true,
-                message: 'Mât khẩu',
+                message: 'Mât khẩu không được bỏ trống',
               },
             ]}
           >
