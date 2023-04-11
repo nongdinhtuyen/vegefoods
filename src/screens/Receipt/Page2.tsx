@@ -12,7 +12,7 @@ import type { RadioChangeEvent } from 'antd';
 import { ReceiptProps } from './receipt';
 import useToggle from 'hooks/useToggle';
 import consts from 'consts';
-import ProductComponent from 'components/Product';
+import ProductComponent from 'components/ProductComponent';
 import { useNavigate } from 'react-router-dom';
 
 export default function Page2({ setPay, pay }: ReceiptProps) {

@@ -10,8 +10,7 @@ import _ from 'lodash';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
 import { useImmer } from 'use-immer';
-import Product from 'components/Product';
-import ProductComponent from 'components/Product';
+import ProductComponent from 'components/ProductComponent';
 
 export default function OrderHistory() {
   const { cartData } = useAppSelector((state) => state.cartReducer);
@@ -51,8 +50,10 @@ export default function OrderHistory() {
           _.map(_receipt.data, (item: any) => (
             <div key={item.Preview.idSaleReceipt} className='rounded-md px-5 pt-3 bg-white mb-2'>
               <div>
-                Đơn hàng <span className='font-semibold'>{item.Preview.idSaleReceipt}</span> |{' '}
-                {utils.formatTimeFromUnix(item.Salereceipt.createAt, 'hh:mm:ss DD/MM/YYYY')}
+                <div>
+                  Đơn hàng <span className='font-semibold'>{item.Preview.idSaleReceipt}</span> |{' '}
+                  {utils.formatTimeFromUnix(item.Salereceipt.createAt, 'hh:mm:ss DD/MM/YYYY')}
+                </div>
               </div>
               <ProductComponent
                 img={item.Preview.productList.img}

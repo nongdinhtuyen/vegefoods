@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from 'redux/store';
 import _ from 'lodash';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
-import ProductComponent from 'components/Product';
+import ProductComponent from 'components/ProductComponent';
 
 export default function Cart() {
   const { cartData, cartDataTotal } = useAppSelector((state) => state.cartReducer);
