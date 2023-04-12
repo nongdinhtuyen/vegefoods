@@ -58,6 +58,7 @@ export default function Cart() {
                   <ProductComponent
                     img={item.productList.img}
                     price={item.price}
+                    priceSale={item.priceSale}
                     unit={item.productList.unit}
                     quantity={item.quantity}
                     name={item.productList.name}
@@ -74,7 +75,7 @@ export default function Cart() {
                       <div className='w-1/2 text-right'>x {item.quantity}</div>
                     </div>
                   </div> */}
-                  <Divider className='m-0' />
+                  <Divider className='m-0 mt-2' />
                 </div>
               ))}
               <div className='py-2 text-right text-lg'>

@@ -17,9 +17,10 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 
 export default function Address() {
   const dispatch = useAppDispatch();
+  const { profile } = useAppSelector((state) => state.userReducer);
   const { close, isOpen, open } = useToggle();
   const [_form] = Form.useForm();
-  const [_address, setAddress] = useImmer({
+  const [_address, setAddress] = useImmer<any>({
     data: [],
   });
 
@@ -29,7 +30,7 @@ export default function Address() {
         callbacks: {
           onSuccess: ({ data }) => {
             setAddress((draft) => {
-              draft.data = data;
+              draft.data = [profile, ...data];
             });
           },
         },
@@ -52,6 +53,7 @@ export default function Address() {
               onSuccess(data) {
                 fetchData();
                 close();
+                _form.resetFields();
               },
             },
           }),
@@ -84,12 +86,14 @@ export default function Address() {
             Thêm mới địa chỉ
           </Button>
         </div>
-        <Divider className='my-2'/>
-        {_.map(_address.data, (item: any) => (
+        <Divider className='my-2' />
+        {_.map(_address.data, (item: any, index: number) => (
           <div key={item.id}>
             <Row>
               <Col span={12} className='flex flex-col gap-y-1'>
-                <div className='font-bold text-base'>{item.name}</div>
+                <div className='font-bold text-base'>
+                  {item.name} {index === 0 && <span className='border text-sm border-solid border-primary ml-2 rounded-lg px-2 py-1'>Mặc định</span>}
+                </div>
                 <div>{item.phone}</div>
                 <div>{item.address}</div>
               </Col>
@@ -111,18 +115,7 @@ export default function Address() {
         cancelText='Hủy'
         className='top-20'
       >
-        <Form
-          size='large'
-          name='basic'
-          form={_form}
-          className='m-auto'
-          layout='vertical'
-          initialValues={{
-            address: 'Số 9, ngõ 4, Duy Tân, Dịch Vọng Hậu, Cầu Giấy, Hà Nội',
-            phone: '0973083638',
-            name: 'Lưu Ngọc Lan',
-          }}
-        >
+        <Form size='large' name='basic' form={_form} className='m-auto' layout='vertical'>
           <Form.Item
             name='name'
             label='Tên'
@@ -138,13 +131,22 @@ export default function Address() {
           <Form.Item
             label='Số điện thoại'
             name='phone'
+            required
             rules={[
-              {
-                required: true,
-              },
+              ({ getFieldValue }) => ({
+                validator(rule, value) {
+                  if (_.isEmpty(value)) {
+                    return Promise.reject('Số điện thoại không được bỏ trống');
+                  }
+                  if (!_.isNumber(+value)) {
+                    return Promise.reject('Vui lòng nhập số');
+                  }
+                  return Promise.resolve();
+                },
+              }),
             ]}
           >
-            <InputNumber placeholder='Nhập số điện thoại' />
+            <Input className='w-full' placeholder='Nhập số điện thoại' />
           </Form.Item>
           <Form.Item
             name='address'

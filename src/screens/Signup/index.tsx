@@ -1,4 +1,4 @@
-import { Form, Input, Button, notification } from 'antd';
+import { Form, Input, Button, notification, Select } from 'antd';
 import { connect, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -45,34 +45,18 @@ export default function Signup() {
     <div className='bg' style={{ backgroundImage: `url(${Background})` }}>
       <div className='container'>
         <div className='login-container'>
-          <h1>Signup</h1>
-          <Form
-            {...layout}
-            name='basic'
-            onFinish={onFinish}
-            className='m-auto'
-            initialValues={{
-              address: 'Hanoi',
-              createAt: 0,
-              email: 'dev@gmail.com',
-              name: 'lan',
-              pass: '123456',
-              phone: '0978787887',
-              sex: true,
-              status: true,
-              username: 'lanln',
-            }}
-          >
+          <h1>ĐĂNG KÝ</h1>
+          <Form {...layout} name='basic' onFinish={onFinish} className='m-auto'>
             <Form.Item
               name='username'
               rules={[
                 {
                   required: true,
-                  message: 'Please input your username!',
+                  message: 'Tài khoản không được để trống'
                 },
               ]}
             >
-              <Input placeholder='Username' />
+              <Input placeholder='Tài khoản' />
             </Form.Item>
 
             <Form.Item
@@ -80,11 +64,11 @@ export default function Signup() {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your password!',
+                  message: 'Mật khẩu không được để trống'
                 },
               ]}
             >
-              <Input.Password placeholder='Password' />
+              <Input.Password placeholder='Mật khẩu' />
             </Form.Item>
 
             <Form.Item
@@ -92,7 +76,7 @@ export default function Signup() {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your email!',
+                  message: 'Email không được để trống'
                 },
               ]}
             >
@@ -103,37 +87,43 @@ export default function Signup() {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your name!',
+                  message: 'Tên không được để trống'
                 },
               ]}
             >
-              <Input placeholder='Name' />
+              <Input placeholder='Tên' />
             </Form.Item>
             <Form.Item
-              name='sex'
               rules={[
                 {
                   required: true,
-                  message: 'Please input your gender!',
+                  message: 'Giới tính không được để trống'
                 },
               ]}
+              name='sex'
             >
-              <Input placeholder='Gender' />
+              <Select
+                options={[
+                  { value: 0, label: 'Nam' },
+                  { value: 1, label: 'Nữ' },
+                  { value: 2, label: 'Khác' },
+                ]}
+              />
             </Form.Item>
             <Form.Item
               name='phone'
               rules={[
                 {
                   required: true,
-                  message: 'Please input your phone!',
+                  message: 'Số điện thoại không được để trống'
                 },
               ]}
             >
-              <Input placeholder='phone' />
+              <Input placeholder='Số điẹn thoại' />
             </Form.Item>
             <Form.Item {...tailLayout}>
               <Button type='primary' htmlType='submit'>
-                Signup
+                Đăng ký
               </Button>
             </Form.Item>
           </Form>

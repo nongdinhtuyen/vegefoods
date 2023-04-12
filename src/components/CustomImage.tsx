@@ -5,14 +5,15 @@ import { EyeOutlined } from '@ant-design/icons';
 export default function CustomImage(props) {
   return (
     <Image
-      preview={{
-        mask: (
-          <Space>
-            <EyeOutlined />
-            Xem trước
-          </Space>
-        ),
-      }}
+      preview={false}
+      // preview={{
+      //   mask: (
+      //     <Space>
+      //       <EyeOutlined />
+      //       Xem trước
+      //     </Space>
+      //   ),
+      // }}
       {...props}
     />
   );

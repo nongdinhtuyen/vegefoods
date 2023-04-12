@@ -2,7 +2,6 @@ import utils from 'common/utils';
 import {Link} from 'react-router-dom';
 
 function Product(props) {
-console.log("🚀 ~ file: product.tsx:5 ~ Product ~ props:", props)
 
     return (
         <div className="col-md-6 col-lg-3">

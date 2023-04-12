@@ -42,8 +42,10 @@ export default function Product() {
       salePrices: {},
     },
   });
+  const [_form] = Form.useForm();
 
   useEffect(() => {
+    setTotal(1);
     dispatch(
       productActions.actionGetProductById({
         params: id,
@@ -142,6 +144,7 @@ export default function Product() {
         callbacks: {
           onSuccess() {
             getComments();
+            _form.resetFields();
           },
         },
       }),
@@ -174,6 +177,7 @@ export default function Product() {
           <div className='col-lg-6 product-details py-4 pl-10'>
             <h3>{_product.name}</h3>
             <div className='rating d-flex'>
+              {_product.rateAVG}
               <Rate value={_product.rateAVG} disabled />
             </div>
             <p className='price'>
@@ -209,7 +213,7 @@ export default function Product() {
           <span>Đánh giá sản phẩm</span>
           <Rate onChange={handleRate} value={_rate} />
         </div>
-        <Form onFinish={onFinish}>
+        <Form onFinish={onFinish} form={_form}>
           <Form.Item name='content'>
             <TextArea rows={4} placeholder='Viết đánh giá của bạn vào đây' />
           </Form.Item>
@@ -222,6 +226,7 @@ export default function Product() {
         <List
           dataSource={_comments.data}
           pagination={{
+            position: 'top',
             total: _comments.total,
             showSizeChanger: false,
             hideOnSinglePage: true,
@@ -238,7 +243,7 @@ export default function Product() {
               author={item.userList.name}
               datetime={
                 <div className='flex gap-x-3 items-center'>
-                  {utils.formatTimeFromUnix(item.createAt, 'DD/MM/YYYY')}
+                  {utils.formatTimeFromUnix(item.createAt, 'HH:mm:ss DD/MM/YYYY')}
                   <Rate className='leading-[0]' value={item.rate} disabled />
                 </div>
               }

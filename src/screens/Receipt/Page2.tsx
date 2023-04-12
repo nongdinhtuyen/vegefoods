@@ -37,10 +37,9 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
           typePayment: pay?.typePayment,
         },
         callbacks: {
-          onSuccess({data}) {
-            console.log("🚀 ~ file: Page2.tsx:41 ~ onSuccess ~ data:", data)
+          onSuccess({ data }) {
             dispatch(cartActions.actionGetCartTotal({}));
-            navigate(`/history/${data}`)
+            navigate(`/history/${data}`);
           },
         },
       }),
@@ -81,8 +80,10 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
               {_.map(cartData.items, (item) => (
                 <div key={item.idProduct} className='rounded-md py-2 px-5 mt-3'>
                   <ProductComponent
+                    id={item.idProduct}
                     img={item.productList.img}
                     price={item.price}
+                    priceSale={item.priceSale}
                     unit={item.productList.unit}
                     quantity={item.quantity}
                     name={item.productList.name}
@@ -98,11 +99,11 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
                     </div>
                   </div> */}
                   <Divider className='m-0' />
-                  <div className='py-2 text-right text-lg'>
-                    Tổng tiền: <span className='font-bold text-primary'>{utils.formatCurrency(item.price * item.quantity)}</span> VNĐ
-                  </div>
                 </div>
               ))}
+              <div className='py-2 text-right text-lg'>
+                Tổng tiền: <span className='font-bold text-primary'>{utils.formatCurrency(cartDataTotal.totalPrice)}</span> VNĐ
+              </div>
             </Col>
             <Col offset={1} span={1}>
               <Divider type='vertical' className='h-full' />
@@ -141,47 +142,47 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
       <Modal width={600} open={isOpen} footer={null} onCancel={close}>
         <Row gutter={10}>
           <Col span={10} className='text-center'>
-            <div className='text-lg text-primary font-semibold mb-2'>Mã QR chuyển khoản</div>
+            <div className='text-xl text-primary font-semibold mb-2'>Mã QR chuyển khoản</div>
             <Image
               preview={false}
-              src={`https://img.vietqr.io/image/BIDV-0041000151013-compact.png?amount=${cartData.totalPrice}&addInfo=${cartData.idCart}%5C&accountName=Luu%20Ngoc%20Lan`}
+              src={`https://img.vietqr.io/image/BIDV-21510002320204-compact.png?amount=${cartData.totalPrice}&addInfo=${cartData.items[0].idCart}%5C&accountName=Nông%20Đình%20Lan`}
             />
           </Col>
           <Col span={14}>
-            <div className='text-lg text-primary font-semibold text-center'>Thông tin chuyển khoản</div>
-            <div className='text-xs rounded p-1 text-primary bg-[#F1F6EB] mt-1 mb-2'>
-              Vui lòng chuyển đúng nội dung 1239856 để chúng tôi xác nhận thanh toán{' '}
+            <div className='text-xl text-primary font-semibold text-center'>Thông tin chuyển khoản</div>
+            <div className='rounded p-1 text-primary bg-[#F1F6EB] mt-1 mb-2'>
+              Vui lòng chuyển đúng nội dung {cartData.idCart} để chúng tôi xác nhận thanh toán{' '}
             </div>
-            <Row gutter={[0, 8]}>
-              <Col span={10} className='text-right font-extrabold'>
+            <Row gutter={[0, 5]}>
+              <Col span={10} className='text-right text-lg font-extrabold'>
                 Chủ tài khoản:
               </Col>
-              <Col offset={1} span={11}>
-                Lưu Ngọc Lan
+              <Col offset={1} span={11} className='text-lg'>
+                Nông Đình Tuyên
               </Col>
-              <Col span={10} className='text-right font-extrabold'>
+              <Col span={10} className='text-right text-lg font-extrabold'>
                 Số tài khoản:
               </Col>
-              <Col offset={1} span={11}>
-                0041000151013
+              <Col offset={1} span={11} className='text-lg'>
+                21510002320204
               </Col>
-              <Col span={10} className='text-right font-extrabold'>
+              <Col span={10} className='text-right text-lg font-extrabold'>
                 Ngân hàng:
               </Col>
-              <Col offset={1} span={11}>
-                Vietcombank
+              <Col offset={1} span={11} className='text-lg'>
+                BIDV
               </Col>
-              <Col span={10} className='text-right font-extrabold'>
+              <Col span={10} className='text-right text-lg font-extrabold'>
                 Số tiền:
               </Col>
-              <Col offset={1} span={11}>
-                0041000151013
+              <Col offset={1} span={11} className='text-lg'>
+                {utils.formatCurrency(cartData.totalPrice)}
               </Col>
-              <Col span={10} className='text-right font-extrabold'>
+              <Col span={10} className='text-right text-lg font-extrabold'>
                 Nội dung:
               </Col>
-              <Col offset={1} span={11}>
-                1239856
+              <Col offset={1} span={11} className='text-lg'>
+                {cartData.items[0].idCart}
               </Col>
             </Row>
             <div className='text-center mt-4'>

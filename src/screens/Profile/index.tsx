@@ -199,7 +199,7 @@ export default function Profile() {
           <Form.Item hidden name='sex' label='Số điện thoại'>
             <Input className='w-full' placeholder='Nhập số điện thoại' />
           </Form.Item>
-          <Form.Item name='sex' label='Số điện thoại'>
+          <Form.Item name='sex' label='Giới tính'>
             <Select
               options={[
                 { value: MALE, label: 'Nam' },

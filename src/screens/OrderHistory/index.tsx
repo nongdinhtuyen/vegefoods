@@ -13,6 +13,7 @@ import { useImmer } from 'use-immer';
 import ProductComponent from 'components/ProductComponent';
 import ProductStatus from 'components/ProductStatus';
 import { DEFAULT_SMALL_PAGE_SIZE } from 'consts';
+import BigNumber from 'bignumber.js';
 
 export default function OrderHistory() {
   const dispatch = useAppDispatch();
@@ -25,6 +26,9 @@ export default function OrderHistory() {
   });
 
   const getData = ({ page = _receipt.current, typeStatus = _receipt.typeStatus } = {}) => {
+    setReceipt((draft) => {
+      draft.current = page;
+    });
     dispatch(
       actions.actionGetReceipt({
         params: {
@@ -77,14 +81,23 @@ export default function OrderHistory() {
               <ProductComponent
                 name={item.Preview.productList.name}
                 img={item.Preview.productList.img}
+                id={item.Preview.idProduct}
                 price={item.Preview.price}
+                priceSale={item.Preview.priceSale}
                 unit={item.Preview.productList.unit}
                 quantity={item.Preview.quantity}
                 description={item.Preview.productList.description}
               />
               <Divider className='m-0' />
-              <div className='py-2 text-right text-lg'>
-                Tổng tiền: <span className='font-bold text-primary'>{utils.formatCurrency(item.Preview.price * item.Preview.quantity)}</span> VNĐ
+              <div className='flex items-center justify-between'>
+                <div className='text-[#7c7c7c]'>{item.TotalItem} sản phẩm</div>
+                <div className='py-2 text-right text-lg'>
+                  Tổng tiền:{' '}
+                  {new BigNumber(item.Salereceipt.total).isGreaterThan(item.Salereceipt.totalAfterSale) && (
+                    <del className='italic font-medium mr-2 text-gray-900'>{utils.formatCurrency(item.Salereceipt.total)}</del>
+                  )}
+                  <span className='font-bold text-primary'>{utils.formatCurrency(item.Salereceipt.totalAfterSale)}</span> VNĐ
+                </div>
               </div>
               <Divider className='m-0' />
               <div className='py-3 text-right'>
@@ -104,7 +117,10 @@ export default function OrderHistory() {
         )}
         <div className='text-center'>
           <Pagination
-            onChange={(page) => getData({ page })}
+            onChange={(page) => {
+              window.scrollTo(0, 0);
+              getData({ page });
+            }}
             showSizeChanger={false}
             current={_receipt.current}
             pageSize={DEFAULT_SMALL_PAGE_SIZE}

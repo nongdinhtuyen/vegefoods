@@ -4,7 +4,6 @@ import CustomImage from 'components/CustomImage';
 import consts from 'consts';
 
 export default function ProductStatus({ status }) {
-  console.log("🚀 ~ file: ProductStatus.tsx:7 ~ ProductStatus ~ status:", status)
   const color = () => {
     switch (status) {
       case 0:

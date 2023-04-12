@@ -20,8 +20,8 @@ export default function Footer() {
       <div className='bg-[#f7f6f2] py-24 relative'>
         <div className='container max-w-container m-auto flex items-center'>
           <div className='flex-1'>
-            <div className='mb-0 text-2xl'>Subcribe to our Newsletter</div>
-            <span className=' text-gray-600 text-sm'>Get e-mail updates about our latest shops and special offers</span>
+            <div className='mb-0 text-2xl'>Đăng ký nhận bản tin của chúng tôi</div>
+            <span className=' text-gray-600 text-sm'>Nhận thông tin cập nhật qua email về các cửa hàng mới nhất và ưu đãi đặc biệt của chúng tôi</span>
           </div>
           <Space.Compact className='flex-1 h-12'>
             <Input className='w-full' />

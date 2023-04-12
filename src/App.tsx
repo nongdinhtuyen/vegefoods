@@ -15,6 +15,7 @@ import validateMessages from 'common/validateMessages';
 import Receipt from 'screens/Receipt';
 import OrderHistoryDetail from 'screens/OrderHistoryDetail';
 import { useAppSelector } from 'redux/store';
+import useScrollToTop from 'hooks/useScrollToTop';
 
 type Router = {
   children: ReactNode;
@@ -38,6 +39,7 @@ function LoginRouter({ children }: Router) {
 }
 
 function App() {
+  useScrollToTop();
   return (
     <ConfigProvider
       theme={{
