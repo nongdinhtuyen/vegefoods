@@ -80,6 +80,14 @@ export default function Product() {
     );
   };
 
+  function customRound(num) {
+    if (num - Math.floor(num) >= 0.6) {
+      return Math.ceil(num);
+    } else {
+      return Math.floor(num);
+    }
+  }
+
   const handleRate = (value) => {
     setRate(parseInt(value, 10));
   };
@@ -176,9 +184,9 @@ export default function Product() {
           </div>
           <div className='col-lg-6 product-details py-4 pl-10'>
             <h3>{_product.name}</h3>
-            <div className='rating d-flex'>
-              {_product.rateAVG}
-              <Rate value={_product.rateAVG} disabled />
+            <div className='items-center gap-x-2 flex'>
+              <span className='ant-rate-text'>{_product.rateAVG?.toFixed(1)}</span>
+              <Rate allowHalf value={customRound(_product.rateAVG)} disabled />
             </div>
             <p className='price'>
               <span>{utils.formatCurrency(_product.price)} VNĐ</span>

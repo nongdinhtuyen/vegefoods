@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Divider, Empty, Steps } from 'antd';
+import { Button, Divider, Empty, Image, Steps } from 'antd';
 
 import actions from '../../redux/actions/receipt';
 import { useAppDispatch, useAppSelector } from 'redux/store';
@@ -50,7 +50,6 @@ export default function OrderHistoryDetail() {
     );
   }, []);
 
-
   return (
     <div className='bg-[#F2F2F2]'>
       <div className='container m-auto py-3'>
@@ -75,10 +74,20 @@ export default function OrderHistoryDetail() {
             <div className='flex items-center gap-x-2 mb-3 text-base'>
               <FiMapPin className='text-primary' size={20} /> THÔNG TIN NGƯỜI NHẬN
             </div>
-            <div className='ml-8'>
-              <div className='font-bold'>{_receipt.data.receipt.addressList?.name}</div>
-              <div>{_receipt.data.receipt.addressList?.phone}</div>
-              <div>{_receipt.data.receipt.addressList?.address}</div>
+            <div className='ml-8 flex justify-between'>
+              <div>
+                <div className='font-bold'>{_receipt.data.receipt.addressList?.name}</div>
+                <div>{_receipt.data.receipt.addressList?.phone}</div>
+                <div>{_receipt.data.receipt.addressList?.address}</div>
+              </div>
+              {_receipt.data.receipt.status === 0 && (
+                <div className='text-center'>
+                  <Image
+                    width={110}
+                    src={`https://img.vietqr.io/image/BIDV-21510002320204-compact.png?amount=${_receipt.data.receipt.total}&addInfo=${_receipt.data.receipt.idt}%5C&accountName=Nông%20Đình%20Tuyên`}
+                  />
+                </div>
+              )}
             </div>
             <Divider className='my-4' />
             <div>{_receipt.data.saleReceiptList?.note}</div>
@@ -99,7 +108,9 @@ export default function OrderHistoryDetail() {
             ))}
             <div className='py-2 text-right text-lg'>
               Tổng tiền:{' '}
-              {!new BigNumber(_receipt.data.receipt.total).isEqualTo(0) && <del className='italic font-medium mr-2 text-gray-900'>{utils.formatCurrency(_receipt.data.receipt.total)}</del>}
+              {!new BigNumber(_receipt.data.receipt.total).isEqualTo(0) && (
+                <del className='italic font-medium mr-2 text-gray-900'>{utils.formatCurrency(_receipt.data.receipt.total)}</del>
+              )}
               <span className='font-bold text-primary'>{utils.formatCurrency(_receipt.data.receipt.totalAfterSale)}</span> VNĐ
             </div>
             <Divider className='mb-2 mt-0' />

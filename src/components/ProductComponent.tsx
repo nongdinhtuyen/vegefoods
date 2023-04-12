@@ -27,7 +27,8 @@ export default function ProductComponent({ priceSale, name, img, price, unit, qu
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleCount = (value) => {
+  const handleCount = (value, event) => {
+    event.stopPropagation();
     setCount(value);
     if (_count > value) {
       if (isCart) {
@@ -100,10 +101,10 @@ export default function ProductComponent({ priceSale, name, img, price, unit, qu
           <div>x{_count}</div>
           {isCart && (
             <>
-              <Button className='flex items-center mx-1' loading={_loading} onClick={() => handleCount(_count + 1)} size='small'>
+              <Button className='flex z-20 items-center mx-1' loading={_loading} onClick={(e) => handleCount(_count + 1, e)} size='small'>
                 <AiOutlinePlus />
               </Button>
-              <Button className='flex items-center' loading={_loading} onClick={() => handleCount(_count - 1)} size='small'>
+              <Button className='flex z-20 items-center' loading={_loading} onClick={(e) => handleCount(_count - 1, e)} size='small'>
                 <AiOutlineMinus />
               </Button>
             </>
