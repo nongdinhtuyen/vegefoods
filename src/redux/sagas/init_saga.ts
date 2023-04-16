@@ -2,6 +2,7 @@ import { all, call, put, fork, takeLatest } from 'redux-saga/effects';
 import { GET_USER_INFO, LOGIN } from '../actions/user';
 import cartActions from '../actions/cart';
 import initActions from '../actions/init';
+import userActions from '../actions/user';
 import rf from '../../requests/RequestFactory';
 import { createActionTypeOnSuccess } from 'redux/redux_helper';
 import utils from 'common/utils';
@@ -28,7 +29,7 @@ export function* saveMasterData(id) {
   yield put(createActionTypeOnSuccess(LOGIN)());
   yield put(createActionTypeOnSuccess(GET_USER_INFO)(resp));
   yield put(cartActions.actionGetCartTotal({}));
-  // yield put(cartActions.actionGetCart({}));
+  yield put(userActions.actionGetRank({ params: { id } }));
   yield put(initActions.actionInitSucceed({}));
 }
 

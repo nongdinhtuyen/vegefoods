@@ -24,6 +24,16 @@ class UserRequest extends BaseRequest {
     delete params.id;
     return this.put(url, params);
   }
+  updatePassword(params) {
+    const url = `${prefix}/${params.id}/pass`;
+    delete params.id;
+    delete params.confirm;
+    return this.post(url, params);
+  }
+  getRank(params) {
+    const url = `${prefix}/${params.id}/rank`;
+    return this.get(url);
+  }
 }
 
 export default UserRequest;

@@ -19,6 +19,7 @@ export default function Address() {
   const dispatch = useAppDispatch();
   const { profile } = useAppSelector((state) => state.userReducer);
   const { close, isOpen, open } = useToggle();
+  const [_updateAddress, setUpdateAddress] = useState<any>({});
   const [_form] = Form.useForm();
   const [_address, setAddress] = useImmer<any>({
     data: [],
@@ -46,18 +47,34 @@ export default function Address() {
     _form
       .validateFields()
       .then((value) => {
-        dispatch(
-          actions.actionAddAddress({
-            params: value,
-            callbacks: {
-              onSuccess(data) {
-                fetchData();
-                close();
-                _form.resetFields();
+        if (_.isEmpty(_updateAddress)) {
+          dispatch(
+            actions.actionAddAddress({
+              params: value,
+              callbacks: {
+                onSuccess(data) {
+                  fetchData();
+                  close();
+                  _form.resetFields();
+                },
               },
-            },
-          }),
-        );
+            }),
+          );
+        } else {
+          dispatch(
+            actions.actionUpdateAddress({
+              params: { ...value, id: _updateAddress.id },
+              callbacks: {
+                onSuccess(data) {
+                  fetchData();
+                  setUpdateAddress({});
+                  close();
+                  _form.resetFields();
+                },
+              },
+            }),
+          );
+        }
       })
       .catch(console.log);
   };
@@ -75,6 +92,21 @@ export default function Address() {
         },
       }),
     );
+  };
+
+  const handleEdit = (item) => {
+    setUpdateAddress(item);
+    _form.setFieldsValue({
+      name: item.name,
+      phone: item.phone,
+      address: item.address,
+    });
+    open();
+  };
+
+  const handleClose = () => {
+    _form.resetFields();
+    close();
   };
 
   return (
@@ -97,10 +129,12 @@ export default function Address() {
                 <div>{item.phone}</div>
                 <div>{item.address}</div>
               </Col>
-              <Col span={12} className='text-right'>
-                {/* <FiEdit className='text-primary mr-2 cursor-pointer' size={20} onClick={() => handleEdit(item.id)}  /> */}
-                <RiDeleteBin6Line className='text-red-500 cursor-pointer' onClick={() => handleDelete(item.id)} size={20} />
-              </Col>
+              {index !== 0 && (
+                <Col span={12} className='text-right'>
+                  <FiEdit className='text-primary mr-2 cursor-pointer' size={20} onClick={() => handleEdit(item)} />
+                  <RiDeleteBin6Line className='text-red-500 cursor-pointer' onClick={() => handleDelete(item.id)} size={20} />
+                </Col>
+              )}
             </Row>
             <Divider className='my-2' />
           </div>
@@ -108,7 +142,7 @@ export default function Address() {
       </div>
       <Modal
         title={<div className='text-2xl text-center mb-8'>Thêm mới địa chỉ</div>}
-        onCancel={close}
+        onCancel={handleClose}
         onOk={handleUpdate}
         open={isOpen}
         okText='Xác nhận'

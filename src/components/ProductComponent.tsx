@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Image } from 'antd';
 import BigNumber from 'bignumber.js';
 import { openNotification } from 'common/Notify';
 import utils from 'common/utils';
@@ -90,7 +90,7 @@ export default function ProductComponent({ priceSale, name, img, price, unit, qu
   };
   return (
     <div className='flex items-center gap-x-6 cursor-pointer hover:bg-slate-50' onClick={handleRedirect}>
-      <CustomImage height={110} width={110} className='object-contain' src={utils.baseUrlImage(img)} />
+      <Image preview={false} height={110} width={110} className='object-contain' src={utils.baseUrlImage(img)} />
       <div className='flex flex-1 flex-wrap gap-y-1 text-base'>
         <div className='w-1/2 font-bold'>{name}</div>
         <div className='w-1/2 text-right'>Giá bán: {renderPrice()}</div>

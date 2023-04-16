@@ -97,7 +97,7 @@ export default function Header(props) {
             </div>
           ) : (
             <Link to='/login' className='text-xs tracking-widest'>
-              Login
+              Đăng nhập
             </Link>
           )}
         </div>

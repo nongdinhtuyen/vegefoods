@@ -18,7 +18,8 @@ export default function Cart() {
     dispatch(actions.actionGetCart({}));
   }, []);
 
-  const handleRemove = (id, quantity) => {
+  const handleRemove = (e, id, quantity) => {
+    e.stopPropagation()
     dispatch(
       actions.actionRemoveCart({
         params: {
@@ -51,7 +52,7 @@ export default function Cart() {
                 <div key={item.idProduct} className='rounded-md py-3 relative'>
                   <span
                     className='w-6 h-6 absolute top-1 right-2 cursor-pointer flex items-center justify-center'
-                    onClick={() => handleRemove(item.idProduct, item.quantity)}
+                    onClick={(e) => handleRemove(e, item.idProduct, item.quantity)}
                   >
                     <GrClose />
                   </span>

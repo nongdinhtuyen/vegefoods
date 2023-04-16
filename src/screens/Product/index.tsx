@@ -14,6 +14,7 @@ import { DEFAULT_SMALL_PAGE_SIZE } from 'consts';
 import { Comment } from '@ant-design/compatible';
 import { FaUser } from 'react-icons/fa';
 import _ from 'lodash';
+import CustomImage from 'components/CustomImage';
 
 const { TextArea } = Input;
 
@@ -165,17 +166,9 @@ export default function Product() {
       <div className='container py-16'>
         <div className='row'>
           <div className='col-lg-6 mb-5 flex justify-center'>
-            <Image
+            <CustomImage
               height={260}
               src={utils.baseUrlImage(_product.img)}
-              preview={{
-                mask: (
-                  <Space>
-                    <EyeOutlined />
-                    Xem trước
-                  </Space>
-                ),
-              }}
               alt=''
             />
             {/* <a href={_product.image} className='image-popup' target='_blank' rel='noreferrer'>

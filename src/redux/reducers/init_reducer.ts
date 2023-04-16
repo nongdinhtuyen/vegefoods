@@ -3,11 +3,11 @@ import actions from 'redux/actions/init';
 
 import _ from 'lodash';
 
-export interface ICartState {
+export interface IInitState {
   inited: boolean;
 }
 
-const initialState: ICartState = {
+export const initialState: IInitState = {
   inited: false,
 };
 

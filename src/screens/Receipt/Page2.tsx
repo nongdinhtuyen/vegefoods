@@ -15,6 +15,7 @@ import consts from 'consts';
 import ProductComponent from 'components/ProductComponent';
 import { useNavigate } from 'react-router-dom';
 import { UserOutlined, EyeOutlined, ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import CustomImage from 'components/CustomImage';
 
 export default function Page2({ setPay, pay }: ReceiptProps) {
   const { cartData, cartDataTotal } = useAppSelector((state) => state.cartReducer);
@@ -144,15 +145,7 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
         <Row gutter={10}>
           <Col span={10} className='text-center'>
             <div className='text-xl text-primary font-semibold mb-2'>Mã QR chuyển khoản</div>
-            <Image
-              preview={{
-                mask: (
-                  <Space>
-                    <EyeOutlined />
-                    Xem trước
-                  </Space>
-                ),
-              }}
+            <CustomImage
               src={`https://img.vietqr.io/image/BIDV-21510002320204-compact.png?amount=${cartData.totalPrice}&addInfo=${cartData.items[0].idCart}%5C&accountName=Nông%20Đình%20Tuyên`}
             />
           </Col>

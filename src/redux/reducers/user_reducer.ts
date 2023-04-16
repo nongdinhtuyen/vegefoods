@@ -7,11 +7,13 @@ import _ from 'lodash';
 export interface IUserState {
   profile: any;
   isLogin: boolean;
+  rank: any;
 }
 
 const initialState: IUserState = {
   profile: {},
   isLogin: false,
+  rank: {},
 };
 
 const userReducer = createReducer(initialState, (builder) => {
@@ -25,6 +27,9 @@ const userReducer = createReducer(initialState, (builder) => {
   });
   builder.addCase(createActionTypeOnSuccess(actions.actionGetUserInfo), (state, { payload }: any) => {
     state.profile = payload.data;
+  });
+  builder.addCase(createActionTypeOnSuccess(actions.actionGetRank), (state, { payload }: any) => {
+    state.rank = payload.data;
   });
 });
 

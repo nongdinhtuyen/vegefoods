@@ -17,6 +17,11 @@ class ProductRequest extends BaseRequest {
     const url = `${prefix}`;
     return this.get(url);
   }
+
+  updateAddress(params) {
+    const url = `${prefix}/${params.id}`;
+    return this.put(url, params);
+  }
 }
 
 export default ProductRequest;

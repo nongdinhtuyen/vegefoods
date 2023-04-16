@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Divider, Empty, Image, Steps } from 'antd';
+import { Button, Divider, Empty, Image, Space, Steps } from 'antd';
 
 import actions from '../../redux/actions/receipt';
 import { useAppDispatch, useAppSelector } from 'redux/store';
@@ -71,18 +71,18 @@ export default function OrderHistoryDetail() {
               typePayment={_receipt.data.receipt.typePayment}
             />
             <Divider className='my-4' />
-            <div className='flex items-center gap-x-2 mb-3 text-base'>
-              <FiMapPin className='text-primary' size={20} /> THÔNG TIN NGƯỜI NHẬN
-            </div>
-            <div className='ml-8 flex justify-between'>
-              <div>
+            <div className='flex items-center gap-x-2 mb-3 text-base justify-between'>
+              <div className='flex flex-col gap-y-1'>
+                <div className='flex items-center gap-x-2 mb-1'>
+                  <FiMapPin className='text-primary' size={20} /> THÔNG TIN NGƯỜI NHẬN
+                </div>
                 <div className='font-bold'>{_receipt.data.receipt.addressList?.name}</div>
                 <div>{_receipt.data.receipt.addressList?.phone}</div>
                 <div>{_receipt.data.receipt.addressList?.address}</div>
               </div>
-              {_receipt.data.receipt.status === 0 && (
+              {_receipt.data.receipt.status === consts.TYPE_PAYMENT_ONLINE && (
                 <div className='text-center'>
-                  <Image
+                  <CustomImage
                     width={110}
                     src={`https://img.vietqr.io/image/BIDV-21510002320204-compact.png?amount=${_receipt.data.receipt.total}&addInfo=${_receipt.data.receipt.idt}%5C&accountName=Nông%20Đình%20Tuyên`}
                   />
