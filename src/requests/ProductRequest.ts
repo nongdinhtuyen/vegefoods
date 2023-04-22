@@ -4,8 +4,8 @@ const prefix = '/product';
 
 class ProductRequest extends BaseRequest {
   getListProducts(params) {
-    const url = `${prefix}`;
-    return this.get(url, params);
+    const url = `${prefix}?current=${params.current}&count=${params.count}`;
+    return this.post(url, params.body);
   }
 
   getProductTypes(params) {

@@ -42,7 +42,7 @@ export default function Login(props) {
         params: id,
         callbacks: {
           onSuccess(data) {
-            navigate('/');
+            navigate('/shop');
           },
         },
       }),

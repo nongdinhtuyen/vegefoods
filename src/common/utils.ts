@@ -117,8 +117,8 @@ const dumpRequest = ({ file, onSuccess }, callback) => {
 };
 
 const baseUrlImage = (img) => {
-  return `http://127.0.0.1:8089/raw/${img}`
-  // return `http://192.168.68.106:8089/raw/${img}`
+  // return `http://127.0.0.1:8089/raw/${img}`
+  return `http://192.168.0.103:8089/raw/${img}`
 }
 
 export default {

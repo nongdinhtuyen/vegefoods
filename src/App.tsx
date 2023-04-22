@@ -6,7 +6,7 @@ import SplashScreen from 'common/SplashScreen';
 import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Header, Footer } from './components';
-import { Home, Shop, Product, Cart, Checkout, Login, Signup, OrderHistory } from './screens';
+import { Home, Shop, Product, Cart, Login, Signup, OrderHistory } from './screens';
 import { ConfigProvider } from 'antd';
 import Profile from 'screens/Profile';
 import viVN from 'antd/lib/locale/vi_VN';
@@ -40,6 +40,7 @@ function LoginRouter({ children }: Router) {
 
 function App() {
   useScrollToTop();
+
   return (
     <ConfigProvider
       theme={{

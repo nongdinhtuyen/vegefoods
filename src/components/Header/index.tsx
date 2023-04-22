@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import actions from '../../redux/actions/user';
-import { Avatar, Badge, Dropdown, Image, Menu, Popover } from 'antd';
+import { Avatar, Badge, Dropdown, Image, Input, Menu, Popover } from 'antd';
 import _ from 'lodash';
 import type { MenuProps } from 'antd';
 import { BiUserCircle } from 'react-icons/bi';
@@ -12,6 +12,7 @@ import { AiOutlineUnorderedList } from 'react-icons/ai';
 import { IoReceiptOutline } from 'react-icons/io5';
 import { MdLogout } from 'react-icons/md';
 import { useAppSelector } from 'redux/store';
+import Search from './Search';
 
 export default function Header(props) {
   const [dropdown, setDropdown] = useState('');
@@ -74,12 +75,14 @@ export default function Header(props) {
           </div>
         </div>
       </div>
-      <div className='container m-auto flex max-w-container items-center justify-between py-4'>
-        <Link className='text-xl font-extrabold uppercase !text-primary transition duration-500 hover:scale-110' to='/'>
-          Vegefoods
-        </Link>
-
-        <div className='flex items-center gap-x-8'>
+      <div className='container m-auto flex max-w-container items-center justify-between py-4 gap-x-8'>
+        <div className='flex flex-1 gap-x-8 items-center'>
+          <Link className='text-xl font-extrabold uppercase !text-primary transition duration-500 hover:scale-110' to='/'>
+            Vegefoods
+          </Link>
+          <Search />
+        </div>
+        <div className='flex items-center gap-x-8 flex-1 justify-end'>
           <Link className='text-black text-xs tracking-widest' to='/shop'>
             Cửa hàng
           </Link>

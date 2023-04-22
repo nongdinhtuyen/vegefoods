@@ -244,7 +244,7 @@ export default function Product() {
               author={item.userList.name}
               datetime={
                 <div className='flex gap-x-3 items-center'>
-                  {utils.formatTimeFromUnix(item.createAt, 'HH:mm:ss DD/MM/YYYY')}
+                  {utils.formatTimeFromUnix(item.createDate, 'HH:mm:ss DD/MM/YYYY')}
                   <Rate className='leading-[0]' value={item.rate} disabled />
                 </div>
               }

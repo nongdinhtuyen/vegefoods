@@ -74,7 +74,7 @@ export default function OrderHistory() {
               <div className='flex justify-between'>
                 <div>
                   Đơn hàng <span className='font-semibold'>{item.Preview.idSaleReceipt}</span> |{' '}
-                  {utils.formatTimeFromUnix(item.Salereceipt.createAt, 'hh:mm:ss DD/MM/YYYY')}
+                  {utils.formatTimeFromUnix(item.Salereceipt.createDate, 'hh:mm:ss DD/MM/YYYY')}
                 </div>
                 <ProductStatus status={item.Salereceipt.status} />
               </div>

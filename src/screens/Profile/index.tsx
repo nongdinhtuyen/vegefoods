@@ -83,8 +83,8 @@ export default function Profile() {
   };
 
   const handlePercent = (): number | undefined => {
-    const next = _.find(rank.listRank, (item) => item.totalSpend > rank.rankUser?.totalSpend);
-    const precent = new BigNumber(next?.totalSpend).minus(rank.rankUser?.totalSpend).times(100).div(rank.rankUser?.totalSpend).toFixed(0);
+    const next = _.find(rank.listRank, (item) => item.totalSpend > profile.totalBuy);
+    const precent = new BigNumber(next?.totalSpend).minus(profile.totalBuy).times(100).div(profile.totalBuy).toFixed(0);
     return new BigNumber(precent).isGreaterThanOrEqualTo(100) ? 0 : +precent;
   };
 
@@ -95,7 +95,7 @@ export default function Profile() {
           <h2 className='flex-1 text-lg leading-6 font-medium text-primary mb-2'>Xếp hạng</h2>
           <div className='text-base leading-8 mb-4'>
             Bạn đang ở rank <span className='font-semibold text-xl'>{rank.rankUser?.name}</span> với tổng chi tiêu là:{' '}
-            <span className='font-semibold text-xl'>{utils.formatCurrency(rank.rankUser.totalSpend)}đ</span>
+            <span className='font-semibold text-xl'>{utils.formatCurrency(profile.totalBuy)}đ</span>
             <br />
             Quyền lợi: được giảm giá <span className='font-semibold text-xl'>{rank.rankUser?.discount}%</span> khi thanh toán trực tiếp hoặc online
           </div>
@@ -107,7 +107,7 @@ export default function Profile() {
               description: (
                 <>
                   <div>{`Giảm giá ${item.discount}%`}</div>
-                  <div>{`Tổng chi tiêu ${utils.formatCurrency(item.totalSpend)}đ`}</div>
+                  <div>{`Tổng chi tiêu lớn hơn ${utils.formatCurrency(item.totalSpend)}đ`}</div>
                 </>
               ),
             }))}
@@ -125,8 +125,8 @@ export default function Profile() {
                   <Form.Item name='name' label='Họ và tên' rules={[{ required: true, message: 'Tên không được bỏ trống' }]}>
                     <Input placeholder='Nhập tên' />
                   </Form.Item>
-                  <Form.Item name='createAt' label='Thời gian đăng ký'>
-                    {utils.formatTimeFromUnix(profile.createAt, 'HH:mm:ss DD/MM/YYYY')}
+                  <Form.Item name='createDate' label='Thời gian đăng ký'>
+                    {utils.formatTimeFromUnix(profile.createDate, 'HH:mm:ss DD/MM/YYYY')}
                   </Form.Item>
                   <Form.Item name='sex' label='Giới tính'>
                     <Radio.Group>
@@ -140,7 +140,7 @@ export default function Profile() {
                 <Col span={11}>
                   <h2 className='flex-1 text-lg leading-6 font-medium text-primary mb-6'>Số điện thoại và Email</h2>
                   <Form.Item name='address' label='Địa chỉ' rules={[{ required: true, message: 'Nhập địa chỉ' }]}>
-                    <Input placeholder='Nhập địa chỉ' />
+                    <Input.TextArea placeholder='Nhập địa chỉ' />
                   </Form.Item>
                   <Form.Item name='phone' label='Số điện thoại' rules={[{ required: true, message: 'Số điện thoại không được bỏ trống' }]}>
                     <Input className='w-full' placeholder='Nhập số điện thoại' />

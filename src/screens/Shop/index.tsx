@@ -42,7 +42,11 @@ export default function Shop() {
         params: {
           current,
           count: 8,
-          productType,
+          body: {
+            name: '',
+            remaining: -1,
+            type_product: productType === 0 ? [] : [productType],
+          },
         },
         callbacks: {
           onSuccess({ data, total }) {
@@ -87,7 +91,7 @@ export default function Shop() {
 
   return (
     <>
-      <Breadcrumb name="shop"/>
+      <Breadcrumb name='shop' />
       <div className='container my-12'>
         <div className='flex items-center justify-center'>
           {_.map(_productTypes.data, (item: any, index: number) => (

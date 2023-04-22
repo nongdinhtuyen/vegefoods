@@ -80,7 +80,7 @@ export default function OrderHistoryDetail() {
                 <div>{_receipt.data.receipt.addressList?.phone}</div>
                 <div>{_receipt.data.receipt.addressList?.address}</div>
               </div>
-              {_receipt.data.receipt.status === consts.TYPE_PAYMENT_ONLINE && (
+              {_receipt.data.receipt.typePayment === consts.TYPE_PAYMENT_ONLINE && (
                 <div className='text-center'>
                   <CustomImage
                     width={110}
