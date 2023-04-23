@@ -3,7 +3,7 @@ import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
 import consts from 'consts';
 
-export default function ProductStatus({ status }) {
+export default function ProductStatus({ status, typePayment }) {
   const color = () => {
     switch (status) {
       case 0:
@@ -20,5 +20,6 @@ export default function ProductStatus({ status }) {
         return 'bg-[#82AE46]';
     }
   };
-  return <div className={classNames('rounded-xl text-white px-2', color())}>{consts.PRODUCT_STATUS_STRING[status]}</div>;
+  const str = typePayment === consts.TYPE_PAYMENT_COD ? 'PRODUCT_STATUS_STRING' : 'PRODUCT_STATUS_STRING_ONLINE';
+  return <div className={classNames('rounded-xl text-white px-2', color())}>{consts[str][status]}</div>;
 }

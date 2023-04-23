@@ -132,12 +132,12 @@ export default function CustomSteps({ status, typePayment, price }) {
       case 1:
         if (typePayment === consts.TYPE_PAYMENT_COD) {
           items[1] = {
-            title: 'Đã phê duyệt',
+            title: consts.PRODUCT_STATUS_STRING[0],
             icon: renderIcon(<BsShieldCheck />),
           };
         } else {
           items[1] = {
-            title: 'Chờ thanh toán',
+            title: consts.PRODUCT_STATUS_STRING_ONLINE[0],
             icon: renderIcon(<Icon size={22} className='icomoon' title='Chi tiết đơn nhập' icon={'money'} />),
           };
         }
@@ -145,7 +145,7 @@ export default function CustomSteps({ status, typePayment, price }) {
       case 2:
         if (typePayment === consts.TYPE_PAYMENT_COD) {
           items[1] = {
-            title: 'Đã phê duyệt',
+            title: consts.PRODUCT_STATUS_STRING[1],
             icon: renderIcon(<BsShieldCheck />),
           };
         } else {
@@ -158,11 +158,11 @@ export default function CustomSteps({ status, typePayment, price }) {
       case 3:
         items.push(
           {
-            title: 'Đã phê duyệt',
+            title: consts.PRODUCT_STATUS_STRING[1],
             icon: renderIcon(<BsShieldCheck />),
           },
           {
-            title: `Đang giao hàng`,
+            title: consts.PRODUCT_STATUS_STRING[3],
             icon: renderIcon(<FaShippingFast />),
           },
         );
@@ -170,22 +170,22 @@ export default function CustomSteps({ status, typePayment, price }) {
       case 4:
         items.push(
           {
-            title: 'Đã phê duyệt',
+            title: consts.PRODUCT_STATUS_STRING[1],
             icon: renderIcon(<BsShieldCheck />),
           },
           {
-            title: `Đang giao hàng`,
+            title: consts.PRODUCT_STATUS_STRING[3],
             icon: renderIcon(<FaShippingFast />),
           },
           {
-            title: 'Giao hàng thành công',
+            title: consts.PRODUCT_STATUS_STRING[4],
             icon: renderIcon(<img src='/icons/received.svg' width={28} height={19} />),
           },
         );
         break;
       case 5:
         items[1] = {
-          title: 'Chờ duyệt hủy',
+          title: consts.PRODUCT_STATUS_STRING[5],
           icon: renderIcon(<img src='/icons/cancel_product.png' width={24} height={19} />),
         };
         break;

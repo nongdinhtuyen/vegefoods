@@ -76,7 +76,7 @@ export default function OrderHistory() {
                   Đơn hàng <span className='font-semibold'>{item.Preview.idSaleReceipt}</span> |{' '}
                   {utils.formatTimeFromUnix(item.Salereceipt.createDate, 'hh:mm:ss DD/MM/YYYY')}
                 </div>
-                <ProductStatus status={item.Salereceipt.status} />
+                <ProductStatus status={item.Salereceipt.status} typePayment={item.Salereceipt.typePayment}/>
               </div>
               <ProductComponent
                 name={item.Preview.productList.name}

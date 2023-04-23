@@ -24,6 +24,16 @@ export default {
     5: 'Chờ duyệt hủy',
     6: 'Đã hủy',
   },
+
+  PRODUCT_STATUS_STRING_ONLINE: {
+    0: 'Chờ thanh toán',
+    1: 'Đã thanh toán',
+    2: 'Chờ vận chuyển',
+    3: 'Đang giao hàng',
+    4: 'Giao hàng thành công',
+    5: 'Chờ duyệt hủy',
+    6: 'Đã hủy',
+  },
 };
 // Status
 // 0 – Chờ phê duyệt - 1
