@@ -65,7 +65,7 @@ export default function Page1({ setPay }: ReceiptProps) {
   return (
     <>
       <div className='max-w-4xl m-auto py-10'>
-        <div className='bg-white px-10 py-6 rounded-lg'>
+        <div className='bg-white px-6 py-4 rounded-lg'>
           <div className='rounded-lg'>
             <div className='text-primary text-xl font-bold'>Thông tin người nhận</div>
             <Divider className='my-4' />

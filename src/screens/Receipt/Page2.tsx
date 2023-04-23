@@ -14,12 +14,14 @@ import useToggle from 'hooks/useToggle';
 import consts from 'consts';
 import ProductComponent from 'components/ProductComponent';
 import { useNavigate } from 'react-router-dom';
-import { UserOutlined, EyeOutlined, ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import CustomImage from 'components/CustomImage';
 import { openNotification } from 'common/Notify';
+import BigNumber from 'bignumber.js';
 
 export default function Page2({ setPay, pay }: ReceiptProps) {
   const { cartData, cartDataTotal } = useAppSelector((state) => state.cartReducer);
+
+  const { profile } = useAppSelector((state) => state.userReducer);
   const { isOpen, open, close } = useToggle();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -65,21 +67,35 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
     createReceipt();
   };
 
+  const renderTotal = () => {
+    if (profile.rankList?.discount > 0) {
+      const sale = new BigNumber(cartDataTotal.totalPrice)
+        .times(100 - profile.rankList?.discount)
+        .div(100)
+        .toNumber();
+      return (
+        <>
+          <del className='italic font-medium mr-2 text-gray-900'>{utils.formatCurrency(cartDataTotal.totalPrice)}</del>
+          <span className='font-bold text-primary'>{utils.formatCurrency(sale)}</span>
+        </>
+      );
+    }
+    return <span className='font-bold text-primary'>{utils.formatCurrency(cartDataTotal.totalPrice)}</span>;
+  };
+
   return (
     <>
       <div className='container m-auto py-10'>
-        <div className='bg-white px-10 py-6 rounded-lg'>
-          <div className='rounded-lg'>
-            <div className='flex justify-between py-1'>
-              <span className='text-primary flex items-center gap-x-2 text-xl font-bold cursor-pointer' onClick={() => navigate(-1)}>
-                <IoChevronBackSharp />
-                Thông tin đơn hàng
-              </span>
-            </div>
-            <Divider className='my-4' />
+        <div className='bg-white px-6 py-4 rounded-lg'>
+          <div className='flex justify-between py-1'>
+            <span className='text-primary flex items-center gap-x-2 text-xl font-bold cursor-pointer' onClick={() => navigate(-1)}>
+              <IoChevronBackSharp />
+              Thông tin đơn hàng
+            </span>
           </div>
+          <Divider className='my-3' />
           <Row>
-            <Col span={14}>
+            <Col span={15}>
               <div className='flex items-center gap-x-2'>
                 <FaRegListAlt className='text-primary' size={18} />
                 <div className='text-lg font-bold'>THÔNG TIN SẢN PHẨM</div>
@@ -96,26 +112,23 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
                     name={item.productList.name}
                     description={item.productList.description}
                   />
-                  {/* <div className='flex items-center gap-x-6'>
-                    <CustomImage height={80} className='object-contain' src={utils.baseUrlImage(item.productList.img)} />
-                    <div className='flex flex-1 flex-wrap gap-y-1 text-base'>
-                      <div className='w-1/2 font-bold'>Đơn vị</div>
-                      <div className='w-1/2 text-right'>Giá bán: {utils.formatCurrency(item.price)} VNĐ</div>
-                      <div className='w-1/2'>Đơn vị tính: {item.productList.unit}</div>
-                      <div className='w-1/2 text-right'>x {item.quantity}</div>
-                    </div>
-                  </div> */}
                   <Divider className='m-0' />
                 </div>
               ))}
-              <div className='py-2 text-right text-lg'>
-                Tổng tiền: <span className='font-bold text-primary'>{utils.formatCurrency(cartDataTotal.totalPrice)}</span> VNĐ
+              <div className='flex items-center justify-between'>
+                {profile.rankList?.discount > 0 && (
+                  <div className='text-gray-600'>
+                    `Bạn đạt rank <span className='text-black font-semibold text-base'>{profile.rankList?.name}</span> được giảm giá{' '}
+                    <span className='text-black font-semibold text-base'>{profile.rankList?.discount}%</span>
+                  </div>
+                )}
+                <div className='py-2 text-right text-lg'>Tổng tiền: {renderTotal()} VNĐ</div>
               </div>
             </Col>
             <Col offset={1} span={1}>
               <Divider type='vertical' className='h-full' />
             </Col>
-            <Col span={8}>
+            <Col span={7}>
               <div className='flex items-center gap-x-2 mb-3'>
                 <BiWallet className='text-primary' size={18} />
                 <div className='text-lg font-bold'>PHƯƠNG THỨC THANH TOÁN</div>
@@ -126,19 +139,8 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
                   <Radio value={consts.TYPE_PAYMENT_ONLINE}>Thanh toán online</Radio>
                 </Space>
               </Radio.Group>
-              {/* <div className='mt-5 text-base font-semibold'>Nội dung</div>
-              <Input.TextArea
-                onChange={(e) =>
-                  setPay((draft) => {
-                    draft.note = e.target.value;
-                  })
-                }
-                rows={4}
-                showCount
-                maxLength={150}
-              /> */}
               <div className='text-center mt-5'>
-                <Button type='primary' onClick={handleOk}>
+                <Button type='primary' onClick={onFinish}>
                   Xác nhận
                 </Button>
               </div>
@@ -151,7 +153,7 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
           <Col span={10} className='text-center'>
             <div className='text-xl text-primary font-semibold mb-2'>Mã QR chuyển khoản</div>
             <CustomImage
-              src={`https://img.vietqr.io/image/BIDV-21510002320204-compact.png?amount=${cartData.totalPrice}&addInfo=${cartData.items[0].idCart}%5C&accountName=Nông%20Đình%20Tuyên`}
+              src={`https://img.vietqr.io/image/BIDV-21510002320204-compact.png?amount=${cartData.totalPrice}&addInfo=${cartData.items?.[0].idCart}%5C&accountName=Nông%20Đình%20Tuyên`}
             />
           </Col>
           <Col span={14}>
@@ -184,12 +186,12 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
               <Col offset={1} span={11} className='text-lg'>
                 {utils.formatCurrency(cartData.totalPrice)}
               </Col>
-              <Col span={10} className='text-right text-lg font-extrabold'>
+              {/* <Col span={10} className='text-right text-lg font-extrabold'>
                 Nội dung:
               </Col>
               <Col offset={1} span={11} className='text-lg'>
-                {cartData.items[0].idCart}
-              </Col>
+                {cartData.items?.[0].idCart}
+              </Col> */}
             </Row>
             <div className='text-center mt-4'>
               <Button onClick={onFinish} type='primary'>

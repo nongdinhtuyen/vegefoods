@@ -13,7 +13,6 @@ import BigNumber from 'bignumber.js';
 export default function Cart() {
   const { cartData, cartDataTotal } = useAppSelector((state) => state.cartReducer);
   const { profile } = useAppSelector((state) => state.userReducer);
-  console.log('🚀 ~ file: index.tsx:16 ~ Cart ~ profile:', profile);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -58,8 +57,8 @@ export default function Cart() {
   return (
     <div className='bg-[#F2F2F2]'>
       <div className='max-w-4xl m-auto py-10'>
-        <div className='bg-white rounded-lg px-5'>
-          <div className='flex justify-between pt-3'>
+        <div className='bg-white rounded-lg px-5 py-3'>
+          <div className='flex justify-between'>
             <div className='text-primary text-xl font-bold'>Giỏ hàng</div>
           </div>
           {!_.isEmpty(cartData.items) ? (
@@ -85,15 +84,6 @@ export default function Cart() {
                     isCart={true}
                     id={item.idProduct}
                   />
-                  {/* <div className='flex items-center gap-x-6'>
-                    <CustomImage height={110} className='object-contain' src={utils.baseUrlImage(item.productList.img)} />
-                    <div className='flex flex-1 flex-wrap gap-y-1 text-base'>
-                      <div className='w-1/2 font-bold'>Đơn vị</div>
-                      <div className='w-1/2 text-right'>Giá bán: {utils.formatCurrency(item.price)} VNĐ</div>
-                      <div className='w-1/2'>Đơn vị tính: {item.productList.unit}</div>
-                      <div className='w-1/2 text-right'>x {item.quantity}</div>
-                    </div>
-                  </div> */}
                   <Divider className='m-0 mt-2' />
                 </div>
               ))}

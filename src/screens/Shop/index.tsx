@@ -7,9 +7,9 @@ import productActions from '../../redux/actions/product';
 import { useImmer } from 'use-immer';
 import _ from 'lodash';
 import classNames from 'classnames';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import utils from 'common/utils';
-import { Button, Pagination } from 'antd';
+import { Button, Empty, Pagination } from 'antd';
 
 type ListProductType = {
   current?: number;
@@ -18,6 +18,7 @@ type ListProductType = {
 
 export default function Shop() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams({});
   const [_products, setProducts] = useImmer({
     total: 0,
     current: 1,
@@ -31,10 +32,12 @@ export default function Shop() {
     current: 1,
     data: {},
   });
-  const [_selectType, setSelectType] = useState(0);
+  const [_selectType, setSelectType] = useState(-1);
   const dispatch = useDispatch();
 
-  const getListProducts = ({ current = 1, productType = 0 }: ListProductType = {}) => {
+  const getListProducts = ({ current = 1, productType = _selectType }: ListProductType = {}) => {
+    setSearchParams({ type: _.toString(productType), current: current + '' });
+    setSelectType(productType)
     setProducts((draft) => {
       draft.current = current;
     });
@@ -46,7 +49,7 @@ export default function Shop() {
           body: {
             name: '',
             remaining: -1,
-            type_product: productType === 0 ? [] : [productType],
+            type_product: productType === -1 ? [] : [productType],
           },
         },
         callbacks: {
@@ -68,7 +71,7 @@ export default function Shop() {
         callbacks: {
           onSuccess({ data, total }) {
             setProductTypes((draft) => {
-              draft.data = [{ name: 'All' }, ...data];
+              draft.data = [{ name: 'All', id: -1 }, ...data];
             });
           },
         },
@@ -77,7 +80,7 @@ export default function Shop() {
   };
 
   useEffect(() => {
-    getListProducts();
+    getListProducts({ current: searchParams.get('current') !== null ? +searchParams.get('current')! : 1, productType: searchParams.get('type') !== null ? +searchParams.get('type')! : _selectType });
     getProductTypes();
   }, []);
 
@@ -85,9 +88,20 @@ export default function Shop() {
     getListProducts({ current: page, productType: _selectType });
   };
 
-  const changeTypes = (index) => {
-    setSelectType(index);
-    getListProducts({ productType: index, current: 1 });
+  const changeTypes = (id) => {
+    getListProducts({ productType: id, current: 1 });
+  };
+
+  const renderTotal = (price, sale) => {
+    if (price > sale && sale > 0) {
+      return (
+        <div>
+          <del className='italic font-medium mr-2 text-gray-900'>{utils.formatCurrency(price)} VNĐ</del>
+          <span className=''>{utils.formatCurrency(sale)} VNĐ</span>
+        </div>
+      );
+    }
+    return <div className=''>{utils.formatCurrency(price)} VNĐ</div>;
   };
 
   return (
@@ -95,47 +109,49 @@ export default function Shop() {
       <Breadcrumb name='shop' />
       <div className='container my-12'>
         <div className='flex items-center justify-center mb-4'>
-          {_.map(_productTypes.data, (item: any, index: number) => (
+          {_.map(_productTypes.data, (item: any) => (
             <div
-              key={index}
+              key={item.id}
               onClick={() => {
-                changeTypes(index);
+                changeTypes(item.id);
               }}
               className={classNames(
                 'text-base py-2 px-5 rounded-md cursor-pointer',
-                _selectType === index ? ['bg-primary', 'text-white'] : 'text-primary',
+                _selectType === item.id ? ['bg-primary', 'text-white'] : 'text-primary',
               )}
             >
               {item.name}
             </div>
           ))}
         </div>
-        <div className='flex flex-wrap'>
-          {_.map(_products.data?.products, (item: any) => (
-            <div className='w-1/4 flex flex-col justify-center'>
-              <Link to={`/product/${item.id}`} className='block overflow-hidden'>
-                <img
-                  height={260}
-                  className='max-w-full hover:scale-110 transition duration-300 object-contain'
-                  src={utils.baseUrlImage(item.img)}
-                  alt={item.img}
-                />
-              </Link>
-              <div className='text-2xl flex-1 text-center'>
-                <Link to={`/product/${item.id}`}>{item.name}</Link>
-              </div>
-              <div className='text py-3 pb-4 px-3 text-center'>
-                <div className='d-flex'>
-                  <div className='pricing'>
-                    <span>{utils.formatCurrency(item.price)} VNĐ</span>
+        <div className='flex flex-wrap gap-x-10 justify-center mt-10'>
+          {_.isEmpty(_products.data?.products) ? (
+            <Empty />
+          ) : (
+            _.map(_products.data?.products, (item: any, i:number) => (
+              <div className='w-1/5 flex flex-col justify-center'>
+                <Link to={`/product/${item.id}`} className='block overflow-hidden'>
+                  <img
+                    height={260}
+                    className='max-w-full hover:scale-110 transition duration-300 object-contain'
+                    src={utils.baseUrlImage(item.img)}
+                    alt={item.img}
+                  />
+                </Link>
+                <div className='text-2xl flex-1 text-center'>
+                  <Link to={`/product/${item.id}`}>{item.name}</Link>
+                </div>
+                <div className='text py-3 pb-4 px-3 text-center'>
+                  <div className='d-flex'>
+                    {renderTotal(item.price, _products.data.salePrices[item.id])}
+                    <Button type='primary' onClick={() => navigate(`/product/${item.id}`)}>
+                      Chi tiết
+                    </Button>
                   </div>
-                  <Button type='primary' onClick={() => navigate(`/product/${item.id}`)}>
-                    Chi tiết
-                  </Button>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
         <div className='text-center mt-3'>
           <Pagination

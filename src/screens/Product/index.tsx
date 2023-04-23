@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Breadcrumb } from '../../components';
-import { Rate, Image, Button, Form, Input, InputNumber, notification, Space, List } from 'antd';
+import { Rate, Image, Button, Form, Input, InputNumber, notification, Space, List, Carousel } from 'antd';
 import dayjs from 'dayjs';
-import { connect, useDispatch } from 'react-redux';
-import { UserOutlined, EyeOutlined, ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
 import productActions from '../../redux/actions/product';
 import cartActions from '../../redux/actions/cart';
 import { useImmer } from 'use-immer';
@@ -15,20 +14,48 @@ import { Comment } from '@ant-design/compatible';
 import { FaUser } from 'react-icons/fa';
 import _ from 'lodash';
 import CustomImage from 'components/CustomImage';
+import { CarouselRef } from 'antd/es/carousel';
+import styled from 'styled-components';
+import { TiChevronLeft, TiChevronRight } from 'react-icons/ti';
+import { useAppSelector } from 'redux/store';
 
 const { TextArea } = Input;
-
-type ListProductType = {
-  current?: number;
-  productType?: number;
-};
+const CarouselWrapper = styled.div`
+  position: relative;
+  height: 300px;
+  .icon {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 99px;
+    background-color: #b4b5b6;
+    translate: 0% -50%;
+    top: 50%;
+    z-index: 999;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+  .previous {
+    left: 0;
+  }
+  .next {
+    right: 0;
+  }
+`;
 
 export default function Product() {
   const [_total, setTotal] = useState(1);
+  const ref = useRef<CarouselRef | null>(null);
   const [_product, setProduct] = useState<any>({});
   const [_rate, setRate] = useState(5);
+  const [_sale, setSale] = useState(0);
   const dispatch = useDispatch();
   const { id }: any = useParams();
+  const { cartData } = useAppSelector((state) => state.cartReducer);
   const [_comments, setComments] = useImmer({
     data: [],
     current: 1,
@@ -43,6 +70,7 @@ export default function Product() {
       salePrices: {},
     },
   });
+  const [_images, setImages] = useState([]);
   const [_form] = Form.useForm();
 
   useEffect(() => {
@@ -53,7 +81,18 @@ export default function Product() {
         callbacks: {
           onSuccess({ data }) {
             setProduct(data.product);
+            setSale(data.salePrice);
             getListProducts(data.product.idType);
+          },
+        },
+      }),
+    );
+    dispatch(
+      productActions.actionGetProductImageById({
+        params: id,
+        callbacks: {
+          onSuccess({ data }) {
+            setImages(data);
           },
         },
       }),
@@ -82,7 +121,10 @@ export default function Product() {
   };
 
   function customRound(num) {
-    if (num - Math.floor(num) >= 0.6) {
+    const decimal = num % 1;
+    if (decimal >= 0.4 && decimal < 0.5) {
+      return Math.ceil(num);
+    } else if (decimal >= 0.8 || decimal === 0) {
       return Math.ceil(num);
     } else {
       return Math.floor(num);
@@ -95,9 +137,35 @@ export default function Product() {
 
   const getCart = () => {
     dispatch(cartActions.actionGetCartTotal({}));
+    dispatch(cartActions.actionGetCart({}));
   };
 
   const addCart = () => {
+    const checkItem = _.find(cartData.items, (item) => item.idProduct == id);
+    const checkRemainIfExist = _product.remain - checkItem?.quantity;
+    const checkRemainFull = _product.remain - checkItem?.quantity - _total;
+    const checkRemain = _product.remain - _total;
+    if (checkRemainFull < 0 && checkRemainIfExist > 0) {
+      openNotification({
+        description: `Trong giỏ hàng của bạn đã có ${checkItem?.quantity} sản phẩm, bạn chỉ có thể thêm tối đa ${checkRemainIfExist} sản phẩm`,
+        type: 'warning',
+      });
+      return;
+    }
+    if (checkRemainFull < 0) {
+      openNotification({
+        description: `Bạn không thể thêm sản phẩm vì giỏ hàng của bạn vượt quá số lượng sản phẩm khả dụng`,
+        type: 'warning',
+      });
+      return;
+    }
+    if (checkRemain < 0) {
+      openNotification({
+        description: `Bạn chỉ có thể mua tối đa ${_product.remain} sản phâm`,
+        type: 'warning',
+      });
+      return;
+    }
     dispatch(
       cartActions.actionAddCart({
         params: {
@@ -160,40 +228,57 @@ export default function Product() {
     );
   };
 
+  const renderTotal = () => {
+    if (_product.price > _sale && _sale > 0) {
+      return (
+        <div>
+          <del className='italic font-medium mr-2 text-gray-900'>{utils.formatCurrency(_product.price)} VNĐ</del>
+          <span className=''>{utils.formatCurrency(_sale)} VNĐ</span>
+        </div>
+      );
+    }
+    return <div className=''>{utils.formatCurrency(_product.price)} VNĐ</div>;
+  };
+
   return (
     <>
       <Breadcrumb />
       <div className='container py-16'>
         <div className='row'>
-          <div className='col-lg-6 mb-5 flex justify-center'>
-            <CustomImage
-              height={260}
-              src={utils.baseUrlImage(_product.img)}
-              alt=''
-            />
-            {/* <a href={_product.image} className='image-popup' target='_blank' rel='noreferrer'>
-                <img src={_product.image} className='img-fluid' alt='Colorlib Template' />
-              </a> */}
-          </div>
-          <div className='col-lg-6 product-details py-4 pl-10'>
+          <div className='col-lg-1' />
+          <CarouselWrapper className='col-lg-4'>
+            <div className='previous icon' onClick={() => ref.current?.prev()}>
+              <TiChevronLeft size={30} />
+            </div>
+            <Carousel ref={ref} dots={false} className='h-full'>
+              {_.map([_product, ..._images], (item: any) => (
+                <div className='text-center' key={item.id}>
+                  <CustomImage key={item.id} width={300} height={300} src={utils.baseUrlImage(item.img)} />
+                </div>
+              ))}
+            </Carousel>
+            <div className='next icon' onClick={() => ref.current?.next()}>
+              <TiChevronRight size={30} />
+            </div>
+          </CarouselWrapper>
+          <div className='col-lg-1' />
+          <div className='col-lg-6 product-details py-4 '>
             <h3>{_product.name}</h3>
             <div className='items-center gap-x-2 flex'>
-              <span className='ant-rate-text'>{_product.rateAVG?.toFixed(1)}</span>
+              <div className='ant-rate-text h-3'>{_product.rateAVG?.toFixed(1)}</div>
               <Rate allowHalf value={customRound(_product.rateAVG)} disabled />
             </div>
-            <p className='price'>
-              <span>{utils.formatCurrency(_product.price)} VNĐ</span>
-            </p>
-            <p>{_product.description}</p>
+            <div className='my-4 text-2xl'>{renderTotal()}</div>
+            <div>{_product.description}</div>
             <div className='flex items-center my-4 gap-x-4'>
               <InputNumber
                 className='w-24'
                 size='large'
                 min={1}
-                max={_product.remain || 1}
+                // max={_product.remain || 1}
                 defaultValue={1}
                 keyboard={false}
-                onChange={(value) => setTotal(value)}
+                onChange={(value) => setTotal(value || 1)}
                 precision={0}
                 value={_total}
               />
@@ -262,8 +347,8 @@ export default function Product() {
       <div className='container pt-10'>
         <h3>Có thể bạn sẽ thích</h3>
         <div className='flex flex-wrap'>
-          {_.map(_products.data?.products, (item: any) => (
-            <div className='col-md-6 col-lg-3'>
+          {_.map(_products.data?.products, (item: any, index: number) => (
+            <div className='col-md-6 col-lg-3' key={index}>
               <div className='block w-full '>
                 <Link to={`/product/${item.id}`} className='block overflow-hidden'>
                   <img

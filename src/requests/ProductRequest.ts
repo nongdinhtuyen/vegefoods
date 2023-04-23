@@ -18,6 +18,11 @@ class ProductRequest extends BaseRequest {
     return this.get(url);
   }
 
+  getProductImageById(params) {
+    const url = `${prefix}/${params}/image`;
+    return this.get(url);
+  }
+
   getListComments(params) {
     const url = `${prefix}/${params.id}/comment`;
     return this.get(url, params);

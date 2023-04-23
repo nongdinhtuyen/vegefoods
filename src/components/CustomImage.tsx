@@ -1,8 +1,8 @@
-import { Image, Space } from 'antd';
+import { Image, ImageProps, Space } from 'antd';
 import React from 'react';
 import { EyeOutlined } from '@ant-design/icons';
 
-export default function CustomImage(props) {
+export default function CustomImage(props: ImageProps) {
   return (
     <Image
       preview={{
@@ -13,6 +13,7 @@ export default function CustomImage(props) {
           </Space>
         ),
       }}
+      className='object-contain'
       {...props}
     />
   );

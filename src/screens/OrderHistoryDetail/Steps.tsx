@@ -18,6 +18,7 @@ import { FaShippingFast } from 'react-icons/fa';
 import styled from 'styled-components';
 import consts from 'consts';
 import ProductComponent from 'components/ProductComponent';
+import Icon from 'components/Icon';
 
 const StepsWrapper = styled(Steps)`
   .ant-steps-item-tail {
@@ -33,39 +34,33 @@ const StepsWrapper = styled(Steps)`
   .ant-steps-item-content {
     /* width: fit-content !important; */
   }
+  .item {
+    height: 40px;
+    width: 40px;
+    align-items: center;
+    display: inline-flex;
+    padding: 0.5rem;
+    justify-content: center;
+    border-radius: 50%;
+    .icomoon path {
+      fill: currentColor
+    }
+  }
   .ant-steps-item-active,
   .ant-steps-item-finish {
     .item-active {
-      height: 40px;
-      width: 40px;
-      padding: 0.5rem;
-      display: inline-flex;
-      align-items: center;
       color: #fff;
       background: #82ae46;
-      border-radius: 50%;
     }
   }
   .ant-steps-item-wait {
     .item-active {
-      align-items: center;
-      height: 40px;
-      width: 40px;
-      padding: 0.5rem;
-      display: inline-flex;
-      border-radius: 50%;
       background: #0000000f;
       color: #000000a6;
     }
   }
   .ant-steps-item-error {
     .item-active {
-      align-items: center;
-      height: 40px;
-      width: 40px;
-      padding: 0.5rem;
-      display: inline-flex;
-      border-radius: 50%;
       background: #343a40;
       color: #000;
     }
@@ -86,7 +81,7 @@ const StepsWrapper = styled(Steps)`
 // 5 – Chờ duyệt hủy - 1
 // 6 – Đã hủy - 3
 export default function CustomSteps({ status, typePayment, price }) {
-  const renderIcon = (icon: React.ReactNode) => <div className='item-active'>{icon}</div>;
+  const renderIcon = (icon: React.ReactNode) => <div className='item item-active'>{icon}</div>;
 
   const items: any = [
     {
@@ -117,9 +112,6 @@ export default function CustomSteps({ status, typePayment, price }) {
 
   const renderItems2 = () => {
     _.forEach([...Array(typePayment - items.length).keys()], (item, index) => {
-      if(index === 1){
-
-      }
       if (typePayment === consts.TYPE_PAYMENT_COD) {
         items.push({
           title: 'Đã phê duyệt',
@@ -145,8 +137,8 @@ export default function CustomSteps({ status, typePayment, price }) {
           };
         } else {
           items[1] = {
-            title: 'Chờ phê duyệt',
-            icon: renderIcon(<BsShieldCheck />),
+            title: 'Chờ thanh toán',
+            icon: renderIcon(<Icon size={22} className='icomoon' title='Chi tiết đơn nhập' icon={'money'} />),
           };
         }
         break;

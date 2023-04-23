@@ -81,14 +81,7 @@ function App() {
               </RequireAuth>
             }
           />
-          <Route
-            path='/product/:id'
-            element={
-              <RequireAuth>
-                <Product />
-              </RequireAuth>
-            }
-          />
+          <Route path='/product/:id' element={<Product />} />
           <Route
             path='/cart'
             element={

@@ -20,7 +20,7 @@ type Props = {
   isCart?: boolean;
   id: number;
   priceSale: number;
-  remain: number;
+  remain?: number;
 };
 
 export default function ProductComponent({ priceSale, name, img, price, unit, quantity, description, isCart = false, id, remain = 0 }: Props) {

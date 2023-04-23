@@ -84,7 +84,7 @@ export default function OrderHistoryDetail() {
                 <div className='text-center'>
                   <CustomImage
                     width={110}
-                    src={`https://img.vietqr.io/image/BIDV-21510002320204-compact.png?amount=${_receipt.data.receipt.total}&addInfo=${_receipt.data.receipt.idt}%5C&accountName=Nông%20Đình%20Tuyên`}
+                    src={`https://img.vietqr.io/image/BIDV-21510002320204-compact2.png?amount=${_receipt.data.receipt.totalAfterSale}&addInfo=${params.id}%5C&accountName=Nông%20Đình%20Tuyên`}
                   />
                 </div>
               )}
