@@ -18,13 +18,8 @@ export default function Page1({ setPay }: ReceiptProps) {
   const [_form] = Form.useForm();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [_address, setAddress] = useState([
-    {
-      name: profile.name,
-      phone: profile.phone,
-      address: profile.address,
-      id: profile.id,
-    },
+  const [_address, setAddress] = useState<any>([
+
   ]);
 
   useEffect(() => {
@@ -33,14 +28,14 @@ export default function Page1({ setPay }: ReceiptProps) {
       addressActions.actionGetAddress({
         callbacks: {
           onSuccess({ data }) {
-            setAddress([..._address, ...data]);
+            setAddress(data);
             setPay((draft) => {
               draft.idReceiver = data[0].id;
             });
             _form.setFieldsValue({
-              name: _address[0].name,
-              phone: _address[0].phone,
-              address: _address[0].address,
+              name: data[0].name,
+              phone: data[0].phone,
+              address: data[0].address,
             });
           },
         },
@@ -50,7 +45,7 @@ export default function Page1({ setPay }: ReceiptProps) {
 
   useEffect(() => {
     if (cartDataTotal.totalItem === 0) {
-      navigate('/shop', {
+      navigate('/', {
         replace: true,
       });
     }

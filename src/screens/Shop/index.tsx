@@ -7,9 +7,9 @@ import productActions from '../../redux/actions/product';
 import { useImmer } from 'use-immer';
 import _ from 'lodash';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import utils from 'common/utils';
-import { Pagination } from 'antd';
+import { Button, Pagination } from 'antd';
 
 type ListProductType = {
   current?: number;
@@ -17,6 +17,7 @@ type ListProductType = {
 };
 
 export default function Shop() {
+  const navigate = useNavigate();
   const [_products, setProducts] = useImmer({
     total: 0,
     current: 1,
@@ -127,10 +128,11 @@ export default function Shop() {
                   </div>
                   <div className='d-flex'>
                     <div className='pricing'>
-                      <p className='price'>
-                        <span>{utils.formatCurrency(item.price)} VNĐ</span>
-                      </p>
+                      <span>{utils.formatCurrency(item.price)} VNĐ</span>
                     </div>
+                    <Button type='primary' onClick={() => navigate(`/product/${item.id}`)}>
+                      Chi tiết
+                    </Button>
                   </div>
                 </div>
               </div>

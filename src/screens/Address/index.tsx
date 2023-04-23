@@ -31,7 +31,7 @@ export default function Address() {
         callbacks: {
           onSuccess: ({ data }) => {
             setAddress((draft) => {
-              draft.data = [profile, ...data];
+              draft.data = [...data];
             });
           },
         },

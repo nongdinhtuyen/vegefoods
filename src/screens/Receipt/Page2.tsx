@@ -16,6 +16,7 @@ import ProductComponent from 'components/ProductComponent';
 import { useNavigate } from 'react-router-dom';
 import { UserOutlined, EyeOutlined, ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import CustomImage from 'components/CustomImage';
+import { openNotification } from 'common/Notify';
 
 export default function Page2({ setPay, pay }: ReceiptProps) {
   const { cartData, cartDataTotal } = useAppSelector((state) => state.cartReducer);
@@ -41,6 +42,10 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
         callbacks: {
           onSuccess({ data }) {
             dispatch(cartActions.actionGetCartTotal({}));
+            openNotification({
+              description: 'Mua hàng thành công',
+              type: 'success',
+            });
             navigate(`/history/${data}`);
           },
         },
@@ -117,7 +122,7 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
               </div>
               <Radio.Group onChange={onChange} value={pay?.typePayment}>
                 <Space direction='vertical' size='middle'>
-                  <Radio value={consts.TYPE_PAYMENT_OCD}>Thanh toán khi nhận hàng (COD)</Radio>
+                  <Radio value={consts.TYPE_PAYMENT_COD}>Thanh toán khi nhận hàng (COD)</Radio>
                   <Radio value={consts.TYPE_PAYMENT_ONLINE}>Thanh toán online</Radio>
                 </Space>
               </Radio.Group>

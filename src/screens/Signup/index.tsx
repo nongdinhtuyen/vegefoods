@@ -19,6 +19,7 @@ const tailLayout = {
 
 export default function Signup() {
   const navigate = useNavigate();
+  const [_form] = Form.useForm();
   const dispatch = useDispatch();
 
   const onFinish = (value) => {
@@ -46,17 +47,17 @@ export default function Signup() {
       <div className='container'>
         <div className='login-container'>
           <h1>ĐĂNG KÝ</h1>
-          <Form {...layout} name='basic' onFinish={onFinish} className='m-auto'>
+          <Form {...layout} name='basic' onFinish={onFinish} className='m-auto' form={_form}>
             <Form.Item
               name='username'
               rules={[
                 {
                   required: true,
-                  message: 'Tài khoản không được để trống'
+                  message: 'Tên đăng nhập không được để trống',
                 },
               ]}
             >
-              <Input placeholder='Tài khoản' />
+              <Input placeholder='Tên đăng nhập' onChange={(e) => _form.setFieldValue('username', e.target?.value.trim())} />
             </Form.Item>
 
             <Form.Item
@@ -64,7 +65,7 @@ export default function Signup() {
               rules={[
                 {
                   required: true,
-                  message: 'Mật khẩu không được để trống'
+                  message: 'Mật khẩu không được để trống',
                 },
               ]}
             >
@@ -76,7 +77,7 @@ export default function Signup() {
               rules={[
                 {
                   required: true,
-                  message: 'Email không được để trống'
+                  message: 'Email không được để trống',
                 },
               ]}
             >
@@ -87,22 +88,24 @@ export default function Signup() {
               rules={[
                 {
                   required: true,
-                  message: 'Tên không được để trống'
+                  message: 'Tên không được để trống',
                 },
               ]}
             >
-              <Input placeholder='Tên' />
+              <Input placeholder='Họ và tên' />
             </Form.Item>
             <Form.Item
               rules={[
                 {
                   required: true,
-                  message: 'Giới tính không được để trống'
+                  message: 'Giới tính không được để trống',
                 },
               ]}
               name='sex'
             >
               <Select
+                placeholder='Giới tính'
+                className='text-left'
                 options={[
                   { value: 0, label: 'Nam' },
                   { value: 1, label: 'Nữ' },
@@ -115,11 +118,22 @@ export default function Signup() {
               rules={[
                 {
                   required: true,
-                  message: 'Số điện thoại không được để trống'
+                  message: 'Số điện thoại không được để trống',
                 },
               ]}
             >
-              <Input placeholder='Số điẹn thoại' />
+              <Input placeholder='Số điện thoại' />
+            </Form.Item>
+            <Form.Item
+              name='address'
+              rules={[
+                {
+                  required: true,
+                  message: 'Địa chỉ không được để trống',
+                },
+              ]}
+            >
+              <Input placeholder='Địa chỉ' />
             </Form.Item>
             <Form.Item {...tailLayout}>
               <Button type='primary' htmlType='submit'>

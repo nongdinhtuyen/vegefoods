@@ -110,7 +110,7 @@ export default function OrderHistory() {
         ) : (
           <div className='col-md-12 text-center cart-empty bg-white'>
             <Empty description='Bạn chưa mua đồ lần nào, hãy mua sắm để có thông tin' />
-            <Link to='/shop' className='btn-primary'>
+            <Link to='/' className='btn-primary'>
               Quay lại mua sắm
             </Link>
           </div>

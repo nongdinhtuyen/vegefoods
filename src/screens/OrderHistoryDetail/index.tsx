@@ -108,7 +108,7 @@ export default function OrderHistoryDetail() {
             ))}
             <div className='py-2 text-right text-lg'>
               Tổng tiền:{' '}
-              {!new BigNumber(_receipt.data.receipt.total).isEqualTo(0) && (
+              {new BigNumber(_receipt.data.receipt.total).isGreaterThan(_receipt.data.receipt.totalAfterSale) && (
                 <del className='italic font-medium mr-2 text-gray-900'>{utils.formatCurrency(_receipt.data.receipt.total)}</del>
               )}
               <span className='font-bold text-primary'>{utils.formatCurrency(_receipt.data.receipt.totalAfterSale)}</span> VNĐ

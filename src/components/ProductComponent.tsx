@@ -89,10 +89,12 @@ export default function ProductComponent({ priceSale, name, img, price, unit, qu
     navigate(`/product/${id}`);
   };
   return (
-    <div className='flex items-center gap-x-6 cursor-pointer hover:bg-slate-50' onClick={handleRedirect}>
+    <div className='flex items-center gap-x-6'>
       <Image preview={false} height={110} width={110} className='object-contain' src={utils.baseUrlImage(img)} />
       <div className='flex flex-1 flex-wrap gap-y-1 text-base'>
-        <div className='w-1/2 font-bold'>{name}</div>
+        <div className='w-1/2 font-bold text-primary cursor-pointer' onClick={handleRedirect}>
+          {name}
+        </div>
         <div className='w-1/2 text-right'>Giá bán: {renderPrice()}</div>
         <div className='w-1/2'>
           {description ? `${description}. ` : ''}Đơn vị tính: {unit}

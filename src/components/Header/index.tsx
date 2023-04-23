@@ -83,7 +83,7 @@ export default function Header(props) {
           <Search />
         </div>
         <div className='flex items-center gap-x-8 flex-1 justify-end'>
-          <Link className='text-black text-xs tracking-widest' to='/shop'>
+          <Link className='text-black text-xs tracking-widest' to='/'>
             Cửa hàng
           </Link>
           <Link className='flex tracking-widest' to='/cart'>

@@ -6,7 +6,7 @@ export default function ButtonShopNow() {
   const navigate = useNavigate();
   return (
     <div className='button-shop-now'>
-      <button className='learn-more' onClick={() => navigate('/shop')}>
+      <button className='learn-more' onClick={() => navigate('/')}>
         <span className='circle' aria-hidden='true'>
           <span className='icon arrow'></span>
         </span>

@@ -119,13 +119,20 @@ export default function CustomSteps({ status, typePayment, price }) {
     switch (status) {
       case 0:
       case 1:
-        items[1] = {
-          title: 'Chờ phê duyệt',
-          icon: renderIcon(<BsShieldCheck />),
-        };
+        if (typePayment === consts.TYPE_PAYMENT_ONLINE) {
+          items[1] = {
+            title: 'Đã phê duyệt',
+            icon: renderIcon(<BsShieldCheck />),
+          };
+        } else {
+          items[1] = {
+            title: 'Chờ phê duyệt',
+            icon: renderIcon(<BsShieldCheck />),
+          };
+        }
         break;
       case 2:
-        if (typePayment === consts.TYPE_PAYMENT_OCD) {
+        if (typePayment === consts.TYPE_PAYMENT_COD) {
           items[1] = {
             title: 'Đã phê duyệt',
             icon: renderIcon(<BsShieldCheck />),

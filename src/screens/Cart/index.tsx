@@ -89,7 +89,7 @@ export default function Cart() {
           ) : (
             <div className='col-md-12 text-center cart-empty'>
               <Empty description='Giỏ hàng của bạn đang trống, hãy tiếp tục mua sắm' />
-              <Link to='/shop' className='btn-primary'>
+              <Link to='/' className='btn-primary'>
                 Quay lại danh sách hàng hóa
               </Link>
             </div>

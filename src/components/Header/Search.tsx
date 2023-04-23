@@ -60,7 +60,7 @@ const Search: React.FC = () => {
           {menu}
           <Divider style={{ margin: '0' }} />
           <Space style={{}}>
-            <Link to='shop' className='watch-more' key='note'>
+            <Link to='' className='watch-more' key='note'>
               Xem thêm
             </Link>
           </Space>

@@ -7,6 +7,6 @@ export default function ButtonHeader() {
   const navigate = useNavigate();
 
   return (
-    <Button className='button-shop-now' onClick={() => navigate('/shop')} size="large" type='primary'>Xem chi tiết</Button>
+    <Button className='button-shop-now' onClick={() => navigate('/')} size="large" type='primary'>Xem chi tiết</Button>
   );
 }

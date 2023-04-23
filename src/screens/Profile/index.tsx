@@ -1,6 +1,7 @@
 import { Button, Col, DatePicker, Drawer, Form, Input, InputNumber, Modal, Radio, Row, Select, Space, Steps } from 'antd';
 import BigNumber from 'bignumber.js';
 import classNames from 'classnames';
+import { openNotification } from 'common/Notify';
 import utils from 'common/utils';
 import useToggle from 'hooks/useToggle';
 import _ from 'lodash';
@@ -57,6 +58,10 @@ export default function Profile() {
             callbacks: {
               onSuccess() {
                 fetchInfo(profile.id);
+                openNotification({
+                  description: 'Cập nhật thông tin cá nhân thành công',
+                  type: 'success'
+                })
               },
             },
           }),
@@ -70,21 +75,31 @@ export default function Profile() {
       .validateFields()
       .then((values) => {
         dispatch(
-          actions.actionUpdateProfile({
+          actions.actionUpdatePassword({
             params: { ...values, id: profile.id },
+            callbacks: {
+              onSuccess(data) {
+                openNotification({
+                  description: 'Đổi mật khẩu thành công',
+                  type: 'success'
+                })
+              },
+            }
           }),
         );
       })
       .catch(console.log);
   };
 
+  const trimString = (str: string) => (_form.getFieldValue(str))?.trim()
+
   const onChange = () => {
-    return _.isEqual(profile, { ...profile, ..._form.getFieldsValue() });
+    return _.isEqual(profile, { ...profile, ..._form.getFieldsValue(), phone: trimString('phone'), address: trimString('address'), name: trimString('name')});
   };
 
   const handlePercent = (): number | undefined => {
     const next = _.find(rank.listRank, (item) => item.totalSpend > profile.totalBuy);
-    const precent = new BigNumber(next?.totalSpend).minus(profile.totalBuy).times(100).div(profile.totalBuy).toFixed(0);
+    const precent = new BigNumber(profile.totalBuy).times(100).div(next?.totalSpend).toFixed(0);
     return new BigNumber(precent).isGreaterThanOrEqualTo(100) ? 0 : +precent;
   };
 
@@ -100,7 +115,7 @@ export default function Profile() {
             Quyền lợi: được giảm giá <span className='font-semibold text-xl'>{rank.rankUser?.discount}%</span> khi thanh toán trực tiếp hoặc online
           </div>
           <Steps
-            current={rank.rankUser?.id - 1}
+            current={rank.rankUser?.id}
             percent={handlePercent()}
             items={_.map(rank.listRank, (item) => ({
               title: item.name,

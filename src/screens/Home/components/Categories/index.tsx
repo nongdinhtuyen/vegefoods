@@ -14,7 +14,7 @@ function Categories(props) {
                                     <div className="text text-center">
                                         <h2>Vegetables</h2>
                                         <p>Bảo vệ sức khỏe của bạn mỗi ngày</p>
-                                        {/* <p><Link to="/shop" className="btn btn-primary">Mua ngay</Link></p> */}
+                                        {/* <p><Link to="/" className="btn btn-primary">Mua ngay</Link></p> */}
                                         <ButtonShopNow />
                                     </div>
                                 </div>

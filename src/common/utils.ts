@@ -5,6 +5,7 @@ import { openNotification } from './Notify';
 import axios, { ParamsSerializerOptions } from 'axios';
 import { parse, stringify, ParsedQs, IStringifyOptions } from 'qs';
 import humanizeDuration from 'humanize-duration';
+import { BASEURL_IMG } from 'bootstrap';
 
 // let timeoutID;
 
@@ -117,8 +118,7 @@ const dumpRequest = ({ file, onSuccess }, callback) => {
 };
 
 const baseUrlImage = (img) => {
-  // return `http://127.0.0.1:8089/raw/${img}`
-  return `http://192.168.0.103:8089/raw/${img}`
+  return `${BASEURL_IMG}/raw/${img}`
 }
 
 export default {
