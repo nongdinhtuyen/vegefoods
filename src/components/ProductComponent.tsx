@@ -8,6 +8,7 @@ import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import actions from 'redux/actions/cart';
+import { useAppSelector } from 'redux/store';
 
 type Props = {
   name: string;
@@ -19,9 +20,10 @@ type Props = {
   isCart?: boolean;
   id: number;
   priceSale: number;
+  remain: number;
 };
 
-export default function ProductComponent({ priceSale, name, img, price, unit, quantity, description, isCart = false, id }: Props) {
+export default function ProductComponent({ priceSale, name, img, price, unit, quantity, description, isCart = false, id, remain = 0 }: Props) {
   const [_count, setCount] = useState(quantity);
   const [_loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -29,6 +31,13 @@ export default function ProductComponent({ priceSale, name, img, price, unit, qu
 
   const handleCount = (value, event) => {
     event.stopPropagation();
+    if (value > remain) {
+      openNotification({
+        description: `Rất tiếc, bạn chỉ có thể mua tối đa ${remain} sản phẩm`,
+        type: 'warning',
+      });
+      return;
+    }
     setCount(value);
     if (_count > value) {
       if (isCart) {

@@ -25,13 +25,13 @@ const StepsWrapper = styled(Steps)`
   }
   .ant-steps-item-title {
     line-height: 1.5rem;
-    white-space: nowrap;
+    /* white-space: nowrap; */
   }
   .ant-steps-item-description {
-    white-space: nowrap;
+    /* white-space: nowrap; */
   }
   .ant-steps-item-content {
-    width: fit-content !important;
+    /* width: fit-content !important; */
   }
   .ant-steps-item-active,
   .ant-steps-item-finish {
@@ -115,11 +115,30 @@ export default function CustomSteps({ status, typePayment, price }) {
     }
   };
 
+  const renderItems2 = () => {
+    _.forEach([...Array(typePayment - items.length).keys()], (item, index) => {
+      if(index === 1){
+
+      }
+      if (typePayment === consts.TYPE_PAYMENT_COD) {
+        items.push({
+          title: 'Đã phê duyệt',
+          icon: renderIcon(<BsShieldCheck />),
+        });
+      } else {
+        items.push({
+          title: 'Chờ phê duyệt',
+          icon: renderIcon(<BsShieldCheck />),
+        });
+      }
+    });
+  };
+
   const renderItems = () => {
     switch (status) {
       case 0:
       case 1:
-        if (typePayment === consts.TYPE_PAYMENT_ONLINE) {
+        if (typePayment === consts.TYPE_PAYMENT_COD) {
           items[1] = {
             title: 'Đã phê duyệt',
             icon: renderIcon(<BsShieldCheck />),

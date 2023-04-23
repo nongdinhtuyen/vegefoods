@@ -39,7 +39,14 @@ class BaseRequest {
   }
 
   async _responseHandler(response) {
-    const { code } = response.data;
+    const { code, msg } = response.data;
+    if (msg === 'WrongPass') {
+      openNotification({
+        description: 'Sai mật khẩu hiện tại',
+        type: 'error',
+      });
+      throw 'Request failed';
+    }
     if (code >= 400) {
       openNotification({
         description: 'Request failed',

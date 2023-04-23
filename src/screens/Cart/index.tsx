@@ -8,9 +8,12 @@ import _ from 'lodash';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
 import ProductComponent from 'components/ProductComponent';
+import BigNumber from 'bignumber.js';
 
 export default function Cart() {
   const { cartData, cartDataTotal } = useAppSelector((state) => state.cartReducer);
+  const { profile } = useAppSelector((state) => state.userReducer);
+  console.log('🚀 ~ file: index.tsx:16 ~ Cart ~ profile:', profile);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -19,7 +22,7 @@ export default function Cart() {
   }, []);
 
   const handleRemove = (e, id, quantity) => {
-    e.stopPropagation()
+    e.stopPropagation();
     dispatch(
       actions.actionRemoveCart({
         params: {
@@ -27,8 +30,6 @@ export default function Cart() {
           quantity,
         },
         callbacks: {
-          onBeginning() {
-          },
           onSuccess() {
             dispatch(actions.actionGetCartTotal({}));
             dispatch(actions.actionGetCart({}));
@@ -36,6 +37,22 @@ export default function Cart() {
         },
       }),
     );
+  };
+
+  const renderTotal = () => {
+    if (profile.rankList?.discount > 0) {
+      const sale = new BigNumber(cartDataTotal.totalPrice)
+        .times(100 - profile.rankList?.discount)
+        .div(100)
+        .toNumber();
+      return (
+        <>
+          <del className='italic font-medium mr-2 text-gray-900'>{utils.formatCurrency(cartDataTotal.totalPrice)}</del>
+          <span className='font-bold text-primary'>{utils.formatCurrency(sale)}</span>
+        </>
+      );
+    }
+    return <span className='font-bold text-primary'>{utils.formatCurrency(cartDataTotal.totalPrice)}</span>;
   };
 
   return (
@@ -63,6 +80,7 @@ export default function Cart() {
                     unit={item.productList.unit}
                     quantity={item.quantity}
                     name={item.productList.name}
+                    remain={item.productList.remain}
                     description={item.productList.description}
                     isCart={true}
                     id={item.idProduct}
@@ -79,11 +97,18 @@ export default function Cart() {
                   <Divider className='m-0 mt-2' />
                 </div>
               ))}
-              <div className='py-2 text-right text-lg'>
-                Tổng tiền: <span className='font-bold text-primary'>{utils.formatCurrency(cartDataTotal.totalPrice)}</span> VNĐ
-                <Button className='ml-3' type='primary' onClick={() => navigate('/receipt')}>
-                  Thanh toán
-                </Button>
+              <div className='flex items-center justify-between'>
+                {profile.rankList?.discount > 0 && (
+                  <div className='text-gray-600'>
+                    `Bạn đạt rank <span className='text-black font-semibold text-base'>{profile.rankList?.name}</span> được giảm giá <span className='text-black font-semibold text-base'>{profile.rankList?.discount}%</span>
+                  </div>
+                )}
+                <div className='py-2 text-right text-lg'>
+                  Tổng tiền: {renderTotal()} VNĐ
+                  <Button className='ml-3' type='primary' onClick={() => navigate('/receipt')}>
+                    Thanh toán
+                  </Button>
+                </div>
               </div>
             </>
           ) : (

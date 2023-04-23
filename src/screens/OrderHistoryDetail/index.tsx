@@ -76,11 +76,11 @@ export default function OrderHistoryDetail() {
                 <div className='flex items-center gap-x-2 mb-1'>
                   <FiMapPin className='text-primary' size={20} /> THÔNG TIN NGƯỜI NHẬN
                 </div>
-                <div className='font-bold'>{_receipt.data.receipt.addressList?.name}</div>
-                <div>{_receipt.data.receipt.addressList?.phone}</div>
-                <div>{_receipt.data.receipt.addressList?.address}</div>
+                <div className='font-bold'>{_receipt.data.receipt?.nameReceiver}</div>
+                <div>{_receipt.data.receipt?.phoneReceiver}</div>
+                <div>{_receipt.data.receipt?.addressReceiver}</div>
               </div>
-              {_receipt.data.receipt.typePayment === consts.TYPE_PAYMENT_ONLINE && (
+              {_receipt.data.receipt.typePayment === consts.TYPE_PAYMENT_ONLINE && _receipt.data.receipt.status === 0 && (
                 <div className='text-center'>
                   <CustomImage
                     width={110}

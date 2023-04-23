@@ -94,7 +94,7 @@ export default function Shop() {
     <>
       <Breadcrumb name='shop' />
       <div className='container my-12'>
-        <div className='flex items-center justify-center'>
+        <div className='flex items-center justify-center mb-4'>
           {_.map(_productTypes.data, (item: any, index: number) => (
             <div
               key={index}
@@ -112,34 +112,32 @@ export default function Shop() {
         </div>
         <div className='flex flex-wrap'>
           {_.map(_products.data?.products, (item: any) => (
-            <div className='col-md-6 col-lg-3'>
-              <div className='block w-full '>
-                <Link to={`/product/${item.id}`} className='block overflow-hidden'>
-                  <img
-                    height={260}
-                    className='max-w-full hover:scale-110 transition duration-300 object-contain'
-                    src={utils.baseUrlImage(item.img)}
-                    alt={item.img}
-                  />
-                </Link>
-                <div className='text py-3 pb-4 px-3 text-center'>
-                  <div className='text-2xl'>
-                    <Link to={`/product/${item.id}`}>{item.name}</Link>
+            <div className='w-1/4 flex flex-col justify-center'>
+              <Link to={`/product/${item.id}`} className='block overflow-hidden'>
+                <img
+                  height={260}
+                  className='max-w-full hover:scale-110 transition duration-300 object-contain'
+                  src={utils.baseUrlImage(item.img)}
+                  alt={item.img}
+                />
+              </Link>
+              <div className='text-2xl flex-1 text-center'>
+                <Link to={`/product/${item.id}`}>{item.name}</Link>
+              </div>
+              <div className='text py-3 pb-4 px-3 text-center'>
+                <div className='d-flex'>
+                  <div className='pricing'>
+                    <span>{utils.formatCurrency(item.price)} VNĐ</span>
                   </div>
-                  <div className='d-flex'>
-                    <div className='pricing'>
-                      <span>{utils.formatCurrency(item.price)} VNĐ</span>
-                    </div>
-                    <Button type='primary' onClick={() => navigate(`/product/${item.id}`)}>
-                      Chi tiết
-                    </Button>
-                  </div>
+                  <Button type='primary' onClick={() => navigate(`/product/${item.id}`)}>
+                    Chi tiết
+                  </Button>
                 </div>
               </div>
             </div>
           ))}
         </div>
-        <div className='text-center'>
+        <div className='text-center mt-3'>
           <Pagination
             onChange={handleChange}
             showSizeChanger={false}
