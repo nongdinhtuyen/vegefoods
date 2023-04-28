@@ -6,6 +6,7 @@ import axios, { ParamsSerializerOptions } from 'axios';
 import { parse, stringify, ParsedQs, IStringifyOptions } from 'qs';
 import humanizeDuration from 'humanize-duration';
 import { BASEURL_IMG } from 'bootstrap';
+import consts from 'consts';
 
 // let timeoutID;
 
@@ -121,8 +122,28 @@ const baseUrlImage = (img) => {
   return `${BASEURL_IMG}/raw/${img}`
 }
 
+
+const errorFromFireBase = (err: any) => {
+  let stringErr = err.toString()
+  let str = stringErr.substring(stringErr.indexOf('(') + 1, stringErr.lastIndexOf(')')).trim();
+  const arr = [
+    consts.TOO_MANY_REQUESTS_STR,
+    consts.INVALID_PHONE_NUMBER,
+    consts.CODE_EXPIRED,
+    consts.MISSING_VERIFICATION_CODE,
+    consts.INVALID_VERIFICATION_CODE,
+  ];
+  if(_.includes(arr, str)){
+    return str;
+  } else {
+    return consts.VERIFICATION_ERROR;
+  }
+}
+
+
 export default {
   baseUrlImage,
+  errorFromFireBase,
   formatTimeFromUnix,
   formatCurrency,
   showNotification,

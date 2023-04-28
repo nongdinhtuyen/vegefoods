@@ -129,7 +129,6 @@ export default function CustomSteps({ status, typePayment, price }) {
   const renderItems = () => {
     switch (status) {
       case 0:
-      case 1:
         if (typePayment === consts.TYPE_PAYMENT_COD) {
           items[1] = {
             title: consts.PRODUCT_STATUS_STRING[0],
@@ -138,6 +137,19 @@ export default function CustomSteps({ status, typePayment, price }) {
         } else {
           items[1] = {
             title: consts.PRODUCT_STATUS_STRING_ONLINE[0],
+            icon: renderIcon(<Icon size={22} className='icomoon' title='Chi tiết đơn nhập' icon={'money'} />),
+          };
+        }
+        break;
+      case 1:
+        if (typePayment === consts.TYPE_PAYMENT_COD) {
+          items[1] = {
+            title: consts.PRODUCT_STATUS_STRING[1],
+            icon: renderIcon(<BsShieldCheck />),
+          };
+        } else {
+          items[1] = {
+            title: consts.PRODUCT_STATUS_STRING_ONLINE[1],
             icon: renderIcon(<Icon size={22} className='icomoon' title='Chi tiết đơn nhập' icon={'money'} />),
           };
         }

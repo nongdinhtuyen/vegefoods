@@ -1,19 +1,19 @@
-import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button, Col, Divider, Empty, Pagination, Radio } from 'antd';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-
 import actions from '../../redux/actions/receipt';
-import { useAppDispatch, useAppSelector } from 'redux/store';
-import _ from 'lodash';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Button, Col, Divider, Empty, Modal, Pagination, Radio, Space } from 'antd';
+import BigNumber from 'bignumber.js';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
-import { useImmer } from 'use-immer';
 import ProductComponent from 'components/ProductComponent';
 import ProductStatus from 'components/ProductStatus';
-import { DEFAULT_SMALL_PAGE_SIZE } from 'consts';
-import BigNumber from 'bignumber.js';
+import consts, { DEFAULT_SMALL_PAGE_SIZE } from 'consts';
+import _ from 'lodash';
+import { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'redux/store';
+import styled from 'styled-components';
+import { useImmer } from 'use-immer';
 
 export default function OrderHistory() {
   const dispatch = useAppDispatch();
@@ -48,6 +48,29 @@ export default function OrderHistory() {
     );
   };
 
+  const cancelReceipt = (id) => {
+    Modal.confirm({
+      title: 'Bạn có chắc chắn hủy đơn hàng không?',
+      icon: <ExclamationCircleFilled />,
+      onOk() {
+        return new Promise((resolve, reject) => {
+          dispatch(
+            actions.actionGetReceipt({
+              params: {},
+              callbacks: {
+                onSuccess({ data, total }) {
+                  getData();
+                  resolve(data);
+                },
+              },
+            }),
+          );
+        }).catch(() => console.log('Oops errors!'));
+      },
+      onCancel() {},
+    });
+  };
+
   useEffect(() => {
     getData();
   }, []);
@@ -76,7 +99,7 @@ export default function OrderHistory() {
                   Đơn hàng <span className='font-semibold'>{item.Preview.idSaleReceipt}</span> |{' '}
                   {utils.formatTimeFromUnix(item.Salereceipt.createDate, 'hh:mm:ss DD/MM/YYYY')}
                 </div>
-                <ProductStatus status={item.Salereceipt.status} typePayment={item.Salereceipt.typePayment}/>
+                <ProductStatus status={item.Salereceipt.status} typePayment={item.Salereceipt.typePayment} />
               </div>
               <ProductComponent
                 name={item.Preview.productList.name}
@@ -100,7 +123,15 @@ export default function OrderHistory() {
                 </div>
               </div>
               <Divider className='m-0' />
-              <div className='py-3 text-right'>
+              <div className='flex gap-x-3 justify-end py-3 text-right'>
+                {_.includes(
+                  [consts.PRODUCT_STATUS.WAITING_FOR_APPROVAL, consts.PRODUCT_STATUS.APPROVED, consts.PRODUCT_STATUS.WAITING_FOR_DELIVERY],
+                  item.Salereceipt.status,
+                ) && (
+                  <Button danger onClick={() => cancelReceipt(item.Preview.idProduct)}>
+                    Hủy đơn hàng
+                  </Button>
+                )}
                 <Button type='primary' onClick={() => navigate(`/history/${item.Preview.idSaleReceipt}`)}>
                   Chi tiết
                 </Button>

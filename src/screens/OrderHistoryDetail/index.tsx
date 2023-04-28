@@ -1,25 +1,25 @@
-import { useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Divider, Empty, Image, Space, Steps } from 'antd';
-
 import actions from '../../redux/actions/receipt';
-import { useAppDispatch, useAppSelector } from 'redux/store';
-import _ from 'lodash';
+import CustomSteps from './Steps';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Button, Divider, Empty, Image, Modal, Space, Steps } from 'antd';
+import BigNumber from 'bignumber.js';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
-import { useImmer } from 'use-immer';
-import { IoChevronBackSharp } from 'react-icons/io5';
-import { CgNotes } from 'react-icons/cg';
-import { TbClipboardList } from 'react-icons/tb';
-import { BsShieldCheck } from 'react-icons/bs';
-import { MdOutlineCancel } from 'react-icons/md';
-import { FiMapPin } from 'react-icons/all';
-import { FaShippingFast } from 'react-icons/fa';
-import styled from 'styled-components';
-import consts from 'consts';
 import ProductComponent from 'components/ProductComponent';
-import CustomSteps from './Steps';
-import BigNumber from 'bignumber.js';
+import consts from 'consts';
+import _ from 'lodash';
+import { useEffect } from 'react';
+import { FiMapPin } from 'react-icons/all';
+import { BsShieldCheck } from 'react-icons/bs';
+import { CgNotes } from 'react-icons/cg';
+import { FaShippingFast } from 'react-icons/fa';
+import { IoChevronBackSharp } from 'react-icons/io5';
+import { MdOutlineCancel } from 'react-icons/md';
+import { TbClipboardList } from 'react-icons/tb';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'redux/store';
+import styled from 'styled-components';
+import { useImmer } from 'use-immer';
 
 export default function OrderHistoryDetail() {
   const dispatch = useAppDispatch();
@@ -33,7 +33,7 @@ export default function OrderHistoryDetail() {
   });
   const params = useParams();
 
-  useEffect(() => {
+  const getData = () => {
     dispatch(
       actions.actionGetReceiptId({
         params: {
@@ -48,7 +48,34 @@ export default function OrderHistoryDetail() {
         },
       }),
     );
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
+
+  const cancelReceipt = (id) => {
+    Modal.confirm({
+      title: 'Bạn có chắc chắn hủy đơn hàng không?',
+      icon: <ExclamationCircleFilled />,
+      onOk() {
+        return new Promise((resolve, reject) => {
+          dispatch(
+            actions.actionGetReceipt({
+              params: {},
+              callbacks: {
+                onSuccess({ data, total }) {
+                  getData();
+                  resolve(data);
+                },
+              },
+            }),
+          );
+        }).catch(() => console.log('Oops errors!'));
+      },
+      onCancel() {},
+    });
+  };
 
   return (
     <div className='bg-[#F2F2F2]'>
@@ -59,6 +86,14 @@ export default function OrderHistoryDetail() {
               <IoChevronBackSharp />
               Đơn hàng {_receipt.data.receipt.id}
             </span>
+            {_.includes(
+              [consts.PRODUCT_STATUS.WAITING_FOR_APPROVAL, consts.PRODUCT_STATUS.APPROVED, consts.PRODUCT_STATUS.WAITING_FOR_DELIVERY],
+              _receipt.data.receipt.status,
+            ) && (
+              <Button danger onClick={() => cancelReceipt(_receipt.data.receipt.id)}>
+                Hủy đơn hàng
+              </Button>
+            )}
           </div>
           <Divider className='my-2' />
           <div className='px-5 pt-2'>

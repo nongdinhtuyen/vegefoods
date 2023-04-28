@@ -1,7 +1,17 @@
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_SMALL_PAGE_SIZE = 5;
 
+// export const SITE_KEY_FISEBASE = '6LcMZR0UAAAAALgPMcgHwga7gY5p8QMg1Hj-bmUv';
+
 export default {
+
+  TOO_MANY_REQUESTS_STR: 'auth/too-many-requests',
+  INVALID_PHONE_NUMBER: 'auth/invalid-phone-number',
+  CODE_EXPIRED: 'auth/code-expired',
+  MISSING_VERIFICATION_CODE: 'auth/missing-verification-code',
+  INVALID_VERIFICATION_CODE: 'auth/invalid-verification-code',
+  VERIFICATION_ERROR: 'ekyc.verification-error',
+
   TYPE_PAYMENT_ONLINE: 0,
   TYPE_PAYMENT_COD: 1,
 
@@ -18,7 +28,7 @@ export default {
   PRODUCT_STATUS_STRING: {
     0: 'Chờ phê duyệt',
     1: 'Đã phê duyệt',
-    2: 'Chờ vận chuyển',
+    2: 'Chờ xuất kho',
     3: 'Đang giao hàng',
     4: 'Giao hàng thành công',
     5: 'Chờ duyệt hủy',

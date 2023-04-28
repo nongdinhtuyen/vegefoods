@@ -1,21 +1,22 @@
-import React, { ReactNode, useEffect } from 'react';
-import 'antd/dist/reset.css';
-import 'common/extend_dayjs';
-import 'styles/index.scss';
-import SplashScreen from 'common/SplashScreen';
-import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { Header, Footer } from './components';
 import { Home, Shop, Product, Cart, Login, Signup, OrderHistory } from './screens';
 import { ConfigProvider } from 'antd';
-import Profile from 'screens/Profile';
+import 'antd/dist/reset.css';
 import viVN from 'antd/lib/locale/vi_VN';
-import Address from 'screens/Address';
+import SplashScreen from 'common/SplashScreen';
+import 'common/extend_dayjs';
 import validateMessages from 'common/validateMessages';
-import Receipt from 'screens/Receipt';
-import OrderHistoryDetail from 'screens/OrderHistoryDetail';
-import { useAppSelector } from 'redux/store';
 import useScrollToTop from 'hooks/useScrollToTop';
+import React, { ReactNode, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { useAppSelector } from 'redux/store';
+import Address from 'screens/Address';
+import GoogleMaps from 'screens/GoogleMaps';
+import OrderHistoryDetail from 'screens/OrderHistoryDetail';
+import Profile from 'screens/Profile';
+import Receipt from 'screens/Receipt';
+import 'styles/index.scss';
 
 type Router = {
   children: ReactNode;
@@ -122,6 +123,7 @@ function App() {
               </RequireAuth>
             }
           />
+          <Route path='/ggmaps' element={<GoogleMaps />} />
         </Routes>
         <Footer />
       </SplashScreen>

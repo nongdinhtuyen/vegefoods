@@ -161,3 +161,19 @@ button:focus {
     }
   }
 }
+
+.web-pc {
+	.custom-form {
+		border-radius: 16px;
+		color: #32407bde;
+		@apply flex flex-col;
+		padding: 30px clamp(20px, 5vw, 50px) 20px;
+		background: #fff;
+		width: clamp(400px, 80vw, 460px);
+		margin: 100px auto 0px;
+		position: relative;
+		height: min(560px, 100vh);
+		justify-content: center;
+		transition: opacity 0.1s ease-in, transform 0.1s ease-in;
+	}
+}

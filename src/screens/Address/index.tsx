@@ -14,6 +14,7 @@ import useToggle from 'hooks/useToggle';
 import { useImmer } from 'use-immer';
 import { FiEdit } from 'react-icons/fi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import ModalAddAddress from './ModalAddAddress';
 
 export default function Address() {
   const dispatch = useAppDispatch();
@@ -24,7 +25,6 @@ export default function Address() {
   const [_address, setAddress] = useImmer<any>({
     data: [],
   });
-
   const fetchData = () => {
     dispatch(
       actions.actionGetAddress({
@@ -140,61 +140,7 @@ export default function Address() {
           </div>
         ))}
       </div>
-      <Modal
-        title={<div className='text-2xl text-center mb-8'>Thêm mới địa chỉ</div>}
-        onCancel={handleClose}
-        onOk={handleUpdate}
-        open={isOpen}
-        okText='Xác nhận'
-        cancelText='Hủy'
-        className='top-20'
-      >
-        <Form size='large' name='basic' form={_form} className='m-auto' layout='vertical'>
-          <Form.Item
-            name='name'
-            label='Tên'
-            rules={[
-              {
-                required: true,
-                message: 'Tên không được bỏ trống',
-              },
-            ]}
-          >
-            <Input placeholder='Nhập tên' />
-          </Form.Item>
-          <Form.Item
-            label='Số điện thoại'
-            name='phone'
-            required
-            rules={[
-              ({ getFieldValue }) => ({
-                validator(rule, value) {
-                  if (_.isEmpty(value)) {
-                    return Promise.reject('Số điện thoại không được bỏ trống');
-                  }
-                  if (!_.isNumber(+value)) {
-                    return Promise.reject('Vui lòng nhập số');
-                  }
-                  return Promise.resolve();
-                },
-              }),
-            ]}
-          >
-            <Input className='w-full' placeholder='Nhập số điện thoại' />
-          </Form.Item>
-          <Form.Item
-            name='address'
-            label='Địa chỉ'
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input placeholder='Nhập địa chỉ' />
-          </Form.Item>
-        </Form>
-      </Modal>
+      <ModalAddAddress updateAddress={_updateAddress} fetchData={fetchData} close={close} isOpen={isOpen} open={open} />
     </div>
   );
 }

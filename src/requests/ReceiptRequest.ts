@@ -17,6 +17,11 @@ class ProductRequest extends BaseRequest {
     const url = `${prefix}`;
     return this.post(url, params);
   }
+
+  cancelReceipt(params) {
+    const url = `${prefix}/${params.id}`;
+    return this.delete(url, params);
+  }
 }
 
 export default ProductRequest;

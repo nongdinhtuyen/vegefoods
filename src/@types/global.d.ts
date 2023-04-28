@@ -6,6 +6,9 @@ export {};
 declare global {
   interface Window {
     axios: Axios;
+    recaptchaVerifier: any,
+    recaptchaWidgetId: any,
+    confirmationResult: any,
     navigate: NavigateFunction;
     $dispatch: Dispatch<AnyAction>;
   }

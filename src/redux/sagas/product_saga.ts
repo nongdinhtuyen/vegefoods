@@ -1,4 +1,4 @@
-import { all, call, put, fork, takeLatest } from 'redux-saga/effects';
+import { all, call, put, fork, takeLatest, takeEvery } from 'redux-saga/effects';
 
 import { GET_PRODUCT_TYPES, GET_PRODUCTS, GET_PRODUCT_BY_ID, GET_COMMENTS, ADD_COMMENT, GET_PRODUCT_IMAGE_BY_ID } from '../actions/product';
 import actions from '../actions/product';
@@ -90,7 +90,7 @@ function* addComment(action) {
 }
 
 function* watchProduct() {
-  yield takeLatest(GET_PRODUCTS, getListProducts);
+  yield takeEvery(GET_PRODUCTS, getListProducts);
   yield takeLatest(GET_PRODUCT_TYPES, getProductTypes);
   yield takeLatest(GET_PRODUCT_BY_ID, getProductById);
   yield takeLatest(GET_PRODUCT_IMAGE_BY_ID, getProductImageById);

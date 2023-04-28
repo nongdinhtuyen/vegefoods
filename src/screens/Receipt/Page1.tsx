@@ -1,11 +1,14 @@
+import addressActions from '../../redux/actions/address';
+import actions from '../../redux/actions/cart';
+import { ReceiptProps } from './receipt';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Col, Divider, Empty, Form, Image, Input, Row, Select, Space, Table } from 'antd';
+import useToggle from 'hooks/useToggle';
+import _ from 'lodash';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Col, Divider, Empty, Form, Image, Input, Row, Select, Table } from 'antd';
-import actions from '../../redux/actions/cart';
-import addressActions from '../../redux/actions/address';
 import { useAppDispatch, useAppSelector } from 'redux/store';
-import _ from 'lodash';
-import { ReceiptProps } from './receipt';
+import ModalAddAddress from 'screens/Address/ModalAddAddress';
 
 const layout = {
   labelCol: { span: 4 },
@@ -14,16 +17,14 @@ const layout = {
 
 export default function Page1({ setPay }: ReceiptProps) {
   const { cartDataTotal } = useAppSelector((state) => state.cartReducer);
-  const { profile } = useAppSelector((state) => state.userReducer);
+  const { provinces } = useAppSelector((state) => state.initReducer);
   const [_form] = Form.useForm();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [_address, setAddress] = useState<any>([
+  const [_address, setAddress] = useState<any>([]);
+  const { close, isOpen, open } = useToggle();
 
-  ]);
-
-  useEffect(() => {
-    dispatch(actions.actionGetCart({}));
+  const fetchData = () => {
     dispatch(
       addressActions.actionGetAddress({
         callbacks: {
@@ -41,6 +42,11 @@ export default function Page1({ setPay }: ReceiptProps) {
         },
       }),
     );
+  };
+
+  useEffect(() => {
+    dispatch(actions.actionGetCart({}));
+    fetchData()
   }, []);
 
   useEffect(() => {
@@ -70,7 +76,18 @@ export default function Page1({ setPay }: ReceiptProps) {
             <div className='text-primary text-xl font-bold'>Thông tin người nhận</div>
             <Divider className='my-4' />
           </div>
-          <Form size='large' name='basic' labelAlign='left' {...layout} form={_form} className='m-auto' layout='horizontal'>
+          <Form
+            size='large'
+            name='basic'
+            labelAlign='left'
+            {...layout}
+            form={_form}
+            className='m-auto'
+            layout='horizontal'
+            initialValues={{
+              province: provinces.name,
+            }}
+          >
             <Form.Item name='name' label='Tên'>
               <Select
                 onSelect={handleChangeAddress}
@@ -90,15 +107,58 @@ export default function Page1({ setPay }: ReceiptProps) {
                     </div>
                   ),
                 }))}
+                dropdownRender={(menu) => (
+                  <>
+                    {menu}
+                    <Divider style={{ margin: '8px 0' }} />
+                    <Button type='text' icon={<PlusOutlined />} onClick={open}>
+                      Thêm địa chỉ mới
+                    </Button>
+                  </>
+                )}
               />
             </Form.Item>
             <Form.Item label='Số điện thoại' name='phone'>
               <Input readOnly />
-              {/* {select('phone')} */}
             </Form.Item>
-            <Form.Item name='address' label='Địa chỉ'>
-              <Input readOnly />
-              {/* {select('address')} */}
+            <Form.Item label='Địa chỉ'>
+              <Row gutter={10}>
+                <Col span={8}>
+                  <Form.Item noStyle shouldUpdate>
+                    {({ getFieldValue }) => (
+                      <Form.Item name='ward'>
+                        <Select
+                          disabled={!getFieldValue('district')}
+                          options={_.map(provinces.districts[getFieldValue('district')]?.wards, (item) => ({
+                            label: item.name,
+                            value: item.code,
+                          }))}
+                          placeholder='Chọn phường/xã'
+                        />
+                      </Form.Item>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item name='district'>
+                    <Select
+                      placeholder='Chọn quận/huyện'
+                      options={_.map(provinces.districts, (item, index) => ({
+                        label: item.name,
+                        value: index,
+                      }))}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item name='province'>
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
+            <Form.Item label='Chi tiết' name='detail'>
+              <Input />
             </Form.Item>
           </Form>
           <div className='text-center'>
@@ -108,6 +168,7 @@ export default function Page1({ setPay }: ReceiptProps) {
           </div>
         </div>
       </div>
+      <ModalAddAddress fetchData={fetchData} close={close} isOpen={isOpen} open={open} />
     </>
   );
 }
