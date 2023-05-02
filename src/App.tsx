@@ -3,15 +3,18 @@ import { Home, Shop, Product, Cart, Login, Signup, OrderHistory } from './screen
 import { ConfigProvider } from 'antd';
 import 'antd/dist/reset.css';
 import viVN from 'antd/lib/locale/vi_VN';
+import axios from 'axios';
 import SplashScreen from 'common/SplashScreen';
 import 'common/extend_dayjs';
 import validateMessages from 'common/validateMessages';
 import useScrollToTop from 'hooks/useScrollToTop';
+import firebase from 'libs/firebase';
 import React, { ReactNode, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'redux/store';
 import Address from 'screens/Address';
+import ForgetPass from 'screens/ForgetPass';
 import GoogleMaps from 'screens/GoogleMaps';
 import OrderHistoryDetail from 'screens/OrderHistoryDetail';
 import Profile from 'screens/Profile';
@@ -42,6 +45,21 @@ function LoginRouter({ children }: Router) {
 function App() {
   useScrollToTop();
 
+  useEffect(() => {
+    console.log("🚀 ~ file: App.tsx:51 ~ useEffect ~ window.recaptchaVerifier:", window.recaptchaVerifier)
+    if (!window.recaptchaVerifier) {
+      // window.recaptchaVerifier = new firebase.RecaptchaVerifier(
+      //   'recaptcha-container',
+      //   {
+      //     size: 'invisible',
+      //     callback: (response) => {},
+      //     'expired-callback': () => {},
+      //   },
+      //   firebase.auth,
+      // );
+    }
+  }, []);
+
   return (
     <ConfigProvider
       theme={{
@@ -56,7 +74,6 @@ function App() {
       <SplashScreen>
         <Header />
         <Routes>
-          {/* <Route path='/' element={<Home />} /> */}
           <Route path='/' element={<Shop />} />
           <Route
             path='/address'
@@ -115,6 +132,7 @@ function App() {
               </LoginRouter>
             }
           />
+          <Route path='/forgetpass' element={<ForgetPass />} />
           <Route
             path='/profile'
             element={

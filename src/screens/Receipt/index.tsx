@@ -23,7 +23,6 @@ export default function Receipt() {
 
   return (
     <div className='bg-[#F2F2F2]'>
-      {/* <Breadcrumb name='Thanh toán' /> */}
       <Routes>
         <Route index element={<Page1 setPay={setPay} />} />
         <Route path={'pay'} element={<Page2 pay={_pay} setPay={setPay} />} />

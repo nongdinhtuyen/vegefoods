@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import firebase from 'libs/firebase';
 import { useEffect, useState } from 'react';
@@ -10,24 +11,6 @@ const VerifyPhone2 = () => {
   const [ph, setPh] = useState<any>('');
   const [loading, setLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        'recaptcha-container',
-        {
-          size: 'invisible',
-          callback: (response) => {
-            console.log("🚀 ~ file: VerifyPhone2.tsx:25 ~ useEffect ~ response:", response)
-          },
-          'expired-callback': () => {},
-        },
-        firebase.auth,
-      );
-    }
-  }, []);
-
   function onSignup() {
     setLoading(true);
 
@@ -51,7 +34,6 @@ const VerifyPhone2 = () => {
       .confirm(otp)
       .then(async (res) => {
         console.log(res);
-        setUser(res.user);
         setLoading(false);
       })
       .catch((err) => {
@@ -61,16 +43,11 @@ const VerifyPhone2 = () => {
   }
 
   return (
-    <section className='bg-emerald-500 flex items-center justify-center h-screen'>
+    <section className='flex items-center justify-center '>
       <div>
         <div id='recaptcha-container'></div>
-        {user ? (
-          <h2 className='text-center text-white font-medium text-2xl'>👍Login Success</h2>
-        ) : (
+        {(
           <div className='w-80 flex flex-col gap-4 rounded-lg p-4'>
-            <h1 className='text-center leading-normal text-white font-medium text-3xl mb-6'>
-              Welcome to <br /> CODE A PROGRAM
-            </h1>
             {showOTP ? (
               <>
                 <div className='bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full'>
@@ -90,13 +67,13 @@ const VerifyPhone2 = () => {
                   <BsTelephoneFill size={30} />
                 </div>
                 <label htmlFor='' className='font-bold text-xl text-white text-center'>
-                  Verify your phone number
+                  Nhập số điện thoại của bạn
                 </label>
-                <PhoneInput country={'VN'} value={ph} onChange={setPh} />
-                <button onClick={onSignup} className='bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded'>
+                <PhoneInput className="ant-input" country={'VN'} value={ph} onChange={setPh} />
+                <Button onClick={onSignup} >
                   {loading && <CgSpinner size={20} className='mt-1 animate-spin' />}
                   <span>Send code via SMS</span>
-                </button>
+                </Button>
               </>
             )}
           </div>

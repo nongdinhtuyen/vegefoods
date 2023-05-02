@@ -1,4 +1,5 @@
 export const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_LARGE_PAGE_SIZE = 20;
 export const DEFAULT_SMALL_PAGE_SIZE = 5;
 
 // export const SITE_KEY_FISEBASE = '6LcMZR0UAAAAALgPMcgHwga7gY5p8QMg1Hj-bmUv';
@@ -28,7 +29,7 @@ export default {
   PRODUCT_STATUS_STRING: {
     0: 'Chờ phê duyệt',
     1: 'Đã phê duyệt',
-    2: 'Chờ xuất kho',
+    2: 'Chờ vận chuyển',
     3: 'Đang giao hàng',
     4: 'Giao hàng thành công',
     5: 'Chờ duyệt hủy',

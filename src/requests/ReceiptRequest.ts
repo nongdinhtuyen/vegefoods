@@ -19,8 +19,8 @@ class ProductRequest extends BaseRequest {
   }
 
   cancelReceipt(params) {
-    const url = `${prefix}/${params.id}`;
-    return this.delete(url, params);
+    const url = `${prefix}/${params.id}?${params.note}`;
+    return this.put(url);
   }
 }
 

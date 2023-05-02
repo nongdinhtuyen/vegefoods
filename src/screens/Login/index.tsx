@@ -97,6 +97,9 @@ export default function Login(props) {
           <div>
             <span>Chưa có tài khoản?</span> <Link to='/signup'>Đăng ký</Link>
           </div>
+          <div className='mt-4'>
+            <Link to='/forgetpass'>Quên mật khẩu</Link>
+          </div>
         </Form>
       </div>
     </div>

@@ -24,6 +24,24 @@ export default function Page1({ setPay }: ReceiptProps) {
   const [_address, setAddress] = useState<any>([]);
   const { close, isOpen, open } = useToggle();
 
+  const renderAddress = (address) => {
+    const str = _.split(address, ',');
+    if (str.length === 3) {
+      _form.setFieldsValue({
+        idWard: str[0],
+        idDistrict: str[1],
+        province: str[2],
+      });
+    } else {
+      _form.setFieldsValue({
+        detail: str[0],
+        idWard: str[1],
+        idDistrict: str[2],
+        province: str[3],
+      });
+    }
+  };
+
   const fetchData = () => {
     dispatch(
       addressActions.actionGetAddress({
@@ -33,10 +51,10 @@ export default function Page1({ setPay }: ReceiptProps) {
             setPay((draft) => {
               draft.idReceiver = data[0].id;
             });
+            renderAddress(data[0]?.address);
             _form.setFieldsValue({
               name: data[0].name,
               phone: data[0].phone,
-              address: data[0].address,
             });
           },
         },
@@ -46,7 +64,7 @@ export default function Page1({ setPay }: ReceiptProps) {
 
   useEffect(() => {
     dispatch(actions.actionGetCart({}));
-    fetchData()
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -66,6 +84,7 @@ export default function Page1({ setPay }: ReceiptProps) {
       phone: option.item.phone,
       address: option.item.address,
     });
+    renderAddress(option.item.address);
   };
 
   return (
@@ -125,40 +144,25 @@ export default function Page1({ setPay }: ReceiptProps) {
               <Row gutter={10}>
                 <Col span={8}>
                   <Form.Item noStyle shouldUpdate>
-                    {({ getFieldValue }) => (
-                      <Form.Item name='ward'>
-                        <Select
-                          disabled={!getFieldValue('district')}
-                          options={_.map(provinces.districts[getFieldValue('district')]?.wards, (item) => ({
-                            label: item.name,
-                            value: item.code,
-                          }))}
-                          placeholder='Chọn phường/xã'
-                        />
-                      </Form.Item>
-                    )}
+                    <Form.Item name='ward'>
+                      <Input readOnly />
+                    </Form.Item>
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item name='district'>
-                    <Select
-                      placeholder='Chọn quận/huyện'
-                      options={_.map(provinces.districts, (item, index) => ({
-                        label: item.name,
-                        value: index,
-                      }))}
-                    />
+                    <Input readOnly />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item name='province'>
-                    <Input />
+                    <Input readOnly />
                   </Form.Item>
                 </Col>
               </Row>
             </Form.Item>
             <Form.Item label='Chi tiết' name='detail'>
-              <Input />
+              <Input readOnly />
             </Form.Item>
           </Form>
           <div className='text-center'>

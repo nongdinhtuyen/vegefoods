@@ -1,14 +1,15 @@
 import actions from '../../redux/actions/receipt';
 import CustomSteps from './Steps';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { Button, Divider, Empty, Image, Modal, Space, Steps } from 'antd';
+import { Button, Divider, Form, Input, Modal } from 'antd';
 import BigNumber from 'bignumber.js';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
 import ProductComponent from 'components/ProductComponent';
 import consts from 'consts';
+import useToggle from 'hooks/useToggle';
 import _ from 'lodash';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FiMapPin } from 'react-icons/all';
 import { BsShieldCheck } from 'react-icons/bs';
 import { CgNotes } from 'react-icons/cg';
@@ -16,6 +17,7 @@ import { FaShippingFast } from 'react-icons/fa';
 import { IoChevronBackSharp } from 'react-icons/io5';
 import { MdOutlineCancel } from 'react-icons/md';
 import { TbClipboardList } from 'react-icons/tb';
+import { TiCancel } from 'react-icons/ti';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'redux/store';
 import styled from 'styled-components';
@@ -32,6 +34,9 @@ export default function OrderHistoryDetail() {
     total: 0,
   });
   const params = useParams();
+  const [_form] = Form.useForm();
+  const { isOpen, close, open } = useToggle();
+  const [_id, setId] = useState(0);
 
   const getData = () => {
     dispatch(
@@ -55,26 +60,13 @@ export default function OrderHistoryDetail() {
   }, []);
 
   const cancelReceipt = (id) => {
-    Modal.confirm({
-      title: 'Bạn có chắc chắn hủy đơn hàng không?',
-      icon: <ExclamationCircleFilled />,
-      onOk() {
-        return new Promise((resolve, reject) => {
-          dispatch(
-            actions.actionGetReceipt({
-              params: {},
-              callbacks: {
-                onSuccess({ data, total }) {
-                  getData();
-                  resolve(data);
-                },
-              },
-            }),
-          );
-        }).catch(() => console.log('Oops errors!'));
-      },
-      onCancel() {},
-    });
+    open();
+    setId(id);
+  };
+
+  const handleCancel = () => {
+    _form.resetFields();
+    close();
   };
 
   return (
@@ -104,8 +96,32 @@ export default function OrderHistoryDetail() {
               price={_receipt.data.receipt.totalAfterSale}
               status={_receipt.data.receipt.status}
               typePayment={_receipt.data.receipt.typePayment}
+              listStatus={_receipt.data.receipt.listStatus}
             />
             <Divider className='my-4' />
+            {_receipt.data.receipt.adminNote ? (
+              <>
+                <div className='flex items-center'>
+                  <TiCancel className='text-primary' size={28} />
+                  Đơn hàng bị hủy bởi admin
+                </div>
+                <div>Lý do: {_receipt.data.receipt.adminNote}</div>
+                <Divider className='my-4' />
+              </>
+            ) : (
+              ''
+            )}
+            {_receipt.data.receipt.note ? (
+              <>
+                <div className='flex items-center'>
+                  <TiCancel className='text-primary' size={28} /> Hủy đơn đặt hàng
+                </div>
+                <div>Lý do: {_receipt.data.receipt.note}</div>
+                <Divider className='my-4' />
+              </>
+            ) : (
+              ''
+            )}
             <div className='flex items-center gap-x-2 mb-3 text-base justify-between'>
               <div className='flex flex-col gap-y-1'>
                 <div className='flex items-center gap-x-2 mb-1'>
@@ -156,6 +172,39 @@ export default function OrderHistoryDetail() {
           </div>
         </div>
       </div>
+      <Modal
+        title={<div className='text-2xl text-center'>{'Lí do hủy đơn hàng'}</div>}
+        onCancel={() => {
+          handleCancel();
+        }}
+        onOk={() => {
+          _form.validateFields().then((value) => {
+            dispatch(
+              actions.actionCancelReceipt({
+                params: {
+                  id: _id,
+                  note: new URLSearchParams(_form.getFieldsValue()).toString(),
+                },
+                callbacks: {
+                  onSuccess(data) {
+                    handleCancel();
+                    getData();
+                  },
+                },
+              }),
+            );
+          });
+        }}
+        open={isOpen}
+        okText='Xác nhận'
+        cancelText='Hủy'
+      >
+        <Form form={_form}>
+          <Form.Item name='note' rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }

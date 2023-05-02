@@ -36,23 +36,27 @@ export default function Header(props) {
   const items: MenuProps['items'] = [
     {
       key: '1',
-      icon: <BiUserCircle size={18} />,
+      // icon: <BiUserCircle size={18} />,
+      icon: <img width={22} src="icons/profile.svg" />,
       label: <Link to='/profile'>Thông tin cá nhân</Link>,
     },
     {
       key: '2',
       label: <Link to='/address'>Sổ địa chỉ</Link>,
-      icon: <AiOutlineUnorderedList size={18} />,
+      // icon: <AiOutlineUnorderedList size={18} />,
+      icon: <img width={22} src="icons/address.svg" />,
     },
     {
       key: '3',
       label: <Link to='/history'>Lịch sử mua hàng</Link>,
-      icon: <IoReceiptOutline />,
+      // icon: <IoReceiptOutline />,
+      icon: <img width={22} src="icons/history.svg" />,
     },
     {
       key: '4',
       label: <div onClick={logout}>Đăng xuất</div>,
-      icon: <MdLogout />,
+      // icon: <MdLogout />,
+      icon: <img width={22} src="icons/logout.svg" />,
     },
   ];
 

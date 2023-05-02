@@ -18,6 +18,16 @@ class ProductRequest extends BaseRequest {
     return this.get(url);
   }
 
+  getDistrict(params) {
+    const url = `${prefix}/district`;
+    return this.get(url, params);
+  }
+
+  getWard(params) {
+    const url = `${prefix}/ward`;
+    return this.get(url, params);
+  }
+
   updateAddress(params) {
     const url = `${prefix}/${params.id}`;
     return this.put(url, params);

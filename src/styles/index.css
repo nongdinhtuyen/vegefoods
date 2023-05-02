@@ -1,7 +1,7 @@
 .bg {
     background-size: cover;
     background-repeat: no-repeat;
-    height: 620px;
+    min-height: 620px;
     background-position: center;
     display: flex;
     align-items: center;

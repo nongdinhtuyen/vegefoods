@@ -45,7 +45,7 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
           onSuccess({ data }) {
             dispatch(cartActions.actionGetCartTotal({}));
             openNotification({
-              description: 'Mua hàng thành công',
+              description: 'Đặt hàng thành công',
               type: 'success',
             });
             navigate(`/history/${data}`);

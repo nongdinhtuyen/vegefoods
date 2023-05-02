@@ -34,6 +34,10 @@ class UserRequest extends BaseRequest {
     const url = `${prefix}/${params.id}/rank`;
     return this.get(url);
   }
+  forgetPassword(params) {
+    const url = `${prefix}forgetpass`;
+    return this.post(url, params);
+  }
 }
 
 export default UserRequest;

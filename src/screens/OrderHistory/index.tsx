@@ -1,14 +1,15 @@
 import actions from '../../redux/actions/receipt';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { Button, Col, Divider, Empty, Modal, Pagination, Radio, Space } from 'antd';
+import { Button, Col, Divider, Empty, Form, Input, Modal, Pagination, Radio, Space } from 'antd';
 import BigNumber from 'bignumber.js';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
 import ProductComponent from 'components/ProductComponent';
 import ProductStatus from 'components/ProductStatus';
 import consts, { DEFAULT_SMALL_PAGE_SIZE } from 'consts';
+import useToggle from 'hooks/useToggle';
 import _ from 'lodash';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'redux/store';
@@ -18,12 +19,15 @@ import { useImmer } from 'use-immer';
 export default function OrderHistory() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [_form] = Form.useForm();
   const [_receipt, setReceipt] = useImmer({
     data: [],
     total: 0,
     current: 1,
     typeStatus: 0,
   });
+  const { isOpen, close, open } = useToggle();
+  const [_id, setId] = useState(0);
 
   const getData = ({ page = _receipt.current, typeStatus = _receipt.typeStatus } = {}) => {
     setReceipt((draft) => {
@@ -48,27 +52,9 @@ export default function OrderHistory() {
     );
   };
 
-  const cancelReceipt = (id) => {
-    Modal.confirm({
-      title: 'Bạn có chắc chắn hủy đơn hàng không?',
-      icon: <ExclamationCircleFilled />,
-      onOk() {
-        return new Promise((resolve, reject) => {
-          dispatch(
-            actions.actionGetReceipt({
-              params: {},
-              callbacks: {
-                onSuccess({ data, total }) {
-                  getData();
-                  resolve(data);
-                },
-              },
-            }),
-          );
-        }).catch(() => console.log('Oops errors!'));
-      },
-      onCancel() {},
-    });
+  const openCancel = (id) => {
+    open();
+    setId(id);
   };
 
   useEffect(() => {
@@ -77,6 +63,11 @@ export default function OrderHistory() {
 
   const handleChange = (e) => {
     getData({ typeStatus: e.target.value });
+  };
+
+  const handleCancel = () => {
+    _form.resetFields();
+    close();
   };
 
   return (
@@ -128,7 +119,7 @@ export default function OrderHistory() {
                   [consts.PRODUCT_STATUS.WAITING_FOR_APPROVAL, consts.PRODUCT_STATUS.APPROVED, consts.PRODUCT_STATUS.WAITING_FOR_DELIVERY],
                   item.Salereceipt.status,
                 ) && (
-                  <Button danger onClick={() => cancelReceipt(item.Preview.idProduct)}>
+                  <Button danger onClick={() => openCancel(item.Preview.idProduct)}>
                     Hủy đơn hàng
                   </Button>
                 )}
@@ -160,6 +151,39 @@ export default function OrderHistory() {
           />
         </div>
       </div>
+      <Modal
+        title={<div className='text-2xl text-center'>{'Lí do hủy đơn hàng'}</div>}
+        onCancel={() => {
+          handleCancel();
+        }}
+        onOk={() => {
+          _form.validateFields().then((value) => {
+            dispatch(
+              actions.actionCancelReceipt({
+                params: {
+                  id: _id,
+                  note: new URLSearchParams(_form.getFieldsValue()).toString(),
+                },
+                callbacks: {
+                  onSuccess(data) {
+                    handleCancel();
+                    getData();
+                  },
+                },
+              }),
+            );
+          });
+        }}
+        open={isOpen}
+        okText='Xác nhận'
+        cancelText='Hủy'
+      >
+        <Form form={_form}>
+          <Form.Item name='note' rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }
