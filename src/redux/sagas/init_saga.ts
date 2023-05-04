@@ -3,9 +3,10 @@ import cartActions from '../actions/cart';
 import initActions from '../actions/init';
 import { GET_USER_INFO, LOGIN } from '../actions/user';
 import userActions from '../actions/user';
+import addressActions from '../actions/address';
 import utils from 'common/utils';
 import _ from 'lodash';
-import { all, call, put, fork, takeLatest } from 'redux-saga/effects';
+import { all, call, put, fork, takeLatest, take } from 'redux-saga/effects';
 import { INIT } from 'redux/actions/init';
 import { createActionTypeOnSuccess } from 'redux/redux_helper';
 
@@ -37,7 +38,10 @@ export function* saveMasterData(id) {
   yield put(createActionTypeOnSuccess(LOGIN)());
   yield put(createActionTypeOnSuccess(GET_USER_INFO)(resp));
   yield put(cartActions.actionGetCartTotal({}));
+  yield put(cartActions.actionGetCart({}));
   yield put(userActions.actionGetRank({ params: { id } }));
+  yield put(addressActions.actionGetAddress({}));
+  yield take(createActionTypeOnSuccess(addressActions.actionGetAddress))
   yield put(initActions.actionInitSucceed({}));
 }
 

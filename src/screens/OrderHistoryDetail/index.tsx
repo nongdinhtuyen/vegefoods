@@ -33,6 +33,7 @@ export default function OrderHistoryDetail() {
     },
     total: 0,
   });
+  const { profile } = useAppSelector((state) => state.userReducer);
   const params = useParams();
   const [_form] = Form.useForm();
   const { isOpen, close, open } = useToggle();
@@ -67,6 +68,13 @@ export default function OrderHistoryDetail() {
   const handleCancel = () => {
     _form.resetFields();
     close();
+  };
+
+  const renderDiscount = () => {
+    return new BigNumber(_receipt.data.receipt.total)
+      .times(100 - profile.rankList?.discount)
+      .div(100)
+      .toNumber();
   };
 
   return (
@@ -157,13 +165,39 @@ export default function OrderHistoryDetail() {
                 <Divider className='m-0' />
               </div>
             ))}
-            <div className='py-2 text-right text-lg'>
+            <div className='inline-grid grid-cols-auto gap-x-4 gap-y-2 text-gray-800 text-right items-center float-right'>
+              <div className=''>Tổng tiền hàng:</div>
+              <span className='text-base'>{utils.formatCurrency(_receipt.data.receipt.total)} VNĐ</span>
+              {profile.rankList?.discount > 0 && (
+                <>
+                  <div>
+                    Bạn đạt rank <span className='text-black font-semibold text-base'>{profile.rankList?.name}</span> được giảm giá{' '}
+                  </div>
+                  <span className='text-black text-base'>- {utils.formatCurrency(renderDiscount())} VNĐ</span>
+                </>
+              )}
+              <div className=''>Phí vận chuyển:</div>
+              <span className='text-base'>{utils.formatCurrency(_receipt.data.receipt.feeShipping)} VNĐ</span>
+              {new BigNumber(_receipt.data.receipt.total).isGreaterThan(_receipt.data.receipt.totalAfterSale) && (
+                <>
+                  <div className=''>Tổng thanh toán: </div>
+                  <div>
+                    <span className='text-2xl text-primary'>{utils.formatCurrency(_receipt.data.receipt.totalAfterSale)}</span> VNĐ
+                  </div>
+                </>
+              )}
+              <div className=''>Tổng thanh toán: </div>
+              <div>
+                <span className='text-2xl text-primary'>{utils.formatCurrency(_receipt.data.receipt.totalAfterSale)}</span> VNĐ
+              </div>
+            </div>
+            {/* <div className='py-2 text-right text-lg'>
               Tổng tiền:{' '}
               {new BigNumber(_receipt.data.receipt.total).isGreaterThan(_receipt.data.receipt.totalAfterSale) && (
                 <del className='italic font-medium mr-2 text-gray-900'>{utils.formatCurrency(_receipt.data.receipt.total)}</del>
               )}
               <span className='font-bold text-primary'>{utils.formatCurrency(_receipt.data.receipt.totalAfterSale)}</span> VNĐ
-            </div>
+            </div> */}
             <Divider className='mb-2 mt-0' />
             <div className='text-right'>
               Hình thức thanh toán:{' '}

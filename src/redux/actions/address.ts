@@ -6,6 +6,7 @@ export const GET_WARD = 'GET_WARD';
 export const DELETE_ADDRESS = 'DELETE_ADDRESS';
 export const ADD_ADDRESS = 'ADD_ADDRESS';
 export const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
+export const GET_FEE_SHIP = 'GET_FEE_SHIP';
 
 export default {
   actionGetAddress: createAction<ActionPayloadStandard>(GET_ADDRESS),
@@ -14,4 +15,5 @@ export default {
   actionDeleteAddress: createAction<ActionPayloadStandard>(DELETE_ADDRESS),
   actionAddAddress: createAction<ActionPayloadStandard>(ADD_ADDRESS),
   actionUpdateAddress: createAction<ActionPayloadStandard>(UPDATE_ADDRESS),
+  actionGetFeeShip: createAction<ActionPayloadStandard>(GET_FEE_SHIP),
 };

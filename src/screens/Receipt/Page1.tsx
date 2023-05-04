@@ -3,6 +3,7 @@ import actions from '../../redux/actions/cart';
 import { ReceiptProps } from './receipt';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Empty, Form, Image, Input, Row, Select, Space, Table } from 'antd';
+import { openNotification } from 'common/Notify';
 import useToggle from 'hooks/useToggle';
 import _ from 'lodash';
 import { useState, useEffect } from 'react';
@@ -15,17 +16,17 @@ const layout = {
   wrapperCol: { span: 20 },
 };
 
-export default function Page1({ setPay }: ReceiptProps) {
+export default function Page1({ setPay, pay }: ReceiptProps) {
   const { cartDataTotal } = useAppSelector((state) => state.cartReducer);
   const { provinces } = useAppSelector((state) => state.initReducer);
+  const { listAddress } = useAppSelector((state) => state.addressReducer);
   const [_form] = Form.useForm();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [_address, setAddress] = useState<any>([]);
   const { close, isOpen, open } = useToggle();
 
   const renderAddress = (address) => {
-    const str = _.split(address, ',');
+    const str = _.split(address, ', ');
     if (str.length === 3) {
       _form.setFieldsValue({
         idWard: str[0],
@@ -42,20 +43,34 @@ export default function Page1({ setPay }: ReceiptProps) {
     }
   };
 
+  useEffect(() => {
+    if (!_.isEmpty(listAddress)) {
+      renderAddress(pay.addressInfo.address);
+    }
+  }, [pay.addressInfo]);
+
   const fetchData = () => {
     dispatch(
       addressActions.actionGetAddress({
         callbacks: {
           onSuccess({ data }) {
-            setAddress(data);
-            setPay((draft) => {
-              draft.idReceiver = data[0].id;
-            });
-            renderAddress(data[0]?.address);
-            _form.setFieldsValue({
-              name: data[0].name,
-              phone: data[0].phone,
-            });
+            if (!_.isEmpty(data)) {
+              //   openNotification({
+              //     description: 'Bạn cần thêm địa chỉ trước khi thanh toán',
+              //     type: 'info'
+              //   })
+              //   navigate('/address')
+              // }
+              // setAddress(data);
+              setPay((draft) => {
+                draft.idReceiver = data[0].id;
+              });
+              renderAddress(data[0]?.address);
+              _form.setFieldsValue({
+                name: data[0].name,
+                phone: data[0].phone,
+              });
+            }
           },
         },
       }),
@@ -63,8 +78,8 @@ export default function Page1({ setPay }: ReceiptProps) {
   };
 
   useEffect(() => {
-    dispatch(actions.actionGetCart({}));
-    fetchData();
+    // dispatch(actions.actionGetCart({}));
+    // fetchData();
   }, []);
 
   useEffect(() => {
@@ -78,13 +93,16 @@ export default function Page1({ setPay }: ReceiptProps) {
   const handleChangeAddress = (value, option) => {
     setPay((draft) => {
       draft.idReceiver = option.item.id;
+      draft.idD = option.item.idDistrict;
+      draft.idW = option.item.idWard;
+      draft.addressInfo = option.item;
     });
     _form.setFieldsValue({
-      name: option.item.name,
+      name: option.item.id,
       phone: option.item.phone,
       address: option.item.address,
     });
-    renderAddress(option.item.address);
+    // renderAddress(option.item.address);
   };
 
   return (
@@ -105,13 +123,16 @@ export default function Page1({ setPay }: ReceiptProps) {
             layout='horizontal'
             initialValues={{
               province: provinces.name,
+              name: listAddress[0]?.id,
+              phone: listAddress[0]?.phone,
+              address: listAddress[0]?.address,
             }}
           >
             <Form.Item name='name' label='Tên'>
               <Select
                 onSelect={handleChangeAddress}
                 optionLabelProp='name'
-                options={_.map(_address, (item: any, index: number) => ({
+                options={_.map(listAddress, (item: any, index: number) => ({
                   key: item.id,
                   value: item.id,
                   item,
@@ -140,17 +161,15 @@ export default function Page1({ setPay }: ReceiptProps) {
             <Form.Item label='Số điện thoại' name='phone'>
               <Input readOnly />
             </Form.Item>
-            <Form.Item label='Địa chỉ'>
+            <Form.Item label='Địa chỉ' className='mb-0'>
               <Row gutter={10}>
                 <Col span={8}>
-                  <Form.Item noStyle shouldUpdate>
-                    <Form.Item name='ward'>
-                      <Input readOnly />
-                    </Form.Item>
+                  <Form.Item name='idWard'>
+                    <Input readOnly />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item name='district'>
+                  <Form.Item name='idDistrict'>
                     <Input readOnly />
                   </Form.Item>
                 </Col>
@@ -166,7 +185,7 @@ export default function Page1({ setPay }: ReceiptProps) {
             </Form.Item>
           </Form>
           <div className='text-center'>
-            <Button size='large' type='primary' onClick={() => navigate('pay')}>
+            <Button size='large' disabled={_.isEmpty(listAddress)} type='primary' onClick={() => navigate('pay')}>
               Tiếp tục thanh toán
             </Button>
           </div>

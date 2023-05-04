@@ -1,30 +1,31 @@
-import { useState, useEffect } from 'react';
-import { Button, Col, Divider, Empty, Form, Image, Input, Modal, Radio, Row, Select, Space, Table } from 'antd';
-import { FaRegListAlt } from 'react-icons/fa';
-import { BiWallet } from 'react-icons/bi';
-import actions from '../../redux/actions/receipt';
+import addressActions from '../../redux/actions/address';
 import cartActions from '../../redux/actions/cart';
-import { useAppDispatch, useAppSelector } from 'redux/store';
-import _ from 'lodash';
-import { IoChevronBackSharp } from 'react-icons/io5';
-import utils from 'common/utils';
-import type { RadioChangeEvent } from 'antd';
+import actions from '../../redux/actions/receipt';
 import { ReceiptProps } from './receipt';
-import useToggle from 'hooks/useToggle';
-import consts from 'consts';
-import ProductComponent from 'components/ProductComponent';
-import { useNavigate } from 'react-router-dom';
-import CustomImage from 'components/CustomImage';
-import { openNotification } from 'common/Notify';
+import { Button, Col, Divider, Empty, Form, Image, Input, Modal, Radio, Row, Select, Space, Table } from 'antd';
+import type { RadioChangeEvent } from 'antd';
 import BigNumber from 'bignumber.js';
+import { openNotification } from 'common/Notify';
+import utils from 'common/utils';
+import CustomImage from 'components/CustomImage';
+import ProductComponent from 'components/ProductComponent';
+import consts from 'consts';
+import useToggle from 'hooks/useToggle';
+import _ from 'lodash';
+import { useState, useEffect } from 'react';
+import { BiWallet } from 'react-icons/bi';
+import { FaRegListAlt } from 'react-icons/fa';
+import { IoChevronBackSharp } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'redux/store';
 
 export default function Page2({ setPay, pay }: ReceiptProps) {
   const { cartData, cartDataTotal } = useAppSelector((state) => state.cartReducer);
-
   const { profile } = useAppSelector((state) => state.userReducer);
   const { isOpen, open, close } = useToggle();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [_fee, setFee] = useState(0);
 
   const onChange = (e: RadioChangeEvent) => {
     const { value } = e.target;
@@ -55,6 +56,26 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
     );
   };
 
+  useEffect(() => {
+    getFeeShip();
+  }, []);
+
+  const getFeeShip = () => {
+    dispatch(
+      addressActions.actionGetFeeShip({
+        params: {
+          idD: pay?.idD,
+          idW: pay?.idW,
+        },
+        callbacks: {
+          onSuccess({ data }) {
+            setFee(data);
+          },
+        },
+      }),
+    );
+  };
+
   const handleOk = (value) => {
     if (pay?.typePayment === consts.TYPE_PAYMENT_ONLINE) {
       open();
@@ -67,20 +88,30 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
     createReceipt();
   };
 
+  const renderSale = () => {
+    const sale = new BigNumber(cartDataTotal.totalPrice)
+      .times(100 - profile.rankList?.discount)
+      .div(100)
+      .toNumber();
+    return sale;
+  };
+
+  const renderDiscount = () => {
+    return new BigNumber(cartDataTotal.totalPrice)
+      .times(100 - profile.rankList?.discount).div(100)
+      .toNumber();
+  }
+
   const renderTotal = () => {
-    if (profile.rankList?.discount > 0) {
-      const sale = new BigNumber(cartDataTotal.totalPrice)
-        .times(100 - profile.rankList?.discount)
-        .div(100)
-        .toNumber();
-      return (
-        <>
-          <del className='italic font-medium mr-2 text-gray-900'>{utils.formatCurrency(cartDataTotal.totalPrice)}</del>
-          <span className='font-bold text-primary'>{utils.formatCurrency(sale)}</span>
-        </>
-      );
-    }
-    return <span className='font-bold text-primary'>{utils.formatCurrency(cartDataTotal.totalPrice)}</span>;
+    // if (profile.rankList?.discount > 0) {
+    //   return (
+    //     <>
+    //       <del className='italic mr-2 text-gray-900'>{utils.formatCurrency(cartDataTotal.totalPrice)}</del>
+    //       <span className=''>{utils.formatCurrency(renderSale())}</span>
+    //     </>
+    //   );
+    // }
+    return <span className=''>{utils.formatCurrency(cartDataTotal.totalPrice)}</span>;
   };
 
   return (
@@ -115,14 +146,36 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
                   <Divider className='m-0' />
                 </div>
               ))}
-              <div className='flex items-center justify-between'>
-                {profile.rankList?.discount > 0 && (
-                  <div className='text-gray-600'>
-                    `Bạn đạt rank <span className='text-black font-semibold text-base'>{profile.rankList?.name}</span> được giảm giá{' '}
-                    <span className='text-black font-semibold text-base'>{profile.rankList?.discount}%</span>
+              <div className=''>
+                {/* <div className='flex-1'>
+                  {profile.rankList?.discount > 0 && (
+                    <div className='text-gray-600'>
+                      Bạn đạt rank <span className='text-black font-semibold text-base'>{profile.rankList?.name}</span> được giảm giá{' '}
+                      <span className='text-black font-semibold text-base'>{profile.rankList?.discount}%</span>
+                    </div>
+                  )}
+                </div> */}
+                <div className='inline-grid grid-cols-auto gap-x-4 gap-y-2 float-right text-gray-800 text-right items-center'>
+                  <div className=''>Tổng tiền hàng:</div>
+                  <span className='text-base'>{renderTotal()} VNĐ</span>
+                  {profile.rankList?.discount > 0 && (
+                    <>
+                      <div>
+                        Bạn đạt rank <span className='text-black font-semibold text-base'>{profile.rankList?.name}</span> được giảm giá{' '}
+                      </div>
+                      <span className='text-black text-base'>- {utils.formatCurrency(renderDiscount())} VNĐ</span>
+                    </>
+                  )}
+                  <div className=''>Phí vận chuyển:</div>
+                  <span className='text-base'>{utils.formatCurrency(_fee)} VNĐ</span>
+                  <div className=''>Tổng thanh toán: </div>
+                  <div>
+                    <span className='text-2xl text-primary'>
+                      {utils.formatCurrency(_fee + (profile.rankList?.discount > 0 ? renderSale() : cartDataTotal.totalPrice))}
+                    </span>{' '}
+                    VNĐ
                   </div>
-                )}
-                <div className='py-2 text-right text-lg'>Tổng tiền: {renderTotal()} VNĐ</div>
+                </div>
               </div>
             </Col>
             <Col offset={1} span={1}>

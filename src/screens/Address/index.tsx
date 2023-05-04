@@ -18,24 +18,13 @@ import ModalAddAddress from './ModalAddAddress';
 
 export default function Address() {
   const dispatch = useAppDispatch();
-  const { profile } = useAppSelector((state) => state.userReducer);
+  const { listAddress } = useAppSelector((state) => state.addressReducer);
   const { close, isOpen, open } = useToggle();
   const [_updateAddress, setUpdateAddress] = useState<any>({});
   const [_form] = Form.useForm();
-  const [_address, setAddress] = useImmer<any>({
-    data: [],
-  });
   const fetchData = () => {
     dispatch(
-      actions.actionGetAddress({
-        callbacks: {
-          onSuccess: ({ data }) => {
-            setAddress((draft) => {
-              draft.data = [...data];
-            });
-          },
-        },
-      }),
+      actions.actionGetAddress({}),
     );
   };
 
@@ -43,43 +32,8 @@ export default function Address() {
     fetchData();
   }, []);
 
-  const handleUpdate = () => {
-    _form
-      .validateFields()
-      .then((value) => {
-        if (_.isEmpty(_updateAddress)) {
-          dispatch(
-            actions.actionAddAddress({
-              params: value,
-              callbacks: {
-                onSuccess(data) {
-                  fetchData();
-                  close();
-                  _form.resetFields();
-                },
-              },
-            }),
-          );
-        } else {
-          dispatch(
-            actions.actionUpdateAddress({
-              params: { ...value, id: _updateAddress.id },
-              callbacks: {
-                onSuccess(data) {
-                  fetchData();
-                  setUpdateAddress({});
-                  close();
-                  _form.resetFields();
-                },
-              },
-            }),
-          );
-        }
-      })
-      .catch(console.log);
-  };
-
   const handleDelete = (id) => {
+    console.log("🚀 ~ file: index.tsx:36 ~ handleDelete ~ id:", id)
     dispatch(
       actions.actionDeleteAddress({
         params: {
@@ -119,7 +73,7 @@ export default function Address() {
           </Button>
         </div>
         <Divider className='my-2' />
-        {_.map(_address.data, (item: any, index: number) => (
+        {_.map(listAddress, (item: any, index: number) => (
           <div key={item.id}>
             <Row>
               <Col span={12} className='flex flex-col gap-y-1'>
@@ -129,12 +83,12 @@ export default function Address() {
                 <div>{item.phone}</div>
                 <div>{item.address}</div>
               </Col>
-              {index !== 0 && (
+              {/* {index !== 0 && ( */}
                 <Col span={12} className='text-right'>
                   <FiEdit className='text-primary mr-2 cursor-pointer' size={20} onClick={() => handleEdit(item)} />
                   <RiDeleteBin6Line className='text-red-500 cursor-pointer' onClick={() => handleDelete(item.id)} size={20} />
                 </Col>
-              )}
+              {/* )} */}
             </Row>
             <Divider className='my-2' />
           </div>

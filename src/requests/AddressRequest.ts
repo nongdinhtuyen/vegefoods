@@ -32,6 +32,11 @@ class ProductRequest extends BaseRequest {
     const url = `${prefix}/${params.id}`;
     return this.put(url, params);
   }
+
+  getFeeShip(params) {
+    const url = `${prefix}/fee`;
+    return this.get(url, params);
+  }
 }
 
 export default ProductRequest;

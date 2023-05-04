@@ -46,6 +46,10 @@ export default function ModalAddAddress({ fetchData, close, open, isOpen }: Prop
   });
   const [_address, setAddress] = useState<string[]>(['', '', 'Thành phố Hà Nội']);
 
+  const getAddress = () => {
+    dispatch(actions.actionGetAddress({}))
+  }
+
   const handleUpdate = () => {
     _form
       .validateFields()
@@ -61,6 +65,7 @@ export default function ModalAddAddress({ fetchData, close, open, isOpen }: Prop
                     description: 'Thêm địa chỉ thành công',
                     type: 'success',
                   });
+                  getAddress()
                   close();
                   _form.resetFields();
                 },
@@ -78,6 +83,7 @@ export default function ModalAddAddress({ fetchData, close, open, isOpen }: Prop
                     description: 'Cập nhật địa chỉ thành công',
                     type: 'success',
                   });
+                  getAddress()
                   setUpdateAddress({});
                   close();
                   _form.resetFields();

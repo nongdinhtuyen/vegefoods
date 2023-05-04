@@ -46,7 +46,6 @@ function App() {
   useScrollToTop();
 
   useEffect(() => {
-    console.log("🚀 ~ file: App.tsx:51 ~ useEffect ~ window.recaptchaVerifier:", window.recaptchaVerifier)
     if (!window.recaptchaVerifier) {
       // window.recaptchaVerifier = new firebase.RecaptchaVerifier(
       //   'recaptcha-container',

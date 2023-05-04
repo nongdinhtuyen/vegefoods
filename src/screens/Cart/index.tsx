@@ -1,17 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button, Col, Divider, Empty, Image, Row, Table } from 'antd';
-import { GrClose } from 'react-icons/gr';
 import actions from '../../redux/actions/cart';
-import { useAppDispatch, useAppSelector } from 'redux/store';
-import _ from 'lodash';
+import { Button, Col, Divider, Empty, Image, Row, Table } from 'antd';
+import BigNumber from 'bignumber.js';
+import { openNotification } from 'common/Notify';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
 import ProductComponent from 'components/ProductComponent';
-import BigNumber from 'bignumber.js';
+import _ from 'lodash';
+import { useState, useEffect } from 'react';
+import { GrClose } from 'react-icons/gr';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'redux/store';
 
 export default function Cart() {
   const { cartData, cartDataTotal } = useAppSelector((state) => state.cartReducer);
+  const { listAddress } = useAppSelector((state) => state.addressReducer);
   const { profile } = useAppSelector((state) => state.userReducer);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -54,6 +56,18 @@ export default function Cart() {
     return <span className='font-bold text-primary'>{utils.formatCurrency(cartDataTotal.totalPrice)}</span>;
   };
 
+  const handlePay = () => {
+    // if (_.isEmpty(listAddress)) {
+    //   openNotification({
+    //     description: 'Bạn cần thêm địa chỉ trước khi thanh toán',
+    //     type: 'info',
+    //   });
+    //   navigate('/address');
+    // } else {
+    // }
+    navigate('/receipt');
+  };
+
   return (
     <div className='bg-[#F2F2F2]'>
       <div className='max-w-4xl m-auto py-10'>
@@ -88,14 +102,17 @@ export default function Cart() {
                 </div>
               ))}
               <div className='flex items-center justify-between'>
-                {profile.rankList?.discount > 0 && (
-                  <div className='text-gray-600'>
-                    `Bạn đạt rank <span className='text-black font-semibold text-base'>{profile.rankList?.name}</span> được giảm giá <span className='text-black font-semibold text-base'>{profile.rankList?.discount}%</span>
-                  </div>
-                )}
-                <div className='py-2 text-right text-lg'>
+                <div>
+                  {profile.rankList?.discount > 0 && (
+                    <div className='text-gray-600'>
+                      Bạn đạt rank <span className='text-black font-semibold text-base'>{profile.rankList?.name}</span> được giảm giá{' '}
+                      <span className='text-black font-semibold text-base'>{profile.rankList?.discount}%</span>
+                    </div>
+                  )}
+                </div>
+                <div className='text-right text-lg'>
                   Tổng tiền: {renderTotal()} VNĐ
-                  <Button className='ml-3' type='primary' onClick={() => navigate('/receipt')}>
+                  <Button className='ml-3' type='primary' onClick={handlePay}>
                     Thanh toán
                   </Button>
                 </div>
