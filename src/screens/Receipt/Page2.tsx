@@ -97,10 +97,8 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
   };
 
   const renderDiscount = () => {
-    return new BigNumber(cartDataTotal.totalPrice)
-      .times(100 - profile.rankList?.discount).div(100)
-      .toNumber();
-  }
+    return new BigNumber(cartDataTotal.totalPrice).times(profile.rankList?.discount).div(100).toNumber();
+  };
 
   const renderTotal = () => {
     // if (profile.rankList?.discount > 0) {
@@ -158,16 +156,17 @@ export default function Page2({ setPay, pay }: ReceiptProps) {
                 <div className='inline-grid grid-cols-auto gap-x-4 gap-y-2 float-right text-gray-800 text-right items-center'>
                   <div className=''>Tổng tiền hàng:</div>
                   <span className='text-base'>{renderTotal()} VNĐ</span>
+                  <div className=''>Phí vận chuyển:</div>
+                  <span className='text-base'>{utils.formatCurrency(_fee)} VNĐ</span>
                   {profile.rankList?.discount > 0 && (
                     <>
-                      <div>
+                      {/* <div>
                         Bạn đạt rank <span className='text-black font-semibold text-base'>{profile.rankList?.name}</span> được giảm giá{' '}
-                      </div>
+                      </div> */}
+                      <div>Giảm giá {`( -${profile.rankList?.discount}%)`}</div>
                       <span className='text-black text-base'>- {utils.formatCurrency(renderDiscount())} VNĐ</span>
                     </>
                   )}
-                  <div className=''>Phí vận chuyển:</div>
-                  <span className='text-base'>{utils.formatCurrency(_fee)} VNĐ</span>
                   <div className=''>Tổng thanh toán: </div>
                   <div>
                     <span className='text-2xl text-primary'>

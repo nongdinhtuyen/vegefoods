@@ -60,14 +60,19 @@ export default function Profile() {
                 fetchInfo(profile.id);
                 openNotification({
                   description: 'Cập nhật thông tin cá nhân thành công',
-                  type: 'success'
-                })
+                  type: 'success',
+                });
               },
             },
           }),
         );
       })
       .catch(console.log);
+  };
+
+  const handleClose = () => {
+    close();
+    _formPassword.resetFields();
   };
 
   const updatePassword = () => {
@@ -81,20 +86,27 @@ export default function Profile() {
               onSuccess(data) {
                 openNotification({
                   description: 'Đổi mật khẩu thành công',
-                  type: 'success'
-                })
+                  type: 'success',
+                });
+                handleClose();
               },
-            }
+            },
           }),
         );
       })
       .catch(console.log);
   };
 
-  const trimString = (str: string) => (_form.getFieldValue(str))?.trim()
+  const trimString = (str: string) => _form.getFieldValue(str)?.trim();
 
   const onChange = () => {
-    return _.isEqual(profile, { ...profile, ..._form.getFieldsValue(), phone: trimString('phone'), address: trimString('address'), name: trimString('name')});
+    return _.isEqual(profile, {
+      ...profile,
+      ..._form.getFieldsValue(),
+      phone: trimString('phone'),
+      address: trimString('address'),
+      name: trimString('name'),
+    });
   };
 
   const handlePercent = (): number | undefined => {
@@ -181,10 +193,7 @@ export default function Profile() {
       <Modal
         title={<div className='text-2xl text-center mb-8'>Đổi mật khẩu</div>}
         closable={false}
-        onCancel={() => {
-          close();
-          _formPassword.resetFields();
-        }}
+        onCancel={handleClose}
         onOk={updatePassword}
         open={isOpen}
         width={448}
@@ -196,7 +205,28 @@ export default function Profile() {
           <Form.Item name='oldPass' label='Mật khẩu hiện tại' rules={[{ required: true, message: 'Trường này được bỏ trống' }]}>
             <Input.Password />
           </Form.Item>
-          <Form.Item name='pass' hasFeedback label='Mật khẩu mới' rules={[{ required: true, message: 'Trường này được bỏ trống' }]}>
+          <Form.Item
+            name='pass'
+            hasFeedback
+            label='Mật khẩu mới'
+            rules={[
+              {
+                validator(rule, value, callback) {
+                  if (!value) {
+                    return Promise.reject('Mật khẩu không được bỏ trống');
+                  }
+                  if (value.length < 8) {
+                    return Promise.reject('Mật khẩu phải có ít nhất 8 ký tự');
+                  }
+                  if (!/^[a-zA-Z]+$/.test(value)) {
+                    return Promise.reject('Mật khẩu không được có ký tự đặc biệt');
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
+            extra={'Mật khẩu viết liền không dấu, không chứa ký tự cách trắng hoặc xuống dòng, có phân biệt chữ hoa, chữ thường, ít nhất 8 ký tự'}
+          >
             <Input.Password />
           </Form.Item>
           <Form.Item

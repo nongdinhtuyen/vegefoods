@@ -83,6 +83,7 @@ export default function Product() {
             setProduct(data.product);
             setSale(data.salePrice);
             getListProducts(data.product.idType);
+            _form.resetFields();
           },
         },
       }),
