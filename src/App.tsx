@@ -45,20 +45,6 @@ function LoginRouter({ children }: Router) {
 function App() {
   useScrollToTop();
 
-  useEffect(() => {
-    if (!window.recaptchaVerifier) {
-      // window.recaptchaVerifier = new firebase.RecaptchaVerifier(
-      //   'recaptcha-container',
-      //   {
-      //     size: 'invisible',
-      //     callback: (response) => {},
-      //     'expired-callback': () => {},
-      //   },
-      //   firebase.auth,
-      // );
-    }
-  }, []);
-
   return (
     <ConfigProvider
       theme={{

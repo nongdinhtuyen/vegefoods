@@ -11,6 +11,16 @@ const firebaseConfig = {
   measurementId: "G-RXR4MPS4K2"
 };
 
+// const firebaseConfig = {
+//   apiKey: "AIzaSyD1skzQiHoWQe1DXBJCIFG7xvsSRfcVSiI",
+//   authDomain: "order-food-11734.firebaseapp.com",
+//   projectId: "order-food-11734",
+//   storageBucket: "order-food-11734.appspot.com",
+//   messagingSenderId: "72958997759",
+//   appId: "1:72958997759:web:ef1597926a0b4b935e88ca",
+//   measurementId: "G-C31MM2PF01"
+// };
+
 const appFirebase = initializeApp(firebaseConfig);
 const auth = getAuth(appFirebase);
 auth.useDeviceLanguage();
