@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
 import { Breadcrumb } from '../../components';
-import { Categories, CustomPagination, Products } from './components';
-import { connect, useDispatch, useSelector } from 'react-redux';
 import category_actions from '../../redux/actions/category';
 import productActions from '../../redux/actions/product';
-import { useImmer } from 'use-immer';
-import _ from 'lodash';
+import { Categories, CustomPagination, Products } from './components';
+import { Badge, Button, Empty, Pagination } from 'antd';
 import classNames from 'classnames';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import utils from 'common/utils';
-import { Button, Empty, Pagination } from 'antd';
+import _ from 'lodash';
+import { useEffect, useState } from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useImmer } from 'use-immer';
 
 type ListProductType = {
   current?: number;
@@ -37,7 +37,7 @@ export default function Shop() {
 
   const getListProducts = ({ current = 1, productType = _selectType }: ListProductType = {}) => {
     setSearchParams({ type: _.toString(productType), current: current + '' });
-    setSelectType(productType)
+    setSelectType(productType);
     setProducts((draft) => {
       draft.current = current;
     });
@@ -71,7 +71,7 @@ export default function Shop() {
         callbacks: {
           onSuccess({ data, total }) {
             setProductTypes((draft) => {
-              draft.data = [{ name: 'All', id: -1 }, ...data];
+              draft.data = [{ name: 'Tất cả', id: -1 }, ...data];
             });
           },
         },
@@ -80,7 +80,10 @@ export default function Shop() {
   };
 
   useEffect(() => {
-    getListProducts({ current: searchParams.get('current') !== null ? +searchParams.get('current')! : 1, productType: searchParams.get('type') !== null ? +searchParams.get('type')! : _selectType });
+    getListProducts({
+      current: searchParams.get('current') !== null ? +searchParams.get('current')! : 1,
+      productType: searchParams.get('type') !== null ? +searchParams.get('type')! : _selectType,
+    });
     getProductTypes();
   }, []);
 
@@ -124,20 +127,29 @@ export default function Shop() {
             </div>
           ))}
         </div>
-        <div className='flex flex-wrap gap-x-10 justify-center mt-10'>
+        <div className='flex flex-wrap gap-x-10 gap-y-4 justify-center mt-10'>
           {_.isEmpty(_products.data?.products) ? (
             <Empty />
           ) : (
-            _.map(_products.data?.products, (item: any, i:number) => (
+            _.map(_products.data?.products, (item: any, i: number) => (
               <div className='w-1/5 flex flex-col justify-center'>
-                <Link to={`/product/${item.id}`} className='block overflow-hidden'>
-                  <img
-                    height={260}
-                    className='max-w-full hover:scale-110 transition duration-300 object-contain'
-                    src={utils.baseUrlImage(item.img)}
-                    alt={item.img}
-                  />
-                </Link>
+                {item.remain <= 0 ? <Badge.Ribbon text='Hết hàng' color="red">
+                  <Link to={`/product/${item.id}`} className='block overflow-hidden'>
+                    <img
+                      height={260}
+                      className='max-w-full hover:scale-110 transition duration-300 object-contain'
+                      src={utils.baseUrlImage(item.img)}
+                      alt={item.img}
+                    />
+                  </Link>
+                </Badge.Ribbon> : <Link to={`/product/${item.id}`} className='block overflow-hidden'>
+                    <img
+                      height={260}
+                      className='max-w-full hover:scale-110 transition duration-300 object-contain'
+                      src={utils.baseUrlImage(item.img)}
+                      alt={item.img}
+                    />
+                  </Link>}
                 <div className='text-2xl flex-1 text-center'>
                   <Link to={`/product/${item.id}`}>{item.name}</Link>
                 </div>

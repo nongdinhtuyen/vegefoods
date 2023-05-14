@@ -3,15 +3,18 @@ import BigNumber from 'bignumber.js';
 import classNames from 'classnames';
 import { openNotification } from 'common/Notify';
 import utils from 'common/utils';
+import { DEFAULT_LARGE_PAGE_SIZE } from 'consts';
 import useToggle from 'hooks/useToggle';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { BiUserCircle } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import addressActions from 'redux/actions/address';
 import actions from 'redux/actions/user';
 import { useAppSelector } from 'redux/store';
+import { useImmer } from 'use-immer';
 
 const MALE = 0,
   FEMALE = 1,
@@ -29,10 +32,117 @@ export default function Profile() {
   const dispatch = useDispatch();
   const [_form] = Form.useForm();
   const [_formPassword] = Form.useForm();
+  const [_district, setDistrict] = useImmer<any>({
+    data: [],
+    current: 1,
+    name: '',
+    total: 0,
+    isEnd: false,
+    id: 0,
+  });
+  const [_ward, setWard] = useImmer<any>({
+    data: [],
+    current: 1,
+    name: '',
+    total: 0,
+    isEnd: false,
+  });
+  const [_address, setAddress] = useState<string[]>(['', '', 'Thành phố Hà Nội']);
 
   const closeUpdateProfile = () => {
     setOpen(false);
   };
+
+  const renderAddress = (address) => {
+    const str = _.split(address, ', ');
+    setAddress(str);
+    if (str.length === 3) {
+      _form.setFieldsValue({
+        idWard: str[0],
+        idDistrict: str[1],
+        province: str[2],
+      });
+    } else {
+      _form.setFieldsValue({
+        detail: str[0],
+        idWard: str[1],
+        idDistrict: str[2],
+        province: str[3],
+      });
+    }
+  };
+
+  const getDistrictData = ({ current = _district.current, name = _district.name } = {}) => {
+    dispatch(
+      addressActions.actionGetDistrict({
+        params: {
+          current,
+          count: DEFAULT_LARGE_PAGE_SIZE,
+          name,
+        },
+        callbacks: {
+          onSuccess({ data, total }) {
+            setDistrict((draft) => {
+              draft.data = !name ? [..._district.data, ...data] : data;
+              draft.isEnd = total <= _district.total;
+              draft.total = total;
+              draft.current = current + 1;
+            });
+          },
+        },
+      }),
+    );
+  };
+
+  const getWardData = ({ current = _district.current, name = _district.name, id = _district.id, update = false }: any = {}) => {
+    dispatch(
+      addressActions.actionGetWard({
+        params: {
+          current,
+          count: DEFAULT_LARGE_PAGE_SIZE,
+          name,
+          id,
+        },
+        callbacks: {
+          onSuccess({ data, total }) {
+            setWard((draft) => {
+              draft.data = !name && !update ? [..._ward.data, ...data] : data;
+              draft.isEnd = total <= _ward.total;
+              draft.total = total;
+              draft.current = current + 1;
+            });
+          },
+        },
+      }),
+    );
+  };
+
+  const onScrollDistrict = (event) => {
+    const { scrollTop, offsetHeight, scrollHeight } = event.target;
+    if (scrollTop > 0.6 * scrollHeight && !_district.isEnd) {
+      getDistrictData();
+    }
+  };
+
+  const onScrollWard = (event) => {
+    const { scrollTop, offsetHeight, scrollHeight } = event.target;
+    if (scrollTop > 0.6 * scrollHeight && !_ward.isEnd) {
+      getWardData();
+    }
+  };
+
+  const onSearchDistrict = _.debounce((value) => {
+    getDistrictData({ current: 1, name: value });
+  }, 300);
+
+  const onSearchWard = _.debounce((value) => {
+    getWardData({ current: 1, name: value });
+  }, 300);
+
+  useEffect(() => {
+    getDistrictData();
+    renderAddress(profile.address);
+  }, []);
 
   const fetchInfo = (id) => {
     dispatch(
@@ -54,7 +164,7 @@ export default function Profile() {
       .then((values) => {
         dispatch(
           actions.actionUpdateProfile({
-            params: { ...values, id: profile.id },
+            params: { ...values, id: profile.id, address: `${values.detail}, ${_.join(_address, ', ')}`},
             callbacks: {
               onSuccess() {
                 fetchInfo(profile.id);
@@ -100,11 +210,12 @@ export default function Profile() {
   const trimString = (str: string) => _form.getFieldValue(str)?.trim();
 
   const onChange = () => {
+    const { idDistrict, idWard, detail, ...rest } = _form.getFieldsValue();
     return _.isEqual(profile, {
       ...profile,
-      ..._form.getFieldsValue(),
+      ...rest,
       phone: trimString('phone'),
-      address: trimString('address'),
+      address: `${detail}, ${_address.join(', ')}`,
       name: trimString('name'),
     });
   };
@@ -146,7 +257,7 @@ export default function Profile() {
               <Row>
                 <Col span={11}>
                   <h2 className='flex-1 text-lg leading-6 font-medium text-primary mb-6'>Thông tin cá nhân</h2>
-                  <Form.Item name='username' label='Tên Đăng nhập'>
+                  <Form.Item name='username' label='Tên đăng nhập'>
                     {profile.username}
                   </Form.Item>
                   <Form.Item name='name' label='Họ và tên' rules={[{ required: true, message: 'Tên không được bỏ trống' }]}>
@@ -166,13 +277,103 @@ export default function Profile() {
                 <Col span={2}></Col>
                 <Col span={11}>
                   <h2 className='flex-1 text-lg leading-6 font-medium text-primary mb-6'>Số điện thoại và Email</h2>
-                  <Form.Item name='address' label='Địa chỉ' rules={[{ required: true, message: 'Nhập địa chỉ' }]}>
-                    <Input.TextArea placeholder='Nhập địa chỉ' />
+                  <Form.Item name='email' label='Email' rules={[{ required: true, message: 'Nhập email' }]}>
+                    <Input placeholder='Nhập email' />
                   </Form.Item>
                   <Form.Item name='phone' label='Số điện thoại' rules={[{ required: true, message: 'Số điện thoại không được bỏ trống' }]}>
                     <Input className='w-full' placeholder='Nhập số điện thoại' />
                   </Form.Item>
                 </Col>
+
+                {/* <Col span={24}>
+                  <Form.Item label='Địa chỉ' required className='mb-0' labelCol={{ span: 4 }}>
+                    <Row gutter={10}>
+                      <Col span={8}>
+                        <Form.Item noStyle shouldUpdate>
+                          {({ getFieldValue }) => (
+                            <Form.Item
+                              name='idWard'
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'Phường/xã không được bỏ trống',
+                                },
+                              ]}
+                            >
+                              <Select
+                                onPopupScroll={onScrollWard}
+                                showSearch
+                                onChange={(value, option: any) => {
+                                  setAddress((value) => {
+                                    const newArr = [...value];
+                                    newArr[0] = option.label;
+                                    return newArr;
+                                  });
+                                }}
+                                onSearch={onSearchWard}
+                                filterOption={(input: any, option: any) => true}
+                                disabled={!getFieldValue('idDistrict')}
+                                options={_.map(_ward.data, (item: any) => ({
+                                  label: item.name,
+                                  value: item.id,
+                                  key: item.id,
+                                }))}
+                                placeholder='Chọn phường/xã'
+                              />
+                            </Form.Item>
+                          )}
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name='idDistrict'
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Quận/huyện không được bỏ trống',
+                            },
+                          ]}
+                        >
+                          <Select
+                            onPopupScroll={onScrollDistrict}
+                            showSearch
+                            onSearch={onSearchDistrict}
+                            onChange={(value, option: any) => {
+                              setAddress((value) => {
+                                const newArr = [...value];
+                                newArr[1] = option.label;
+                                newArr[0] = '';
+                                return newArr;
+                              });
+                              setDistrict((draft) => {
+                                draft.id = value;
+                              });
+                              getWardData({ id: value, current: 1, update: true });
+                              _form.resetFields(['idWard']);
+                            }}
+                            filterOption={(input: any, option: any) => true}
+                            placeholder='Chọn quận/huyện'
+                            options={_.map(_district.data, (item: any) => ({
+                              label: item.name,
+                              value: item.id,
+                              key: item.id,
+                            }))}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item>
+                          <Input value='Thành phố Hà Nội' readOnly />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Form.Item label='Chi tiết' name='detail' labelCol={{ span: 4 }}>
+                    <Input />
+                  </Form.Item>
+                </Col> */}
                 <Col span={24}>
                   <div className='flex justify-center gap-x-4'>
                     <Button onClick={open}>Đổi mật khẩu</Button>

@@ -33,7 +33,6 @@ export default function Address() {
   }, []);
 
   const handleDelete = (id) => {
-    console.log("🚀 ~ file: index.tsx:36 ~ handleDelete ~ id:", id)
     dispatch(
       actions.actionDeleteAddress({
         params: {

@@ -21,9 +21,20 @@ const firebaseConfig = {
 //   measurementId: "G-C31MM2PF01"
 // };
 
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDwx1k4uQOz70I2XY7kzq2rOzvstbj-Eao",
+//   authDomain: "test-otp-a78a2.firebaseapp.com",
+//   projectId: "test-otp-a78a2",
+//   storageBucket: "test-otp-a78a2.appspot.com",
+//   messagingSenderId: "658040531380",
+//   appId: "1:658040531380:web:9f311baf033039f860aae1",
+//   measurementId: "G-EX7KQNMKWJ"
+// };
+
+
 const appFirebase = initializeApp(firebaseConfig);
 const auth = getAuth(appFirebase);
-auth.useDeviceLanguage();
+// auth.useDeviceLanguage();
 // auth.settings.appVerificationDisabledForTesting = true;
 
 export default {

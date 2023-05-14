@@ -64,8 +64,11 @@ export default function Signup() {
         'recaptcha-container',
         {
           size: 'invisible',
-          callback: (response) => {},
-          'expired-callback': () => {},
+          callback: (response) => {
+
+            console.log("🚀 ~ file: index.tsx:68 ~ useEffect ~ response:", response)
+          },
+            'expired-callback': () => {},
         },
         firebase.auth,
       );
@@ -80,19 +83,19 @@ export default function Signup() {
   };
 
   function getOTP() {
-    console.log('12312312312');
-    setLoading(true);
+      setLoading(true);
 
     const appVerifier = window.recaptchaVerifier;
 
     firebase
       .signInWithPhoneNumber(firebase.auth, ph, appVerifier)
       .then((confirmationResult) => {
+        console.log("🚀 ~ file: index.tsx:94 ~ .then ~ confirmationResult:", confirmationResult)
         window.confirmationResult = confirmationResult;
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.log('111111111111111111111111', error);
         setLoading(false);
       });
   }
@@ -238,7 +241,7 @@ export default function Signup() {
           >
             <Input placeholder='Nhập mã OTP' />
           </Form.Item> */}
-          <Form.Item
+          {/* <Form.Item
             name='address'
             rules={[
               {
@@ -248,7 +251,7 @@ export default function Signup() {
             ]}
           >
             <Input placeholder='Địa chỉ' />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item {...tailLayout}>
             <Button type='primary' htmlType='submit'>
               Đăng ký
@@ -256,7 +259,7 @@ export default function Signup() {
           </Form.Item>
         </Form>
       </div>
-      <Modal title='Nhập mã OTP' width={600} open={isOpen} onOk={handleSignup} onCancel={close}>
+      <Modal width={400} title='Nhập mã OTP' open={isOpen} onOk={handleSignup} onCancel={close}>
         <Input placeholder='Nhập mã OTP' onChange={(e) => setOtp(e.target.value)} />
       </Modal>
     </div>

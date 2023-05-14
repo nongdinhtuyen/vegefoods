@@ -20,6 +20,7 @@ export default function Page1({ setPay, pay }: ReceiptProps) {
   const { cartDataTotal } = useAppSelector((state) => state.cartReducer);
   const { provinces } = useAppSelector((state) => state.initReducer);
   const { listAddress } = useAppSelector((state) => state.addressReducer);
+  const { profile } = useAppSelector((state) => state.userReducer);
   const [_form] = Form.useForm();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -123,9 +124,9 @@ export default function Page1({ setPay, pay }: ReceiptProps) {
             layout='horizontal'
             initialValues={{
               province: provinces.name,
-              name: listAddress[0]?.id,
-              phone: listAddress[0]?.phone,
-              address: listAddress[0]?.address,
+              // name: listAddress[0]?.id,
+              // phone: listAddress[0]?.phone,
+              // address: listAddress[0]?.address,
             }}
           >
             <Form.Item name='name' label='Tên'>

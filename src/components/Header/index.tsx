@@ -71,7 +71,7 @@ export default function Header(props) {
             </div>
             <div className='flex flex-1 items-center gap-x-1 text-white'>
               <span className='icon-paper-plane'></span>
-              <span className='text-xs  uppercase'>vegafoods@gmail.com</span>
+              <span className='text-xs  uppercase'>vegefoods@gmail.com</span>
             </div>
             <div className='flex-2 text-right'>
               <span className='text-xs  uppercase text-white'>Giao hàng trong vòng 3-5 ngày làm việc và đổi/trả hàng miễn phí</span>

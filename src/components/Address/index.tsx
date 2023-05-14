@@ -1,33 +1,29 @@
-import { Breadcrumb } from '../../components';
+import { DEFAULT_LARGE_PAGE_SIZE } from 'consts';
 import actions from '../../redux/actions/address';
-import { PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Empty, Form, Image, Input, InputNumber, Modal, Row, Select, Table } from 'antd';
-import { openNotification } from 'common/Notify';
+import Background from '../../static/background_login.jpg';
+import { Form, Input, Button, notification, Select, Space, Modal, Row, Col } from 'antd';
 import utils from 'common/utils';
-import { DEFAULT_LARGE_PAGE_SIZE, DEFAULT_PAGE_SIZE } from 'consts';
-import useToggle from 'hooks/useToggle';
 import _ from 'lodash';
-import { useState, useEffect } from 'react';
-import { FiEdit } from 'react-icons/fi';
-import { RiDeleteBin6Line } from 'react-icons/ri';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from 'redux/store';
-import styled from 'styled-components';
+import { useEffect, useRef, useState } from 'react';
+import { connect, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { useImmer } from 'use-immer';
 
-type Props = {
-  fetchData: () => void;
-  close: () => void;
-  open: () => void;
-  isOpen: boolean;
-  updateAddress?: any;
+const layout = {
+  wrapperCol: {
+    span: 24,
+  },
+};
+const tailLayout = {
+  wrapperCol: {
+    offset: 4,
+    span: 16,
+  },
 };
 
-export default function ModalAddAddress({ fetchData, close, open, isOpen }: Props) {
-  const dispatch = useAppDispatch();
-  const [_updateAddress, setUpdateAddress] = useState<any>({});
-  const [_form] = Form.useForm();
+export default function Signup() {
+  const _form = Form.useFormInstance();
+  const dispatch = useDispatch();
   const [_district, setDistrict] = useImmer<any>({
     data: [],
     current: 1,
@@ -44,61 +40,6 @@ export default function ModalAddAddress({ fetchData, close, open, isOpen }: Prop
     isEnd: false,
   });
   const [_address, setAddress] = useState<string[]>(['', '', 'Thành phố Hà Nội']);
-
-  const getAddress = () => {
-    dispatch(actions.actionGetAddress({}))
-  }
-
-  const handleUpdate = () => {
-    _form
-      .validateFields()
-      .then((value) => {
-        if (_.isEmpty(_updateAddress)) {
-          dispatch(
-            actions.actionAddAddress({
-              params: { ...value, address: `${value.detail}, ${_.join(_address, ', ')}` },
-              callbacks: {
-                onSuccess(data) {
-                  fetchData();
-                  openNotification({
-                    description: 'Thêm địa chỉ thành công',
-                    type: 'success',
-                  });
-                  getAddress()
-                  close();
-                  _form.resetFields();
-                },
-              },
-            }),
-          );
-        } else {
-          dispatch(
-            actions.actionUpdateAddress({
-              params: { ...value, address: `${value.detail}, ${_.join(_address, ',')}`, id: _updateAddress.id },
-              callbacks: {
-                onSuccess(data) {
-                  fetchData();
-                  openNotification({
-                    description: 'Cập nhật địa chỉ thành công',
-                    type: 'success',
-                  });
-                  getAddress()
-                  setUpdateAddress({});
-                  close();
-                  _form.resetFields();
-                },
-              },
-            }),
-          );
-        }
-      })
-      .catch(console.log);
-  };
-
-  const handleClose = () => {
-    _form.resetFields();
-    close();
-  };
 
   const getDistrictData = ({ current = _district.current, name = _district.name } = {}) => {
     dispatch(
@@ -147,8 +88,8 @@ export default function ModalAddAddress({ fetchData, close, open, isOpen }: Prop
 
   useEffect(() => {
     getDistrictData();
-    // getWardData();
   }, []);
+
 
   const onScrollDistrict = (event) => {
     const { scrollTop, offsetHeight, scrollHeight } = event.target;
@@ -172,51 +113,11 @@ export default function ModalAddAddress({ fetchData, close, open, isOpen }: Prop
     getWardData({ current: 1, name: value });
   }, 300);
 
+
+
   return (
-    <Modal
-      title={<div className='text-2xl text-center mb-8'>Thêm mới địa chỉ</div>}
-      onCancel={handleClose}
-      onOk={handleUpdate}
-      open={isOpen}
-      okText='Xác nhận'
-      cancelText='Hủy'
-      width={840}
-      className='top-20'
-    >
-      <Form name='basic' form={_form} className='m-auto' layout='vertical'>
-        <Form.Item
-          name='name'
-          label='Tên'
-          rules={[
-            {
-              required: true,
-              message: 'Tên không được bỏ trống',
-            },
-          ]}
-        >
-          <Input placeholder='Nhập tên' />
-        </Form.Item>
-        <Form.Item
-          label='Số điện thoại'
-          name='phone'
-          required
-          rules={[
-            ({ getFieldValue }) => ({
-              validator(rule, value) {
-                if (_.isEmpty(value)) {
-                  return Promise.reject('Số điện thoại không được bỏ trống');
-                }
-                if (!_.isNumber(+value)) {
-                  return Promise.reject('Vui lòng nhập số');
-                }
-                return Promise.resolve();
-              },
-            }),
-          ]}
-        >
-          <Input className='w-full' placeholder='Nhập số điện thoại' />
-        </Form.Item>
-        <Form.Item label='Địa chỉ' required className='mb-0'>
+    <>
+      <Form.Item label='Địa chỉ' required className='mb-0'>
           <Row gutter={10}>
             <Col span={8}>
               <Form.Item noStyle shouldUpdate>
@@ -298,10 +199,6 @@ export default function ModalAddAddress({ fetchData, close, open, isOpen }: Prop
             </Col>
           </Row>
         </Form.Item>
-        <Form.Item name='detail' label='Chi tiết'>
-          <Input />
-        </Form.Item>
-      </Form>
-    </Modal>
+    </>
   );
 }

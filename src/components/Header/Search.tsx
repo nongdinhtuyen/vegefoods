@@ -58,12 +58,12 @@ const Search: React.FC = () => {
       dropdownRender={(menu) => (
         <>
           {menu}
-          <Divider style={{ margin: '0' }} />
+          {/* <Divider style={{ margin: '0' }} />
           <Space style={{}}>
             <Link to='' className='watch-more' key='note'>
               Xem thêm
             </Link>
-          </Space>
+          </Space> */}
         </>
       )}
       onChange={getListProducts}

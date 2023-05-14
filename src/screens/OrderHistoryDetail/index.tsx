@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js';
 import utils from 'common/utils';
 import CustomImage from 'components/CustomImage';
 import ProductComponent from 'components/ProductComponent';
+import ProductStatus from 'components/ProductStatus';
 import consts from 'consts';
 import useToggle from 'hooks/useToggle';
 import _ from 'lodash';
@@ -71,10 +72,7 @@ export default function OrderHistoryDetail() {
   };
 
   const renderDiscount = () => {
-    return new BigNumber(_receipt.data.receipt.total)
-      .times(profile.rankList?.discount)
-      .div(100)
-      .toNumber();
+    return new BigNumber(_receipt.data.receipt.total).times(profile.rankList?.discount).div(100).toNumber();
   };
 
   return (
@@ -86,14 +84,7 @@ export default function OrderHistoryDetail() {
               <IoChevronBackSharp />
               Đơn hàng {_receipt.data.receipt.id}
             </span>
-            {_.includes(
-              [consts.PRODUCT_STATUS.WAITING_FOR_APPROVAL, consts.PRODUCT_STATUS.APPROVED, consts.PRODUCT_STATUS.WAITING_FOR_DELIVERY],
-              _receipt.data.receipt.status,
-            ) && (
-              <Button danger onClick={() => cancelReceipt(_receipt.data.receipt.id)}>
-                Hủy đơn hàng
-              </Button>
-            )}
+            <ProductStatus status={_receipt.data.receipt.status} typePayment={_receipt.data.receipt.typePayment} />
           </div>
           <Divider className='my-2' />
           <div className='px-5 pt-2'>
@@ -121,8 +112,8 @@ export default function OrderHistoryDetail() {
             )}
             {_receipt.data.receipt.note ? (
               <>
-                <div className='flex items-center'>
-                  <TiCancel className='text-primary' size={28} /> Hủy đơn đặt hàng
+                <div className='flex items-center gap-x-2'>
+                  <TiCancel className='text-primary' size={24} /> Hủy đơn đặt hàng
                 </div>
                 <div>Lý do: {_receipt.data.receipt.note}</div>
                 <Divider className='my-4' />
@@ -196,6 +187,19 @@ export default function OrderHistoryDetail() {
               Hình thức thanh toán:{' '}
               {_receipt.data.receipt.typePayment === consts.TYPE_PAYMENT_ONLINE ? 'Thanh toán online' : 'Thanh toán khi nhận hàng'}
             </div>
+            {_.includes(
+              [consts.PRODUCT_STATUS.WAITING_FOR_APPROVAL, consts.PRODUCT_STATUS.APPROVED, consts.PRODUCT_STATUS.WAITING_FOR_DELIVERY],
+              _receipt.data.receipt.status,
+            ) && (
+              <>
+                <Divider className='my-2' />
+                <div className='text-right' >
+                <Button danger onClick={() => cancelReceipt(_receipt.data.receipt.id)}>
+                  Hủy đơn hàng
+                </Button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

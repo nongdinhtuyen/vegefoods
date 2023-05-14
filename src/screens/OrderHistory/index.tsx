@@ -30,6 +30,7 @@ export default function OrderHistory() {
   const [_id, setId] = useState(0);
 
   const getData = ({ page = _receipt.current, typeStatus = _receipt.typeStatus } = {}) => {
+    console.log('🚀 ~ file: index.tsx:33 ~ getData ~ typeStatus:', typeStatus);
     setReceipt((draft) => {
       draft.current = page;
     });
@@ -62,7 +63,11 @@ export default function OrderHistory() {
   }, []);
 
   const handleChange = (e) => {
-    getData({ typeStatus: e.target.value });
+    setReceipt((draft) => {
+      draft.typeStatus = e.target.value;
+      draft.current = 1;
+    });
+    getData({ page: 1, typeStatus: e.target.value });
   };
 
   const handleCancel = () => {

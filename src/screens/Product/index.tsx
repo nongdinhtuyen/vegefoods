@@ -1,23 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Breadcrumb } from '../../components';
-import { Rate, Image, Button, Form, Input, InputNumber, notification, Space, List, Carousel } from 'antd';
-import dayjs from 'dayjs';
-import { useDispatch } from 'react-redux';
-import productActions from '../../redux/actions/product';
 import cartActions from '../../redux/actions/cart';
-import { useImmer } from 'use-immer';
-import utils from 'common/utils';
-import { openNotification } from 'common/Notify';
-import { DEFAULT_SMALL_PAGE_SIZE } from 'consts';
+import productActions from '../../redux/actions/product';
 import { Comment } from '@ant-design/compatible';
-import { FaUser } from 'react-icons/fa';
-import _ from 'lodash';
-import CustomImage from 'components/CustomImage';
+import { Rate, Image, Button, Form, Input, InputNumber, notification, Space, List, Carousel, Badge } from 'antd';
 import { CarouselRef } from 'antd/es/carousel';
-import styled from 'styled-components';
+import { openNotification } from 'common/Notify';
+import utils from 'common/utils';
+import CustomImage from 'components/CustomImage';
+import { DEFAULT_SMALL_PAGE_SIZE } from 'consts';
+import dayjs from 'dayjs';
+import _ from 'lodash';
+import { useEffect, useRef, useState } from 'react';
+import { FaUser } from 'react-icons/fa';
 import { TiChevronLeft, TiChevronRight } from 'react-icons/ti';
+import { useDispatch } from 'react-redux';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAppSelector } from 'redux/store';
+import styled from 'styled-components';
+import { useImmer } from 'use-immer';
 
 const { TextArea } = Input;
 const CarouselWrapper = styled.div`
@@ -251,13 +251,25 @@ export default function Product() {
             <div className='previous icon' onClick={() => ref.current?.prev()}>
               <TiChevronLeft size={30} />
             </div>
-            <Carousel ref={ref} dots={false} className='h-full'>
-              {_.map([_product, ..._images], (item: any) => (
-                <div className='text-center' key={item.id}>
-                  <CustomImage key={item.id} width={300} height={300} src={utils.baseUrlImage(item.img)} />
-                </div>
-              ))}
-            </Carousel>
+            {_product.remain <= 0 ? (
+              <Badge.Ribbon text='Hết hàng' color='red'>
+                <Carousel ref={ref} dots={false} className='h-full'>
+                  {_.map([_product, ..._images], (item: any) => (
+                    <div className='text-center' key={item.id}>
+                      <CustomImage key={item.id} width={300} height={300} src={utils.baseUrlImage(item.img)} />
+                    </div>
+                  ))}
+                </Carousel>
+              </Badge.Ribbon>
+            ) : (
+              <Carousel ref={ref} dots={false} className='h-full'>
+                {_.map([_product, ..._images], (item: any) => (
+                  <div className='text-center' key={item.id}>
+                    <CustomImage key={item.id} width={300} height={300} src={utils.baseUrlImage(item.img)} />
+                  </div>
+                ))}
+              </Carousel>
+            )}
             <div className='next icon' onClick={() => ref.current?.next()}>
               <TiChevronRight size={30} />
             </div>
@@ -285,7 +297,7 @@ export default function Product() {
               />
               <div>{_product.remain} sản phẩm có sẵn</div>
             </div>
-            <Button type='primary' size='large' onClick={addCart}>
+            <Button disabled={_product.remain <= 0} type='primary' size='large' onClick={addCart}>
               Thêm vào giỏ hàng
             </Button>
           </div>
