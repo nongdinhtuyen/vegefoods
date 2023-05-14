@@ -59,13 +59,21 @@ class BaseRequest {
 
   _errorHandler(err) {
     if (err.response && err.response.status === 401) {
-      openNotification({
-        description: 'Bạn không có quyền',
-        type: 'error',
-      });
-      store.dispatch({
-        type: LOGOUT,
-      });
+      if (!window.axios.defaults.headers.common['apikey']) {
+        openNotification({
+          description: 'Bạn chưa đăng nhập',
+          type: 'error',
+        });
+        window.navigate('login')
+      } else {
+        openNotification({
+          description: 'Bạn không có quyền',
+          type: 'error',
+        });
+        store.dispatch({
+          type: LOGOUT,
+        });
+      }
     }
     throw err;
   }

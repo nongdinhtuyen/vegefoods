@@ -42,20 +42,20 @@ export default function Signup() {
   const onFinish = (value) => {
     open();
     getOTP();
-    // dispatch(
-    //   actions.actionRegister({
-    //     params: { ...value, phone: ph },
-    //     callbacks: {
-    //       onSuccess(data) {
-    //         redirect();
-    //       },
-    //     },
-    //   }),
-    // );
   };
 
   const handleSignup = () => {
-    console.log('window.confirmationResult', window.confirmationResult);
+    dispatch(
+      actions.actionRegister({
+        params: { ..._form.getFieldsValue(), phone: ph, id_token: _otp },
+        callbacks: {
+          onSuccess(data) {
+            closeSignup();
+            redirect();
+          },
+        },
+      }),
+    );
   };
 
   useEffect(() => {
@@ -64,11 +64,8 @@ export default function Signup() {
         'recaptcha-container',
         {
           size: 'invisible',
-          callback: (response) => {
-
-            console.log("🚀 ~ file: index.tsx:68 ~ useEffect ~ response:", response)
-          },
-            'expired-callback': () => {},
+          callback: (response) => {},
+          'expired-callback': () => {},
         },
         firebase.auth,
       );
@@ -83,39 +80,28 @@ export default function Signup() {
   };
 
   function getOTP() {
-      setLoading(true);
+    setLoading(true);
 
     const appVerifier = window.recaptchaVerifier;
 
     firebase
       .signInWithPhoneNumber(firebase.auth, ph, appVerifier)
       .then((confirmationResult) => {
-        console.log("🚀 ~ file: index.tsx:94 ~ .then ~ confirmationResult:", confirmationResult)
         window.confirmationResult = confirmationResult;
         setLoading(false);
       })
       .catch((error) => {
-        console.log('111111111111111111111111', error);
         setLoading(false);
       });
   }
 
-  // function onVerify() {
-  //   setLoading(true);
-  //   window.confirmationResult
-  //     .confirm(otp)
-  //     .then(async (res) => {
-  //       console.log(res);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setLoading(false);
-  //     });
-  // }
+  const closeSignup = () => {
+    close();
+    setOtp('');
+  };
 
   return (
-    <div className='bg py-4 ' style={{ backgroundImage: `url(${Background})` }}>
+    <div className='bg py-4' style={{ backgroundImage: `url(${Background})` }}>
       <div className='login-container'>
         <h1>ĐĂNG KÝ</h1>
         <div id='recaptcha-container'></div>
@@ -123,7 +109,7 @@ export default function Signup() {
           {...layout}
           name='basic'
           onFinish={onFinish}
-          className='m-auto'
+          className='m-auto text-left'
           form={_form}
           initialValues={{
             id: 7,
@@ -160,6 +146,7 @@ export default function Signup() {
 
           <Form.Item
             name='pass'
+            hasFeedback
             rules={[
               {
                 required: true,
@@ -168,6 +155,28 @@ export default function Signup() {
             ]}
           >
             <Input.Password placeholder='Mật khẩu' />
+          </Form.Item>
+
+          <Form.Item
+            name='confirm'
+            dependencies={['password']}
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: 'Mật khẩu xác nhận không được để trống',
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('pass') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Mật khẩu xác nhận khác với mật khẩu'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder='Mật khẩu xác nhận ' />
           </Form.Item>
 
           <Form.Item
@@ -252,15 +261,15 @@ export default function Signup() {
           >
             <Input placeholder='Địa chỉ' />
           </Form.Item> */}
-          <Form.Item {...tailLayout}>
+          <Form.Item {...tailLayout} className='text-center'>
             <Button type='primary' htmlType='submit'>
               Đăng ký
             </Button>
           </Form.Item>
         </Form>
       </div>
-      <Modal width={400} title='Nhập mã OTP' open={isOpen} onOk={handleSignup} onCancel={close}>
-        <Input placeholder='Nhập mã OTP' onChange={(e) => setOtp(e.target.value)} />
+      <Modal width={400} title='Nhập mã OTP' open={isOpen} onOk={handleSignup} onCancel={closeSignup}>
+        <Input placeholder='Nhập mã OTP' value={_otp} onChange={(e) => setOtp(e.target.value)} />
       </Modal>
     </div>
   );

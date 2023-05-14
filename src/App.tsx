@@ -43,7 +43,9 @@ function LoginRouter({ children }: Router) {
 }
 
 function App() {
+  const navigate = useNavigate();
   useScrollToTop();
+  window.navigate = navigate;
 
   return (
     <ConfigProvider

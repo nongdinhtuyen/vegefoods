@@ -22,7 +22,7 @@ const userReducer = createReducer(initialState, (builder) => {
   });
   builder.addCase(actions.actionLogout, (state, { payload }: any) => {
     localStorage.removeItem('session');
-    window.axios.defaults.headers.common['apikey'] = '';
+    window.axios.defaults.headers['apikey'] = '';
     state.profile = {};
     state.isLogin = false;
   });

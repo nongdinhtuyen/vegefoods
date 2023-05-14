@@ -30,7 +30,9 @@ export default function Header(props) {
   };
 
   const logout = () => {
-    dispatch(actions.actionLogout({}));
+    dispatch(actions.actionLogout({
+
+    }));
   };
 
   const items: MenuProps['items'] = [
