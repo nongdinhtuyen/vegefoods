@@ -34,6 +34,7 @@ export default function OrderHistoryDetail() {
     },
     total: 0,
   });
+
   const { profile } = useAppSelector((state) => state.userReducer);
   const params = useParams();
   const [_form] = Form.useForm();

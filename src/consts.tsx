@@ -6,12 +6,12 @@ export const DEFAULT_SMALL_PAGE_SIZE = 5;
 
 export default {
 
-  TOO_MANY_REQUESTS_STR: 'auth/too-many-requests',
-  INVALID_PHONE_NUMBER: 'auth/invalid-phone-number',
-  CODE_EXPIRED: 'auth/code-expired',
-  MISSING_VERIFICATION_CODE: 'auth/missing-verification-code',
-  INVALID_VERIFICATION_CODE: 'auth/invalid-verification-code',
-  VERIFICATION_ERROR: 'ekyc.verification-error',
+  TOO_MANY_REQUESTS_STR: 'Bạn bị giới hạn gửi mã xác thực, vui lòng thử lại sau',
+  INVALID_PHONE_NUMBER: 'Số điện thoại không hợp lệ',
+  CODE_EXPIRED: 'Mã xác minh đã hết hạn.',
+  MISSING_VERIFICATION_CODE: 'Thiếu mã xác minh',
+  INVALID_VERIFICATION_CODE: 'Mã xác minh không hợp lệ',
+  VERIFICATION_ERROR: 'Vui lòng thử lại sau',
 
   TYPE_PAYMENT_ONLINE: 0,
   TYPE_PAYMENT_COD: 1,

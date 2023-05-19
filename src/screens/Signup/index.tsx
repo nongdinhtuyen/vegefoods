@@ -1,3 +1,4 @@
+import { openNotification } from 'common/Notify';
 import actions from '../../redux/actions/user';
 import Background from '../../static/background_login.jpg';
 import VerifyPhone from './VerifyPhone';
@@ -13,6 +14,7 @@ import PhoneInput from 'react-phone-number-input/input';
 import { connect, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Reaptcha from 'reaptcha';
+import consts from 'consts';
 
 const layout = {
   wrapperCol: {
@@ -38,16 +40,18 @@ export default function Signup() {
   const [ph, setPh] = useState<any>('09730835341');
   const { isOpen, open, close } = useToggle();
   const [_otp, setOtp] = useState('');
+  const [_result, setResult] = useState<any>('');
 
   const onFinish = (value) => {
     open();
     getOTP();
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
+    const resp = await _result.confirm(_otp)
     dispatch(
       actions.actionRegister({
-        params: { ..._form.getFieldsValue(), phone: ph, id_token: _otp },
+        params: { ..._form.getFieldsValue(), phone: ph, id_token: resp._tokenResponse.idToken },
         callbacks: {
           onSuccess(data) {
             closeSignup();
@@ -74,10 +78,27 @@ export default function Signup() {
 
   const redirect = () => {
     notification['success']({
-      message: 'Sign up succeeded',
+      message: 'Đăng ký thành công',
     });
     navigate('/login');
   };
+
+  const errorFromFireBase = (err: any) => {
+    const stringErr = err.toString()
+    const str = stringErr.substring(stringErr.indexOf('(') + 1, stringErr.lastIndexOf(')')).trim();
+    const arr = [
+      consts.TOO_MANY_REQUESTS_STR,
+      consts.INVALID_PHONE_NUMBER,
+      consts.CODE_EXPIRED,
+      consts.MISSING_VERIFICATION_CODE,
+      consts.INVALID_VERIFICATION_CODE,
+    ];
+    if(_.includes(arr, str)){
+      return str;
+    } else {
+      return consts.VERIFICATION_ERROR;
+    }
+  }
 
   function getOTP() {
     setLoading(true);
@@ -87,11 +108,19 @@ export default function Signup() {
     firebase
       .signInWithPhoneNumber(firebase.auth, ph, appVerifier)
       .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
+        setResult(confirmationResult);
         setLoading(false);
+        openNotification({
+          description: 'Gửi mã OTP thành công',
+          type: 'success',
+        })
       })
       .catch((error) => {
         setLoading(false);
+        openNotification({
+          description: errorFromFireBase(error),
+          type: 'error',
+        })
       });
   }
 
@@ -111,26 +140,27 @@ export default function Signup() {
           onFinish={onFinish}
           className='m-auto text-left'
           form={_form}
-          initialValues={{
-            id: 7,
-            name: 'Lưu Ngọc Lan',
-            username: 'lanln',
-            pass: '',
-            phone: '09730835341',
-            address: 'tràng an complex, 1 phùng chí kiên, nghĩa đô, cầu giấy, hà lội',
-            email: '123',
-            sex: 1,
-            createDate: 1679107612,
-            status: 0,
-            idRank: 3,
-            rankList: {
-              id: 3,
-              name: 'Vàng',
-              totalSpend: 1500000,
-              discount: 5,
-            },
-            totalBuy: 97997425,
-          }}
+          // initialValues={{
+          //   id: 7,
+          //   name: 'Nông Đình Tuyên',
+          //   username: 'tuyennd',
+          //   pass: '1',
+          //   confirm: '1',
+          //   phone: '09730835341',
+          //   address: 'tràng an complex, 1 phùng chí kiên, nghĩa đô, cầu giấy, hà lội',
+          //   email: '123',
+          //   sex: 0,
+          //   createDate: 1679107612,
+          //   status: 0,
+          //   idRank: 3,
+          //   rankList: {
+          //     id: 3,
+          //     name: 'Vàng',
+          //     totalSpend: 1500000,
+          //     discount: 5,
+          //   },
+          //   totalBuy: 97997425,
+          // }}
         >
           <Form.Item
             name='username'

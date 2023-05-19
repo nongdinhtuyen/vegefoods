@@ -80,6 +80,7 @@ const StepsWrapper = styled(Steps)`
 // 5 – Chờ duyệt hủy - 1
 // 6 – Đã hủy - 3
 export default function CustomSteps({ status, typePayment, listStatus, price }) {
+
   const renderIcon = (icon: React.ReactNode) => <div className='item item-active'>{icon}</div>;
 
   const items: any = [

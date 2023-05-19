@@ -123,7 +123,7 @@ function VerifyPhone(props: any) {
         <Reaptcha
           key={'explicit'}
           ref={_captcha}
-          // sitekey={SITE_KEY_FISEBASE}
+          sitekey={'6LcMZR0UAAAAALgPMcgHwga7gY5p8QMg1Hj-bmUv'}
           size={'invisible'}
           theme={'light'}
           explicit={true}
