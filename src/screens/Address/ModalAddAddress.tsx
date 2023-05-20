@@ -201,20 +201,22 @@ export default function ModalAddAddress({ fetchData, close, open, isOpen }: Prop
           name='phone'
           required
           rules={[
-            ({ getFieldValue }) => ({
-              validator(rule, value) {
-                if (_.isEmpty(value)) {
-                  return Promise.reject('Số điện thoại không được bỏ trống');
-                }
-                if (!_.isNumber(+value)) {
-                  return Promise.reject('Vui lòng nhập số');
-                }
-                return Promise.resolve();
-              },
-            }),
+            {
+              required: true,
+              message: 'Số điện thoại không được để trống',
+            },
+            {
+              type: 'number',
+              message: 'Số điện thoại không hợp lệ',
+              transform: (value) => _.toNumber(value),
+            },
+            {
+              max: 10,
+              message: 'Số điện thoại không hợp lệ',
+            },
           ]}
         >
-          <Input className='w-full' placeholder='Nhập số điện thoại' />
+          <Input className='w-full' type='number' placeholder='Nhập số điện thoại' />
         </Form.Item>
         <Form.Item label='Địa chỉ' required className='mb-0'>
           <Row gutter={10}>

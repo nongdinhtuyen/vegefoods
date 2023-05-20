@@ -187,7 +187,7 @@ export default function CustomSteps({ status, typePayment, listStatus, price }) 
       case 5:
         items.push({
           title: consts.PRODUCT_STATUS_STRING[5],
-          icon: renderIcon(<img src='/icons/cancel_product.png' width={24} height={19} />),
+          icon: renderIcon(<img src='/icons/cancel_product.svg' width={24} height={24} />),
         })
         break;
       case 6:

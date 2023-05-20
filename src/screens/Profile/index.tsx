@@ -164,7 +164,7 @@ export default function Profile() {
       .then((values) => {
         dispatch(
           actions.actionUpdateProfile({
-            params: { ...values, id: profile.id, address: `${values.detail}, ${_.join(_address, ', ')}`},
+            params: { ...values, id: profile.id, address: `${values.detail}, ${_.join(_address, ', ')}` },
             callbacks: {
               onSuccess() {
                 fetchInfo(profile.id);
@@ -280,8 +280,26 @@ export default function Profile() {
                   <Form.Item name='email' label='Email' rules={[{ required: true, message: 'Nhập email' }]}>
                     <Input placeholder='Nhập email' />
                   </Form.Item>
-                  <Form.Item name='phone' label='Số điện thoại' rules={[{ required: true, message: 'Số điện thoại không được bỏ trống' }]}>
-                    <Input className='w-full' placeholder='Nhập số điện thoại' />
+                  <Form.Item
+                    name='phone'
+                    label='Số điện thoại'
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Số điện thoại không được để trống',
+                      },
+                      {
+                        type: 'number',
+                        message: 'Số điện thoại không hợp lệ',
+                        transform: (value) => _.toNumber(value),
+                      },
+                      {
+                        max: 10,
+                        message: 'Số điện thoại không hợp lệ',
+                      },
+                    ]}
+                  >
+                    <Input className='w-full' placeholder='Nhập số điện thoại' type='number' />
                   </Form.Item>
                 </Col>
 

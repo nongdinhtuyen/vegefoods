@@ -257,11 +257,15 @@ export default function Signup() {
                 required: true,
                 message: 'Số điện thoại không được để trống',
               },
-              // {
-              //   type: 'number',
-              //   message: 'Số điện thoại không hợp lệ',
-              //   transform: (value) => _.toNumber(value),
-              // },
+              {
+                type: 'number',
+                message: 'Số điện thoại không hợp lệ',
+                transform: (value) => _.toNumber(value),
+              },
+              {
+                max: 12,
+                message: 'Số điện thoại không hợp lệ',
+              },
             ]}
           >
             {/* <Space.Compact> */}
