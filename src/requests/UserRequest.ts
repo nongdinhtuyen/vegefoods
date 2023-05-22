@@ -35,7 +35,7 @@ class UserRequest extends BaseRequest {
     return this.get(url);
   }
   forgetPassword(params) {
-    const url = `${prefix}forgetpass`;
+    const url = `${prefix}/forgotpass`;
     return this.post(url, params);
   }
 }

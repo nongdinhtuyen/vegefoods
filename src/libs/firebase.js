@@ -11,15 +11,15 @@ import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth
 //   measurementId: "G-RXR4MPS4K2"
 // };
 
-const firebaseConfig = {
-  apiKey: "AIzaSyD1skzQiHoWQe1DXBJCIFG7xvsSRfcVSiI",
-  authDomain: "order-food-11734.firebaseapp.com",
-  projectId: "order-food-11734",
-  storageBucket: "order-food-11734.appspot.com",
-  messagingSenderId: "72958997759",
-  appId: "1:72958997759:web:ef1597926a0b4b935e88ca",
-  measurementId: "G-C31MM2PF01"
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyD1skzQiHoWQe1DXBJCIFG7xvsSRfcVSiI",
+//   authDomain: "order-food-11734.firebaseapp.com",
+//   projectId: "order-food-11734",
+//   storageBucket: "order-food-11734.appspot.com",
+//   messagingSenderId: "72958997759",
+//   appId: "1:72958997759:web:ef1597926a0b4b935e88ca",
+//   measurementId: "G-C31MM2PF01"
+// };
 
 // const firebaseConfig = {
 //   apiKey: "AIzaSyDwx1k4uQOz70I2XY7kzq2rOzvstbj-Eao",
@@ -30,6 +30,16 @@ const firebaseConfig = {
 //   appId: "1:658040531380:web:9f311baf033039f860aae1",
 //   measurementId: "G-EX7KQNMKWJ"
 // };
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDE83O_JzuMIvlcZgACk3E05snZeJMFOlg",
+  authDomain: "order-food-8a356.firebaseapp.com",
+  projectId: "order-food-8a356",
+  storageBucket: "order-food-8a356.appspot.com",
+  messagingSenderId: "137736897948",
+  appId: "1:137736897948:web:531d93f386220797197459",
+  measurementId: "G-GZY4QZJX8F"
+};
 
 
 const appFirebase = initializeApp(firebaseConfig);

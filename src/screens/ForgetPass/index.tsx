@@ -1,7 +1,10 @@
 import Background from '../../static/background_login.jpg';
 import { Button, Form, Input } from 'antd';
+import { openNotification } from 'common/Notify';
+import consts from 'consts';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import firebase from 'libs/firebase';
+import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { BsFillShieldLockFill, BsTelephoneFill } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
@@ -23,6 +26,7 @@ const ForgetPass = () => {
   const [_isNewPass, setIsNewPass] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [_result, setResult] = useState<any>({});
 
   function getOTP() {
     setLoading(true);
@@ -31,40 +35,51 @@ const ForgetPass = () => {
 
     signInWithPhoneNumber(firebase.auth, ph, appVerifier)
       .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
+        setResult(confirmationResult);
         setLoading(false);
         setShowOTP(true);
       })
       .catch((error) => {
-        console.log(error);
+        openNotification({
+          description: errorFromFireBase(error),
+          type: 'error',
+        })
         setLoading(false);
       });
   }
 
-  // function onVerify() {
-  //   setLoading(true);
-  //   window.confirmationResult
-  //     .confirm(otp)
-  //     .then(async (res) => {
-  //       console.log(res);
-  //       setIsNewPass(true);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setLoading(false);
-  //     });
-  // }
+  const errorFromFireBase = (err: any) => {
+    const stringErr = err.toString();
+    const str = stringErr.substring(stringErr.indexOf('(') + 1, stringErr.lastIndexOf(')')).trim();
+    const arr = [
+      consts.TOO_MANY_REQUESTS_STR,
+      consts.INVALID_PHONE_NUMBER,
+      consts.CODE_EXPIRED,
+      consts.MISSING_VERIFICATION_CODE,
+      consts.INVALID_VERIFICATION_CODE,
+    ];
+    if (_.includes(arr, str)) {
+      return str;
+    } else {
+      return consts.VERIFICATION_ERROR;
+    }
+  };
 
-  const onFinish = (value) => {
+  const onFinish = async (value) => {
+    const resp = await _result.confirm(value.otp);
     dispatch(
       actions.actionForgetPassword({
         params: {
           phone: ph,
-          ...value,
+          pass: value.pass,
+          id_token: resp._tokenResponse.idToken,
         },
         callbacks: {
           onSuccess() {
+            openNotification({
+              description: 'Đổi mật khẩu thành công',
+              type: 'success',
+            });
             navigate('login');
             // fetchInfo(data.id);
           },
@@ -77,31 +92,20 @@ const ForgetPass = () => {
     <div className='bg' style={{ backgroundImage: `url(${Background})` }}>
       <div className='w-modal m-auto p-12 rounded-3xl bg-[#ffffffe0] text-center'>
         <div className='text-3xl mb-4 text-zinc-800 font-bold'>QUÊN MẬT KHẨU</div>
-        <div id='recaptcha-container'></div>
+        {/* <div id='recaptcha-container'></div> */}
         <div className='w-80 flex flex-col gap-4 rounded-lg p-4'>
           {showOTP ? (
             <>
               <div className='bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full'>
                 <BsFillShieldLockFill size={30} />
               </div>
-              <Form
-                size='large'
-                {...layout}
-                name='basic'
-                onFinish={onFinish}
-                className='m-auto'
-                layout='vertical'
-                initialValues={{
-                  pass: '123456',
-                  username: 'lanln',
-                }}
-              >
+              <Form size='large' {...layout} name='basic' onFinish={onFinish} className='m-auto' layout='vertical' autoComplete=''>
                 <Form.Item
-                  name='id_token'
+                  name='otp'
                   rules={[
                     {
                       required: true,
-                      message: 'Tài khoản không được bỏ trống',
+                      message: 'OTP không được bỏ trống',
                     },
                   ]}
                 >
@@ -113,7 +117,7 @@ const ForgetPass = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Nhập mật khẩu không được bỏ trống',
+                      message: 'Mật khẩu không được bỏ trống',
                     },
                   ]}
                 >
@@ -122,7 +126,7 @@ const ForgetPass = () => {
 
                 <Form.Item>
                   <Button type='primary' className='w-full' htmlType='submit' size='large'>
-                    Đăng nhập
+                    Đổi mật khẩu
                   </Button>
                 </Form.Item>
               </Form>

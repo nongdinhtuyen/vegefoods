@@ -47,6 +47,20 @@ function App() {
   useScrollToTop();
   window.navigate = navigate;
 
+  useEffect(() => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new firebase.RecaptchaVerifier(
+        'recaptcha-container',
+        {
+          size: 'invisible',
+          callback: (response) => {},
+          'expired-callback': () => {},
+        },
+        firebase.auth,
+      );
+    }
+  }, []);
+
   return (
     <ConfigProvider
       theme={{
@@ -58,6 +72,7 @@ function App() {
       locale={viVN}
       form={{ validateMessages }}
     >
+      <div id='recaptcha-container'></div>
       <SplashScreen>
         <Header />
         <Routes>

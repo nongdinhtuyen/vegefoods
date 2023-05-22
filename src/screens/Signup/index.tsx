@@ -40,7 +40,7 @@ export default function Signup() {
   const [ph, setPh] = useState<any>('09730835341');
   const { isOpen, open, close } = useToggle();
   const [_otp, setOtp] = useState('');
-  const [_result, setResult] = useState<any>('');
+  const [_result, setResult] = useState<any>({});
 
   const onFinish = (value) => {
     open();
@@ -62,19 +62,6 @@ export default function Signup() {
     );
   };
 
-  useEffect(() => {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new firebase.RecaptchaVerifier(
-        'recaptcha-container',
-        {
-          size: 'invisible',
-          callback: (response) => {},
-          'expired-callback': () => {},
-        },
-        firebase.auth,
-      );
-    }
-  }, []);
 
   const redirect = () => {
     notification['success']({
@@ -133,7 +120,7 @@ export default function Signup() {
     <div className='bg py-4' style={{ backgroundImage: `url(${Background})` }}>
       <div className='login-container'>
         <h1>ĐĂNG KÝ</h1>
-        <div id='recaptcha-container'></div>
+        {/* <div id='recaptcha-container'></div> */}
         <Form
           {...layout}
           name='basic'
